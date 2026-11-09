@@ -1,0 +1,981 @@
+{
+  "@@locale": "fr",
+  "navDashboard": "Tableau de bord",
+  "navProspects": "Prospects",
+  "navPipeline": "Pipeline",
+  "navActivities": "Activités",
+  "navFollowUps": "Relances",
+  "navProducts": "Produits",
+  "navSalesStages": "Étapes de vente",
+  "navLossReasons": "Motifs de perte",
+  "navServerDisplay": "Serveur & affichage",
+  "navSettingsSection": "PARAMÈTRES",
+  "themeLight": "Thème clair",
+  "themeDark": "Thème sombre",
+  "globalSearchHint": "Rechercher un prospect (nom, téléphone, e-mail…) puis Entrée",
+  "connOnline": "Connecté",
+  "connOffline": "Hors ligne",
+  "connChecking": "Vérification…",
+  "connUnknown": "Inconnu",
+  "connServer": "Serveur : {url}",
+  "@connServer": {
+    "placeholders": {
+      "url": {
+        "type": "Object"
+      }
+    }
+  },
+  "connLastCheck": "\nDernière vérification : {time}",
+  "@connLastCheck": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "connClickToCheck": "\nCliquer pour vérifier maintenant.",
+  "actionRefresh": "Actualiser",
+  "actionAdd": "Ajouter",
+  "actionCancel": "Annuler",
+  "actionConfirm": "Confirmer",
+  "actionSave": "Enregistrer",
+  "actionSaving": "Enregistrement…",
+  "actionClose": "Fermer",
+  "actionEdit": "Modifier",
+  "actionDelete": "Supprimer",
+  "actionDeactivate": "Désactiver",
+  "actionReactivate": "Réactiver",
+  "actionRetry": "Réessayer",
+  "actionReset": "Réinitialiser",
+  "actionClear": "Effacer",
+  "actionBack": "Retour",
+  "actionSchedule": "Planifier",
+  "actionSeeAll": "Tout voir",
+  "actionMoveUp": "Monter",
+  "actionMoveDown": "Descendre",
+  "actionOpenRecord": "Ouvrir la fiche",
+  "loading": "Chargement…",
+  "loadingRecord": "Chargement de la fiche…",
+  "loadingStages": "Chargement des étapes…",
+  "errorOccurred": "Une erreur est survenue",
+  "serverUnreachable": "Serveur injoignable",
+  "serverSettings": "Paramètres serveur",
+  "errorUnknown": "Erreur inconnue.",
+  "noItems": "Aucun élément",
+  "noResults": "Aucun résultat",
+  "searchHint": "Rechercher…",
+  "filterAll": "Tous",
+  "clearPeriod": "Effacer la période",
+  "period": "Période",
+  "perPage": "Par page",
+  "pageFirst": "Première page",
+  "pagePrevious": "Page précédente",
+  "pageNext": "Page suivante",
+  "pageLast": "Dernière page",
+  "pageOf": "Page {page} / {pages}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "Object"
+      },
+      "pages": {
+        "type": "Object"
+      }
+    }
+  },
+  "rangeOfTotal": "{from}–{to} sur {total}",
+  "@rangeOfTotal": {
+    "placeholders": {
+      "from": {
+        "type": "Object"
+      },
+      "to": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "showMoreCount": "Afficher plus ({count})",
+  "@showMoreCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "color": "Couleur",
+  "colDate": "Date",
+  "colStatus": "Statut",
+  "colActions": "Actions",
+  "fieldDescription": "Description",
+  "fieldDescriptionRequired": "Description *",
+  "fieldOutcome": "Résultat",
+  "fieldDateTimeRequired": "Date et heure *",
+  "fieldNameRequired": "Nom *",
+  "fieldLabelRequired": "Libellé *",
+  "fieldTypeRequired": "Type *",
+  "fieldType": "Type",
+  "fieldNotes": "Notes",
+  "fieldAddress": "Adresse",
+  "fieldCity": "Ville",
+  "fieldPhone": "Téléphone",
+  "fieldEmail": "E-mail",
+  "fieldContact": "Contact",
+  "colContactDetails": "Coordonnées",
+  "statusActive": "Actif",
+  "statusActiveFem": "Active",
+  "statusInactive": "Inactif",
+  "statusInactiveFem": "Inactive",
+  "optionOther": "Autre",
+  "validThisField": "Ce champ",
+  "validRequired": "{field} est obligatoire.",
+  "@validRequired": {
+    "placeholders": {
+      "field": {
+        "type": "Object"
+      }
+    }
+  },
+  "validMaxLength": "{max} caractères maximum.",
+  "@validMaxLength": {
+    "placeholders": {
+      "max": {
+        "type": "Object"
+      }
+    }
+  },
+  "validEmailInvalid": "Adresse e-mail invalide.",
+  "validPhoneChars": "Le numéro ne peut contenir que des chiffres, espaces, +, -, . ou ().",
+  "validPhoneLength": "Le numéro doit contenir entre 6 et 20 chiffres.",
+  "validColorInvalid": "Couleur invalide (format #RRGGBB).",
+  "validServerRequired": "L'adresse du serveur est obligatoire.",
+  "validServerInvalid": "Adresse invalide. Exemple : http://192.168.1.100:8000/api/v1",
+  "validServerScheme": "L'adresse doit commencer par http:// ou https://",
+  "validFieldDescription": "La description",
+  "validFieldName": "Le nom",
+  "validFieldLabel": "Le libellé",
+  "validFieldCompany": "Le nom de la société / du client",
+  "validFixFields": "Veuillez corriger les champs signalés.",
+  "validSelectProspect": "Sélectionnez un prospect.",
+  "validSelectStage": "Sélectionnez une étape.",
+  "validDateRequired": "La date est obligatoire.",
+  "validFollowUpFuture": "La date de relance doit être dans le futur.",
+  "validDateNotFuture": "La date ne peut pas être dans le futur.",
+  "validNextFollowUpFuture": "La prochaine relance doit être dans le futur.",
+  "validNextFollowUpAfterActivity": "La prochaine relance doit être postérieure à l'activité.",
+  "validActivityNotFuture": "Une activité ne peut pas être dans le futur : planifiez plutôt une relance.",
+  "validInitialStageRequired": "L'étape initiale est obligatoire.",
+  "validStageDisabled": "Cette étape est désactivée.",
+  "validAlreadyInStage": "Le prospect est déjà à cette étape.",
+  "validLossReasonRequiredForLost": "Le motif de perte est obligatoire pour une étape « perdu ».",
+  "validLossReasonRequired": "Le motif de perte est obligatoire.",
+  "validReasonNeedsDetails": "Ce motif nécessite une précision.",
+  "validDetailsRequired": "Précision obligatoire pour ce motif.",
+  "typeAtLeastTwo": "Tapez au moins 2 caractères…",
+  "errTimeout": "Le serveur ({server}) ne répond pas dans le délai imparti. Vérifiez le réseau puis réessayez.",
+  "@errTimeout": {
+    "placeholders": {
+      "server": {
+        "type": "Object"
+      }
+    }
+  },
+  "errConnection": "Impossible de joindre le serveur ({server}). Vérifiez que l'ordinateur central est allumé, que vous êtes sur le réseau de l'entreprise et que l'adresse du serveur est correcte.",
+  "@errConnection": {
+    "placeholders": {
+      "server": {
+        "type": "Object"
+      }
+    }
+  },
+  "errConnectionShort": "Impossible de joindre le serveur ({server}). Vérifiez le réseau et l'adresse du serveur.",
+  "@errConnectionShort": {
+    "placeholders": {
+      "server": {
+        "type": "Object"
+      }
+    }
+  },
+  "errCertificate": "Certificat du serveur refusé ({server}).",
+  "@errCertificate": {
+    "placeholders": {
+      "server": {
+        "type": "Object"
+      }
+    }
+  },
+  "errCancelled": "Requête annulée.",
+  "errReceiveTimeout": "La réponse du serveur ({server}) n'a pas pu être lue à temps.",
+  "@errReceiveTimeout": {
+    "placeholders": {
+      "server": {
+        "type": "Object"
+      }
+    }
+  },
+  "errCommunication": "Erreur de communication avec le serveur : {details}",
+  "@errCommunication": {
+    "placeholders": {
+      "details": {
+        "type": "Object"
+      }
+    }
+  },
+  "errBadRequest": "Requête invalide.",
+  "errNotFound": "Élément introuvable sur le serveur.",
+  "errNotSupported": "Opération non prise en charge par le serveur.",
+  "errConflict": "Opération refusée : conflit avec les données existantes.",
+  "errValidation": "Certaines données sont invalides.",
+  "errServer": "Erreur interne du serveur ({status}). Réessayez ou contactez l'administrateur.",
+  "@errServer": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "errUnexpectedStatus": "Réponse inattendue du serveur ({status}).",
+  "@errUnexpectedStatus": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "errUnexpectedResponse": "Réponse du serveur inattendue : {details}",
+  "@errUnexpectedResponse": {
+    "placeholders": {
+      "details": {
+        "type": "Object"
+      }
+    }
+  },
+  "errUnexpected": "Erreur inattendue : {details}",
+  "@errUnexpected": {
+    "placeholders": {
+      "details": {
+        "type": "Object"
+      }
+    }
+  },
+  "errExpectedObject": "Réponse du serveur inattendue : un objet JSON était attendu.",
+  "errExpectedList": "Réponse du serveur inattendue : une liste JSON était attendue.",
+  "errExpectedPaged": "Réponse du serveur inattendue : une liste paginée était attendue.",
+  "errMissingProspect": "Réponse du serveur inattendue : le prospect mis à jour est absent.",
+  "errBusy": "Opération déjà en cours.",
+  "relToday": "aujourd'hui {time}",
+  "@relToday": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "relTomorrow": "demain {time}",
+  "@relTomorrow": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "relYesterday": "hier {time}",
+  "@relYesterday": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "relInDays": "dans {days} j",
+  "@relInDays": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      }
+    }
+  },
+  "relDaysAgo": "il y a {days} j",
+  "@relDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashSubtitle": "Vue d'ensemble de l'activité commerciale",
+  "dashUpdatedAt": "Mis à jour à {time}",
+  "@dashUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashStale": "Chiffres peut-être obsolètes : {error}",
+  "@dashStale": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "stageTypeOpen": "En cours",
+  "dashWon": "Gagnés",
+  "dashLost": "Perdus",
+  "dashWinRate": "Taux de réussite : {rate} %",
+  "@dashWinRate": {
+    "placeholders": {
+      "rate": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashFollowUpsToday": "Relances aujourd'hui",
+  "dashFollowUpsOverdue": "Relances en retard",
+  "dashFollowUpsUpcoming": "Relances à venir",
+  "dashFollowUpsUpcomingDays": "Relances à venir ({days} j)",
+  "@dashFollowUpsUpcomingDays": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashProspectsByStage": "Prospects par étape",
+  "dashClickStage": "Cliquez sur une étape pour voir ses prospects",
+  "noStages": "Aucune étape",
+  "dashOutcomes": "Issue des opportunités",
+  "dashRecentActivities": "Activités récentes",
+  "noRecentActivities": "Aucune activité récente",
+  "dashWhyLose": "Pourquoi perdons-nous des ventes ?",
+  "dashLostByReason": "Prospects perdus par motif",
+  "noLostProspects": "Aucun prospect perdu",
+  "prospectsSubtitle": "Gestion des prospects et opportunités",
+  "newProspect": "Nouveau prospect",
+  "editProspect": "Modifier le prospect",
+  "createProspect": "Créer le prospect",
+  "addProspect": "Ajouter un prospect",
+  "noProspectMatchesFilters": "Aucun prospect ne correspond aux filtres",
+  "noProspectsYet": "Aucun prospect pour le moment",
+  "clearFilters": "Effacer les filtres",
+  "prospectSearchHint": "Nom, société, téléphone, e-mail…",
+  "fieldStage": "Étape",
+  "stageInactiveSuffix": "{name} (inactive)",
+  "@stageInactiveSuffix": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "allStages": "Toutes les étapes",
+  "fieldProduct": "Produit",
+  "allProducts": "Tous les produits",
+  "fieldLossReason": "Motif de perte",
+  "allReasons": "Tous les motifs",
+  "filterCreatedDate": "Date de création",
+  "filtersUnavailable": "Listes de filtres indisponibles : {error}\nCliquer pour réessayer.",
+  "@filtersUnavailable": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "prospectCreated": "Prospect « {name} » créé.",
+  "@prospectCreated": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "prospectUpdated": "Prospect mis à jour.",
+  "prospectMovedTo": "« {name} » est passé à l'étape « {stage} ».",
+  "@prospectMovedTo": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      },
+      "stage": {
+        "type": "Object"
+      }
+    }
+  },
+  "colCompanyContact": "Société / contact",
+  "colLastActivity": "Dernière activité",
+  "colNextFollowUp": "Prochaine relance",
+  "colCreatedOn": "Créé le",
+  "changeStage": "Changer d'étape",
+  "scheduleFollowUp": "Planifier une relance",
+  "addActivity": "Ajouter une activité",
+  "sectionIdentity": "Identité",
+  "fieldCompanyRequired": "Société / client *",
+  "fieldCompany": "Société / client",
+  "fieldContactPerson": "Personne à contacter",
+  "sectionSalesFollowUp": "Suivi commercial",
+  "currentStage": "Étape actuelle",
+  "currentStageLabel": "Étape actuelle :  ",
+  "useChangeStageHint": "Utilisez « Changer d'étape » pour la modifier (historique conservé).",
+  "stagesUnavailable": "Étapes indisponibles : {error}",
+  "@stagesUnavailable": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "initialStageRequired": "Étape initiale *",
+  "markAsLost": "Marquer comme perdu",
+  "confirmChange": "Confirmer le changement",
+  "newStageRequired": "Nouvelle étape *",
+  "stageMarksWon": "Cette étape marque une vente gagnée.",
+  "lossReasonRequiredLabel": "Motif de perte *",
+  "noActiveLossReason": "Aucun motif actif : ajoutez-en dans « Motifs de perte ».",
+  "reasonDetailsRequiredSuffix": "{label}  (précision requise)",
+  "@reasonDetailsRequiredSuffix": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "detailsRequiredLabel": "Précision *",
+  "details": "Précision",
+  "interestedProducts": "Produits intéressés",
+  "invalidProspectId": "Identifiant de prospect invalide.",
+  "dataMaybeStale": "Données peut-être obsolètes : {error}",
+  "@dataMaybeStale": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "stageChanged": "Étape changée : « {stage} ».",
+  "@stageChanged": {
+    "placeholders": {
+      "stage": {
+        "type": "Object"
+      }
+    }
+  },
+  "createdOnDate": "Créé le {date}",
+  "@createdOnDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "sectionInformation": "Informations",
+  "updatedLabel": "Mis à jour",
+  "productsUpdated": "Produits mis à jour.",
+  "noProductAssociated": "Aucun produit associé.",
+  "sectionCommercialStage": "Étape commerciale",
+  "opportunityLost": "Opportunité perdue",
+  "reason": "Motif",
+  "saleWon": "Vente gagnée",
+  "stageHistory": "Historique des étapes",
+  "noStageChanges": "Aucun changement d'étape enregistré.",
+  "creationArrow": "Création →",
+  "pendingCount": "{count} en attente",
+  "@pendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "noFollowUpScheduled": "Aucune relance planifiée.",
+  "closedFollowUps": "Relances terminées ou annulées ({count})",
+  "@closedFollowUps": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "activityHistory": "Historique des activités",
+  "activityWord": "activité",
+  "noActivitiesForProspect": "Aucune activité enregistrée pour ce prospect.",
+  "showOlderActivities": "Afficher les activités plus anciennes",
+  "activitiesSubtitle": "Appels, rendez-vous, messages et notes",
+  "newActivity": "Nouvelle activité",
+  "activitySearchHint": "Description, résultat, prospect…",
+  "allTypes": "Tous les types",
+  "noActivityMatchesFilters": "Aucune activité ne correspond aux filtres",
+  "noActivities": "Aucune activité enregistrée",
+  "colProspect": "Prospect",
+  "prospectNumber": "Prospect #{id}",
+  "@prospectNumber": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "outcomeLine": "Résultat : {outcome}",
+  "@outcomeLine": {
+    "placeholders": {
+      "outcome": {
+        "type": "Object"
+      }
+    }
+  },
+  "activityTypeLabel": "Type d'activité",
+  "activityDescriptionHint": "Ce qui a été dit / fait…",
+  "activityOutcomeHint": "Ex. : intéressé, hésite sur le prix, demande une démo…",
+  "nextStepsSection": "Suite à donner",
+  "nextFollowUpOptional": "Prochaine relance (optionnel)",
+  "alsoScheduleFollowUp": "Planifier aussi une relance à cette date",
+  "willAppearInFollowUps": "Elle apparaîtra dans « Relances ».",
+  "followUpSubject": "Objet de la relance",
+  "leaveEmptyAuto": "Laisser vide pour un texte automatique",
+  "activitySaved": "Activité enregistrée.",
+  "activitySavedAndFollowUp": "Activité enregistrée et relance planifiée.",
+  "activitySavedFollowUpFailed": "L'activité est enregistrée, mais la relance n'a PAS pu être planifiée :",
+  "activityTypeCall": "Appel",
+  "activityTypeAppointment": "Rendez-vous",
+  "activityTypeMessage": "Message",
+  "activityTypeNote": "Note",
+  "followUpAfterActivity": "Relance suite à : {type} du {date}",
+  "@followUpAfterActivity": {
+    "placeholders": {
+      "type": {
+        "type": "Object"
+      },
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "followUpsSubtitle": "Suivi des rappels et rendez-vous à venir",
+  "followUpSearchHint": "Prospect, description…",
+  "noFollowUpsToday": "Aucune relance prévue aujourd'hui",
+  "noFollowUpsOverdue": "Aucune relance en retard",
+  "noFollowUpsUpcoming": "Aucune relance à venir",
+  "noFollowUpsDone": "Aucune relance effectuée",
+  "noFollowUpsCancelled": "Aucune relance annulée",
+  "colDueDate": "Échéance",
+  "markAsDone": "Marquer comme effectuée",
+  "cancelFollowUp": "Annuler la relance",
+  "followUpStatusPending": "En attente",
+  "followUpStatusCompleted": "Effectuée",
+  "followUpStatusCancelled": "Annulée",
+  "followUpViewToday": "Aujourd'hui",
+  "followUpViewOverdue": "En retard",
+  "followUpViewUpcoming": "À venir",
+  "followUpViewCompleted": "Effectuées",
+  "followUpViewCancelled": "Annulées",
+  "followUpScheduled": "Relance planifiée.",
+  "followUpUpdated": "Relance modifiée.",
+  "followUpCompleted": "Relance marquée comme effectuée.",
+  "followUpCompletedActivityFailed": "Relance marquée comme effectuée, mais l'activité n'a pas pu être enregistrée ({error}). Le résultat est conservé dans la note de la relance ; ajoutez l'activité depuis la fiche du prospect.",
+  "@followUpCompletedActivityFailed": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "followUpCancelled": "Relance annulée.",
+  "editFollowUp": "Modifier la relance",
+  "quickTomorrow": "Demain",
+  "quickIn3Days": "Dans 3 jours",
+  "quickIn1Week": "Dans 1 semaine",
+  "quickIn2Weeks": "Dans 2 semaines",
+  "followUpDescriptionHint": "Ex. : rappeler pour la validation du devis",
+  "completeFollowUpTitle": "Marquer la relance comme effectuée",
+  "finishFollowUp": "Terminer la relance",
+  "dueOn": "Prévue le {date}",
+  "@dueOn": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "recordOutcomeAsActivity": "Enregistrer le résultat comme activité",
+  "recommendedKeepsHistory": "Recommandé : garde l'historique de l'échange.",
+  "completeOutcomeHint": "Ex. : accord de principe, souhaite réfléchir…",
+  "companyDueOn": "{company} — prévue le {date}",
+  "@companyDueOn": {
+    "placeholders": {
+      "company": {
+        "type": "Object"
+      },
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "reasonOptional": "Raison (optionnel)",
+  "followUpOverdueTip": "Relance en retard",
+  "pipelineTitle": "Pipeline des ventes",
+  "pipelineSubtitle": "Prospects regroupés par étape",
+  "pipelineFilterHint": "Filtrer toutes les étapes…",
+  "noStagesConfigured": "Aucune étape de vente configurée",
+  "configureStages": "Configurer les étapes",
+  "prospectMovedToStage": "« {name} » déplacé vers « {stage} ».",
+  "@prospectMovedToStage": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      },
+      "stage": {
+        "type": "Object"
+      }
+    }
+  },
+  "dropCardHere": "Déposez une carte ici",
+  "stageDeactivated": "Étape désactivée",
+  "moveTo": "Déplacer vers…",
+  "moveToStage": "Déplacer vers « {stage} »",
+  "@moveToStage": {
+    "placeholders": {
+      "stage": {
+        "type": "Object"
+      }
+    }
+  },
+  "productAdded": "Produit « {name} » ajouté.",
+  "@productAdded": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "productUpdated": "Produit mis à jour.",
+  "productReactivated": "Produit réactivé.",
+  "productDeactivated": "Produit désactivé.",
+  "deactivateQuestion": "Désactiver « {name} » ?",
+  "@deactivateQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "deactivateProductBody": "Le produit ne pourra plus être associé à de nouveaux prospects. Les associations existantes et l'historique sont conservés.",
+  "productsSubtitle": "Logiciels et services proposés aux prospects",
+  "newProduct": "Nouveau produit",
+  "productSearchHint": "Rechercher un produit…",
+  "showInactiveProducts": "Afficher les produits inactifs",
+  "noProducts": "Aucun produit",
+  "noProductMatches": "Aucun produit ne correspond",
+  "addProduct": "Ajouter un produit",
+  "editProduct": "Modifier le produit",
+  "productActive": "Produit actif",
+  "productActiveHint": "Seuls les produits actifs peuvent être associés aux prospects.",
+  "selectedCount": "{count} sélectionné(s)",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "noActiveProducts": "Aucun produit actif. Ajoutez-en dans « Produits ».",
+  "productInactiveSuffix": "{name} (inactif)",
+  "@productInactiveSuffix": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "stageCreated": "Étape « {name} » créée.",
+  "@stageCreated": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "stageUpdated": "Étape mise à jour.",
+  "stageReactivated": "Étape réactivée.",
+  "stageDeactivatedMsg": "Étape désactivée.",
+  "stageDeleted": "Étape supprimée.",
+  "deleteQuestion": "Supprimer « {name} » ?",
+  "@deleteQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "deleteStageBody": "Cette étape n'a jamais été utilisée. Elle sera définitivement supprimée.",
+  "orderNotSaved": "Le nouvel ordre n'a pas été enregistré :",
+  "stagesSubtitle": "Définissez le pipeline : ordre, couleur et type (en cours / gagné / perdu). Les étapes utilisées ne peuvent pas être supprimées, seulement désactivées.",
+  "newStage": "Nouvelle étape",
+  "savingNewOrder": "Enregistrement du nouvel ordre…",
+  "createStagesHint": "Créez au moins une étape « en cours », une « gagné » et une « perdu ».",
+  "createStage": "Créer une étape",
+  "prospectsCountShort": "{count} prospect(s)",
+  "@prospectsCountShort": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "stageUsedNoDelete": "Utilisée par des prospects ou l'historique : suppression impossible.",
+  "deleteImpossibleUsed": "Suppression impossible (étape utilisée)",
+  "editStage": "Modifier l'étape",
+  "stageTypeLocked": "Étape déjà utilisée : son type ne peut plus changer (protection de l'historique).",
+  "lostRequiresReasonHint": "« Perdu » exige un motif de perte lors du changement d'étape.",
+  "stageActive": "Étape active",
+  "stageUsedDeactivateInstead": "Cette étape est utilisée par des prospects ou leur historique : désactivez-la au lieu de la supprimer.",
+  "stageTypeWon": "Gagné",
+  "stageTypeLost": "Perdu",
+  "reasonAdded": "Motif ajouté.",
+  "reasonUpdated": "Motif mis à jour.",
+  "reasonReactivated": "Motif réactivé.",
+  "reasonDeactivated": "Motif désactivé.",
+  "deactivateReasonBody": "Ce motif ne sera plus proposé. Les prospects déjà perdus avec ce motif le conservent.",
+  "lossReasonsSubtitle": "Raisons proposées lorsqu'un prospect passe à une étape « perdu ». Elles alimentent l'analyse des ventes perdues.",
+  "newReason": "Nouveau motif",
+  "lossReasonsReadOnly": "Le serveur ne permet pas de gérer les motifs de perte depuis l'application : liste en lecture seule.",
+  "noLossReasons": "Aucun motif de perte",
+  "noActiveReasonWarning": "Sans motif actif, aucun prospect ne peut passer à une étape « perdu ».",
+  "detailsRequired": "Précision requise",
+  "editReason": "Modifier le motif",
+  "newLossReason": "Nouveau motif de perte",
+  "reasonLabelHint": "Ex. : Trop cher",
+  "detailsMandatory": "Précision obligatoire",
+  "detailsMandatoryHint": "Ex. : « Concurrent choisi » → préciser lequel.",
+  "reasonActive": "Motif actif",
+  "settingsSavedOnline": "Paramètres enregistrés. Serveur joignable.",
+  "settingsSavedOffline": "Paramètres enregistrés sur cet ordinateur, mais le serveur ne répond pas pour le moment.",
+  "settingsSubtitle": "Paramètres propres à cet ordinateur",
+  "firstLaunchHint": "Première utilisation : indiquez l'adresse de l'ordinateur central (serveur Laravel) sur le réseau de l'entreprise, testez la connexion puis enregistrez.",
+  "settingsServerTitle": "Serveur de l'application",
+  "settingsServerSubtitle": "API Laravel hébergée sur l'ordinateur central (réseau local)",
+  "fieldApiAddress": "Adresse de l'API *",
+  "apiAddressHelp": "Format : http://ADRESSE_IP:PORT/api/v1 — n'utilisez pas « localhost » sur les postes des employés.",
+  "fieldTimeout": "Délai d'attente maximal",
+  "secondsShort": "{seconds} s",
+  "@secondsShort": {
+    "placeholders": {
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "testing": "Test en cours…",
+  "testConnection": "Tester la connexion",
+  "connectionSuccess": "Connexion réussie à {url}",
+  "@connectionSuccess": {
+    "placeholders": {
+      "url": {
+        "type": "Object"
+      }
+    }
+  },
+  "settingsDisplay": "Affichage",
+  "themeLightShort": "Clair",
+  "themeDarkShort": "Sombre",
+  "themeSystemShort": "Système",
+  "settingsAbout": "À propos",
+  "aboutApplication": "Application",
+  "aboutClient": "{app} — client Windows",
+  "@aboutClient": {
+    "placeholders": {
+      "app": {
+        "type": "Object"
+      }
+    }
+  },
+  "aboutVersion": "Version",
+  "aboutData": "Données",
+  "aboutDataBody": "Toutes les données sont stockées sur le serveur central. Seuls l'adresse du serveur et le thème sont enregistrés sur ce poste.",
+  "changeProspect": "Changer de prospect",
+  "prospectRequiredLabel": "Prospect *",
+  "errNotJson": "Le serveur a répondu, mais pas en JSON. Vérifiez que l'adresse se termine par /api/v1.",
+  "countProspects": "{count, plural, =0{Aucun prospect} one{1 prospect} other{{count} prospects}}",
+  "@countProspects": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countActivities": "{count, plural, =0{Aucune activité} one{1 activité} other{{count} activités}}",
+  "@countActivities": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activitiesCountSubtitle": "{count, plural, one{{count} activité} other{{count} activités}} — appels, rendez-vous, messages et notes",
+  "@activitiesCountSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pipelineCountSubtitle": "{count, plural, one{{count} prospect} other{{count} prospects}} · glissez une carte vers une autre étape pour la déplacer",
+  "@pipelineCountSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "donutProspects": "prospects",
+  "reasonLine": "Raison : {note}",
+  "@reasonLine": {
+    "placeholders": {
+      "note": {
+        "type": "Object"
+      }
+    }
+  },
+  "lossReasonLine": "Motif : {reason}",
+  "@lossReasonLine": {
+    "placeholders": {
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "deactivateStageIntro": "L'étape ne pourra plus être choisie pour de nouveaux changements.",
+  "deactivateStageProspects": "{count, plural, one{1 prospect y est actuellement et y restera.} other{{count} prospects y sont actuellement et y resteront.}}",
+  "@deactivateStageProspects": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deactivateStageOutro": "L'historique est conservé.",
+  "sectionBusinessProfile": "Profil commercial",
+  "fieldBusinessActivity": "Activité de l'entreprise",
+  "businessActivityHint": "Choisir ou saisir une activité",
+  "fieldSource": "Source du prospect",
+  "fieldSourceOther": "Précisez la source",
+  "fieldPreviousSoftware": "Logiciel utilisé auparavant",
+  "previousSoftwareHint": "Choisir ou saisir un logiciel",
+  "notSpecified": "Non renseigné",
+  "allSources": "Toutes les sources",
+  "baWholesale": "Commerce de gros",
+  "baRetail": "Commerce de détail",
+  "baManufacturing": "Industrie / production",
+  "baConstruction": "BTP / construction",
+  "baServices": "Services",
+  "srcFacebook": "Facebook",
+  "srcInstagram": "Instagram",
+  "srcFriendReferral": "Ami / recommandation personnelle",
+  "srcCustomerReferral": "Recommandation d'un client existant",
+  "srcWebsite": "Site web",
+  "srcPhoneCall": "Appel téléphonique",
+  "swSage": "Sage",
+  "swPcCompta": "PC Compta",
+  "swExcel": "Excel",
+  "swOtherSoftware": "Autre logiciel de gestion",
+  "swNone": "Aucun logiciel",
+  "searchProspectTitle": "Rechercher un prospect",
+  "searchProspectHint": "Nom, société, téléphone ou n° de prospect…",
+  "searchProspectIdle": "Saisissez un nom, une société, un numéro de téléphone ou un n° de prospect.",
+  "searchProspectEmpty": "Aucun prospect trouvé",
+  "searchProspectMore": "Affinez la recherche pour voir les autres résultats ({total} au total).",
+  "@searchProspectMore": {
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "searchAllStagesNote": "La recherche porte sur toutes les étapes (gagnés et perdus inclus).",
+  "prospectIdShort": "N° {id}",
+  "@prospectIdShort": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "prospectOptionalLabel": "Prospect (optionnel)",
+  "pickProspect": "Choisir un prospect",
+  "activityTitleRequired": "Titre / résumé *",
+  "activityTitleHint": "Ex. : appel du client au sujet du devis",
+  "activityDiscussionLabel": "Discussion, réponse du client, notes",
+  "colTitle": "Titre",
+  "linkStatusLinked": "Lié",
+  "linkStatusUnlinked": "Non lié",
+  "linkToProspect": "Lier à un prospect",
+  "changeLinkedProspect": "Changer le prospect lié",
+  "linkedProspectLabel": "Prospect lié",
+  "noProspectLinked": "Aucun prospect lié",
+  "openProspect": "Ouvrir le prospect",
+  "activityDetails": "Détails de l'activité",
+  "activityLinkedTo": "Activité liée à « {name} ».",
+  "@activityLinkedTo": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "relinkTitle": "Changer le prospect lié ?",
+  "relinkBody": "Cette activité est liée à « {from} ». La déplacer vers « {to} » ? Son contenu et sa date ne changent pas.",
+  "@relinkBody": {
+    "placeholders": {
+      "from": {
+        "type": "Object"
+      },
+      "to": {
+        "type": "Object"
+      }
+    }
+  },
+  "relinkConfirm": "Déplacer",
+  "originLabel": "Origine",
+  "originDirect": "Saisie directe",
+  "originFollowUp": "Issue d'une relance",
+  "activityFromFollowUpLocked": "Cette activité provient d'une relance : elle reste liée à son prospect.",
+  "filterLinkAll": "Toutes (liées ou non)",
+  "filterLinkOnlyLinked": "Liées à un prospect",
+  "filterLinkOnlyUnlinked": "Non liées",
+  "colLink": "Prospect lié",
+  "activityOccurredAt": "Date et heure",
+  "createdOnLabel": "Créée le",
+  "linkedOnLabel": "Liée le",
+  "typeLabelRequired": "Type d'activité *",
+  "followUpTypeLabel": "Type de relance",
+  "followUpTypeRequired": "Choisissez le type de relance.",
+  "followUpTypeMissing": "Type non défini",
+  "followUpCompletedKeepsType": "Le type de l'activité sera celui de la relance : {type}.",
+  "@followUpCompletedKeepsType": {
+    "placeholders": {
+      "type": {
+        "type": "Object"
+      }
+    }
+  },
+  "activityTypeForLegacy": "Cette relance n'a pas de type : choisissez celui de l'activité.",
+  "followUpCompletedWithActivity": "Relance terminée et activité enregistrée.",
+  "colType": "Type",
+  "settingsLanguage": "Langue",
+  "settingsLanguageHint": "Langue de l'interface. Le changement est immédiat.",
+  "languageMenuTooltip": "Changer la langue",
+  "themeToggleToDark": "Passer au thème sombre",
+  "themeToggleToLight": "Passer au thème clair",
+  "settingsAboutBody": "Seuls l'adresse du serveur, la langue et le thème sont enregistrés sur ce poste.",
+  "validFieldTitle": "Le titre",
+  "validMinLength": "{min} caractères minimum.",
+  "@validMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "Object"
+      }
+    }
+  }
+}
