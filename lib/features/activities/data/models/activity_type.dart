@@ -1,14 +1,10 @@
 import '../../../../app/l10n/l10n.dart';
 
-/// Activity kinds defined by the business rules (§4.3).
+/// Activity kinds defined by the business rules: Call, Meeting, Message, Other.
 enum ActivityType {
   call('call'),
-
-  /// Legacy code of rows created before `appointment` existed. Same meaning.
   meeting('meeting'),
-  appointment('appointment'),
   message('message'),
-  note('note'),
   other('other');
 
   const ActivityType(this.apiValue);
@@ -17,20 +13,20 @@ enum ActivityType {
 
   String get label => switch (this) {
     call => tr.activityTypeCall,
-    meeting || appointment => tr.activityTypeAppointment,
+    meeting => tr.activityTypeAppointment,
     message => tr.activityTypeMessage,
-    note => tr.activityTypeNote,
     other => tr.optionOther,
   };
 
-  /// The three types offered when creating an activity or a follow-up.
-  static const selectable = [call, appointment, message];
+  /// The four types offered when creating an activity or a follow-up.
+  static const selectable = [call, meeting, message, other];
 
-  /// `meeting` rows are appointments.
-  ActivityType get canonical => this == meeting ? appointment : this;
+  ActivityType get canonical => this;
 
   static ActivityType fromApi(Object? value) {
     final text = value?.toString().trim().toLowerCase();
+    if (text == 'appointment') return meeting;
+    if (text == 'note') return other;
     return ActivityType.values.firstWhere(
       (t) => t.apiValue == text,
       orElse: () => ActivityType.other,

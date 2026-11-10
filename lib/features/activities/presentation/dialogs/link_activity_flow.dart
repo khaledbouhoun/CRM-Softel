@@ -1,45 +1,49 @@
 import 'package:get/get.dart';
 
-import '../../../../app/l10n/l10n.dart';
+import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/widgets/app_feedback.dart';
-import '../../../prospects/presentation/dialogs/prospect_search_dialog.dart';
+import '../../../follow_ups/presentation/dialogs/follow_up_search_dialog.dart';
 import '../../data/models/activity.dart';
-import '../controllers/activity_link_controller.dart';
-import 'activity_form_dialog.dart';
+import '../../domain/activities_repository.dart';
 
-/// "Link to prospect" for an existing activity: search a prospect (all
-/// stages, by name, company, phone or id), confirm when this changes an
-/// existing link, then link. Resolves with the updated activity, or null when
-/// cancelled or refused. The caller refreshes its view after this returns.
-Future<Activity?> linkActivityToProspect(Activity activity) async {
-  if (activity.isFromFollowUp) {
-    AppFeedback.warning(tr.activityFromFollowUpLocked);
-    return null;
-  }
-  final target = await showProspectSearchDialog(
-    title: activity.isLinked ? tr.changeLinkedProspect : tr.linkToProspect,
-    excludeProspectId: activity.prospect?.id,
-  );
-  if (target == null) return null;
-
-  final linker = ActivityLinkController(repository: Get.find());
-  final needsConfirmation = linker.needsConfirmation(activity, target);
-  if (needsConfirmation) {
-    final ok = await confirmRelink(
-      from: activity.prospect!.companyName,
-      to: target.companyName,
+/// "Link to follow-up" flow for an activity that is not yet linked to a follow-up.
+///
+/// If the activity already belongs to a prospect, only follow-ups for that
+/// prospect can be chosen, guaranteeing consistency. Once linked to a follow-up,
+/// the link cannot be changed.
+Future<Activity?> linkActivityToFollowUp(Activity activity) async {
+  if (activity.isLinkedToFollowUp) {
+    AppFeedback.warning(
+      'This activity is already linked to a follow-up and cannot be changed.',
     );
-    if (!ok) return null;
-  }
-  final result = await linker.link(
-    activity,
-    target,
-    confirmRelink: needsConfirmation,
-  );
-  if (!result.isSuccess) {
-    AppFeedback.error(result.error!);
     return null;
   }
-  AppFeedback.success(tr.activityLinkedTo(target.companyName));
-  return result.value;
+
+  final followUp = await showFollowUpSearchDialog(
+    prospectId: activity.prospect?.id,
+    prospectName: activity.prospect?.companyName,
+  );
+  if (followUp == null) return null;
+
+  // Enforce same prospect if activity already had a prospect
+  if (activity.prospect != null &&
+      followUp.prospect != null &&
+      activity.prospect!.id != followUp.prospect!.id) {
+    AppFeedback.error(
+      BadRequestException(
+        'The selected follow-up belongs to another prospect.',
+      ),
+    );
+    return null;
+  }
+
+  try {
+    final repo = Get.find<ActivitiesRepository>();
+    final updated = await repo.linkToFollowUp(activity.id, followUp.id);
+    AppFeedback.success('Activity linked to follow-up successfully.');
+    return updated;
+  } catch (e) {
+    AppFeedback.error(ApiException.from(e));
+    return null;
+  }
 }

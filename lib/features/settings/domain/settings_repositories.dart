@@ -1,4 +1,5 @@
 import '../data/models/loss_reason.dart';
+import '../data/models/prospect_form_option.dart';
 import '../data/models/sales_stage.dart';
 
 /// Sales pipeline stages. Results are always ordered by `position`.
@@ -20,4 +21,24 @@ abstract interface class LossReasonsRepository {
   Future<LossReason> updateLossReason(int id, LossReasonPayload payload);
   Future<LossReason> setLossReasonActive(int id, bool isActive);
   Future<List<LossReason>> reorderLossReasons(List<int> orderedIds);
+}
+
+/// Configurable options for prospect forms (sources, previous software,
+/// business activities, professions).
+abstract interface class ProspectFormOptionsRepository {
+  Future<List<ProspectFormOption>> getOptions({
+    String? type,
+    bool includeInactive = false,
+  });
+  Future<ProspectFormOption> createOption(ProspectFormOptionPayload payload);
+  Future<ProspectFormOption> updateOption(
+    int id,
+    ProspectFormOptionPayload payload,
+  );
+  Future<ProspectFormOption> setOptionActive(int id, bool isActive);
+  Future<List<ProspectFormOption>> reorderOptions(
+    String type,
+    List<int> orderedIds,
+  );
+  Future<void> deleteOption(int id);
 }

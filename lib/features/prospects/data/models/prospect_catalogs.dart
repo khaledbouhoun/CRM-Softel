@@ -20,6 +20,12 @@ class ProspectCatalogs {
 
   static const otherCode = 'other';
 
+  static String get professionLabel => switch (L10n.current.languageCode) {
+    'ar' => 'المهنة',
+    'fr' => 'Profession',
+    _ => 'Profession',
+  };
+
   static List<CatalogOption> get businessActivities => [
     CatalogOption('wholesale', () => tr.baWholesale),
     CatalogOption('retail', () => tr.baRetail),
@@ -71,13 +77,24 @@ class ProspectCatalogs {
     return t;
   }
 
-  static String? sourceLabel(String? code) => code == null || code.trim().isEmpty ? null : labelOf(sources, code);
+  static String? sourceLabel(String? code) =>
+      code == null || code.trim().isEmpty ? null : labelOf(sources, code);
 
   /// "Facebook", or "Other: Trade fair" when a detail was given.
   static String? sourceDisplay(String? code, String? other) {
     final base = sourceLabel(code);
     if (base == null) return null;
     final detail = other?.trim();
-    return code == otherCode && detail != null && detail.isNotEmpty ? '$base — $detail' : base;
+    return code == otherCode && detail != null && detail.isNotEmpty
+        ? '$base — $detail'
+        : base;
+  }
+
+  /// Formatted display of any catalog field with optional details.
+  static String displayWithDetails(String? main, String? details) {
+    final m = main?.trim();
+    if (m == null || m.isEmpty) return tr.notSpecified;
+    final d = details?.trim();
+    return (d != null && d.isNotEmpty) ? '$m — $d' : m;
   }
 }

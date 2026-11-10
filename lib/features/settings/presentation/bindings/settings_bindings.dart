@@ -4,6 +4,7 @@ import '../../../../app/services/connection_service.dart';
 import '../../../../app/services/lookup_service.dart';
 import '../controllers/connection_settings_controller.dart';
 import '../controllers/loss_reasons_settings_controllers.dart';
+import '../controllers/prospect_form_options_settings_controllers.dart';
 import '../controllers/stages_settings_controllers.dart';
 
 // Explicit type arguments are required: the controllers take nullable
@@ -26,6 +27,18 @@ class LossReasonsSettingsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(
       () => LossReasonsSettingsController(
+        repository: Get.find(),
+        lookups: Get.find<LookupService>(),
+      ),
+    );
+  }
+}
+
+class ProspectFormOptionsSettingsBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(
+      () => ProspectFormOptionsSettingsController(
         repository: Get.find(),
         lookups: Get.find<LookupService>(),
       ),

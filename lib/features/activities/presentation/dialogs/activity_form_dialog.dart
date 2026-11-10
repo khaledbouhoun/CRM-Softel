@@ -6,8 +6,9 @@ import '../../../../app/theme/app_theme.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../follow_ups/data/models/follow_up.dart';
+import '../../../follow_ups/presentation/dialogs/follow_up_search_dialog.dart';
 import '../../../prospects/data/models/prospect_ref.dart';
-import '../../../prospects/presentation/widgets/prospect_picker_field.dart';
 import '../../data/models/activity_type.dart';
 import '../controllers/activity_form_controller.dart';
 import '../widgets/activity_widgets.dart';
@@ -15,10 +16,11 @@ import '../widgets/activity_widgets.dart';
 /// Opens the "new activity" form and shows the outcome. Resolves with the
 /// result when the activity was saved.
 ///
-/// Without [prospect] the prospect is optional: the activity can be created
-/// on its own and linked later.
+/// An activity can be created linked to a [followUp] (or [prospect]), or on its own
+/// to be linked to a follow-up later.
 Future<ActivityFormResult?> showActivityFormDialog({
   ProspectRef? prospect,
+  FollowUp? followUp,
 }) async {
   final result =
       await showControllerDialog<ActivityFormController, ActivityFormResult>(
@@ -26,6 +28,7 @@ Future<ActivityFormResult?> showActivityFormDialog({
           activitiesRepository: Get.find(),
           followUpsRepository: Get.find(),
           prospect: prospect,
+          followUp: followUp,
         ),
         builder: (c) => _ActivityFormDialog(c),
       );
@@ -44,7 +47,7 @@ Future<ActivityFormResult?> showActivityFormDialog({
 }
 
 /// Segmented selector of the types offered for new activities and follow-ups
-/// (call, appointment, message).
+/// (Call, Meeting, Message, Other).
 class ActivityTypeSelector extends StatelessWidget {
   const ActivityTypeSelector({
     super.key,
@@ -100,6 +103,68 @@ class _ActivityFormDialog extends StatelessWidget {
   Future<void> _submit() async {
     final result = await c.submit();
     if (result != null) Get.back(result: result);
+  }
+
+  Widget _followUpField(BuildContext context) {
+    final fu = c.selectedFollowUp.value;
+    final prospect = c.prospect.value;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: context.colors.outlineVariant),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.event_note, color: context.colors.primary, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  fu != null
+                      ? (fu.description?.trim().isNotEmpty == true
+                          ? fu.description!
+                          : 'Follow-up #${fu.id}')
+                      : 'No follow-up linked (optional)',
+                  style: context.text.bodyMedium?.copyWith(
+                    fontWeight: fu != null
+                        ? FontWeight.w600
+                        : FontWeight.normal,
+                  ),
+                ),
+                if (prospect != null)
+                  Text(
+                    'Prospect: ${prospect.companyName}',
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (fu != null && !c.followUpLocked)
+            IconButton(
+              icon: const Icon(Icons.clear, size: 18),
+              tooltip: 'Clear',
+              onPressed: () => c.selectFollowUp(null),
+            ),
+          if (!c.followUpLocked)
+            OutlinedButton.icon(
+              icon: const Icon(Icons.search, size: 16),
+              label: Text(fu == null ? 'Choose follow-up' : 'Change'),
+              onPressed: () async {
+                final chosen = await showFollowUpSearchDialog(
+                  prospectId: prospect?.id,
+                  prospectName: prospect?.companyName,
+                );
+                if (chosen != null) c.selectFollowUp(chosen);
+              },
+            ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -169,12 +234,7 @@ class _ActivityFormDialog extends StatelessWidget {
               validator: c.validateOutcome,
             ),
             const SizedBox(height: 14),
-            ProspectPickerField(
-              value: c.prospect.value,
-              enabled: !c.prospectLocked,
-              optional: true,
-              onChanged: (p) => c.prospect.value = p,
-            ),
+            _followUpField(context),
             if (c.prospect.value != null) ...[
               const SizedBox(height: 18),
               FormSectionLabel(tr.nextStepsSection),
@@ -210,11 +270,3 @@ class _ActivityFormDialog extends StatelessWidget {
     ),
   );
 }
-
-/// Asks before moving an already linked activity to another prospect.
-Future<bool> confirmRelink({required String from, required String to}) =>
-    showConfirmDialog(
-      title: tr.relinkTitle,
-      message: tr.relinkBody(from, to),
-      confirmLabel: tr.relinkConfirm,
-    );

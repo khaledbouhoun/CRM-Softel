@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../app/theme/app_theme.dart';
@@ -20,7 +21,6 @@ import '../../data/models/prospect.dart';
 import '../../data/models/prospect_catalogs.dart';
 import '../controllers/prospect_details_controller.dart';
 import '../dialogs/prospect_dialogs.dart';
-import '../../../../app/l10n/l10n.dart';
 
 /// Route `/prospects/:id`. Owns a controller tagged with the prospect id so
 /// several detail pages can be stacked safely.
@@ -62,9 +62,7 @@ class _ProspectDetailsPageState extends State<ProspectDetailsPage> {
   @override
   Widget build(BuildContext context) => AppShell(
     route: Routes.prospects,
-    child: _controller == null
-        ? ErrorView(message: tr.invalidProspectId)
-        : _DetailsBody(_controller!),
+    child: _controller == null ? ErrorView(message: tr.invalidProspectId) : _DetailsBody(_controller!),
   );
 }
 
@@ -94,9 +92,7 @@ class _DetailsBody extends StatelessWidget {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 8),
             child: ErrorBanner(
-              message: tr.dataMaybeStale(
-                c.prospectState.errorMessage.value ?? '',
-              ),
+              message: tr.dataMaybeStale(c.prospectState.errorMessage.value ?? ''),
               onRetry: c.loadProspect,
             ),
           ),
@@ -109,22 +105,12 @@ class _DetailsBody extends StatelessWidget {
                 _StageSection(c: c, prospect: prospect),
                 _HistorySection(c),
               ];
-              final right = [
-                _FollowUpsSection(c: c, prospect: prospect),
-                _TimelineSection(c: c, prospect: prospect),
-              ];
+              final right = [_FollowUpsSection(c: c, prospect: prospect), _TimelineSection(c: c, prospect: prospect)];
               if (constraints.maxWidth < 1050) {
                 // Spec order on narrow windows.
                 return ListView(
                   padding: const EdgeInsetsDirectional.fromSTEB(28, 4, 28, 28),
-                  children: _spaced([
-                    left[0],
-                    left[1],
-                    left[2],
-                    right[1],
-                    right[0],
-                    left[3],
-                  ]),
+                  children: _spaced([left[0], left[1], left[2], right[1], right[0], left[3]]),
                 );
               }
               return SingleChildScrollView(
@@ -146,10 +132,7 @@ class _DetailsBody extends StatelessWidget {
   });
 
   static List<Widget> _spaced(List<Widget> children) => [
-    for (var i = 0; i < children.length; i++) ...[
-      if (i > 0) const SizedBox(height: 16),
-      children[i],
-    ],
+    for (var i = 0; i < children.length; i++) ...[if (i > 0) const SizedBox(height: 16), children[i]],
   ];
 }
 
@@ -185,11 +168,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PageHeader(
-    leading: IconButton(
-      tooltip: tr.actionBack,
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () => Get.back(),
-    ),
+    leading: IconButton(tooltip: tr.actionBack, icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
     title: prospect.companyName,
     subtitle: [
       if (prospect.contactName != null) prospect.contactName!,
@@ -197,11 +176,7 @@ class _Header extends StatelessWidget {
       tr.createdOnDate(Formatters.date(prospect.createdAt)),
     ].join('  ·  '),
     actions: [
-      IconButton(
-        tooltip: tr.actionRefresh,
-        onPressed: c.loadAll,
-        icon: const Icon(Icons.refresh),
-      ),
+      IconButton(tooltip: tr.actionRefresh, onPressed: c.loadAll, icon: const Icon(Icons.refresh)),
       OutlinedButton.icon(
         onPressed: _edit,
         icon: const Icon(Icons.edit_outlined, size: 18),
@@ -237,65 +212,34 @@ class _InfoSection extends StatelessWidget {
     icon: Icons.badge_outlined,
     child: Column(
       children: [
-        InfoRow(
-          label: tr.fieldCompany,
-          value: p.companyName,
-          icon: Icons.business_outlined,
-        ),
-        InfoRow(
-          label: tr.fieldContact,
-          value: p.contactName,
-          icon: Icons.person_outline,
-        ),
-        InfoRow(
-          label: tr.fieldPhone,
-          value: p.phone,
-          icon: Icons.phone_outlined,
-        ),
-        InfoRow(
-          label: tr.fieldEmail,
-          value: p.email,
-          icon: Icons.alternate_email,
-        ),
-        InfoRow(
-          label: tr.fieldAddress,
-          value: p.address,
-          icon: Icons.place_outlined,
-        ),
-        InfoRow(
-          label: tr.fieldCity,
-          value: p.city,
-          icon: Icons.location_city_outlined,
-        ),
+        InfoRow(label: tr.fieldCompany, value: p.companyName, icon: Icons.business_outlined),
+        InfoRow(label: tr.fieldContact, value: p.contactName, icon: Icons.person_outline),
+        InfoRow(label: tr.fieldPhone, value: p.phone, icon: Icons.phone_outlined),
+        InfoRow(label: tr.fieldEmail, value: p.email, icon: Icons.alternate_email),
+        InfoRow(label: tr.fieldAddress, value: p.address, icon: Icons.place_outlined),
+        InfoRow(label: tr.fieldCity, value: p.city, icon: Icons.location_city_outlined),
         InfoRow(
           label: tr.fieldBusinessActivity,
-          value: ProspectCatalogs.labelOf(
-            ProspectCatalogs.businessActivities,
-            p.businessActivity,
-          ),
+          value: ProspectCatalogs.displayWithDetails(p.businessActivity, p.businessActivityDetails),
           icon: Icons.storefront_outlined,
         ),
         InfoRow(
+          label: ProspectCatalogs.professionLabel,
+          value: ProspectCatalogs.displayWithDetails(p.profession, p.professionDetails),
+          icon: Icons.work_outline,
+        ),
+        InfoRow(
           label: tr.fieldSource,
-          value:
-              ProspectCatalogs.sourceDisplay(p.source, p.sourceOther) ??
-              tr.notSpecified,
+          value: ProspectCatalogs.displayWithDetails(p.source, p.sourceDetails ?? p.sourceOther),
           icon: Icons.campaign_outlined,
         ),
         InfoRow(
           label: tr.fieldPreviousSoftware,
-          value: ProspectCatalogs.labelOf(
-            ProspectCatalogs.previousSoftware,
-            p.previousSoftware,
-          ),
+          value: ProspectCatalogs.displayWithDetails(p.previousSoftware, p.previousSoftwareDetails),
           icon: Icons.apps_outlined,
         ),
         InfoRow(label: tr.fieldNotes, value: p.notes, icon: Icons.notes),
-        InfoRow(
-          label: tr.updatedLabel,
-          value: Formatters.dateTime(p.updatedAt),
-          icon: Icons.update,
-        ),
+        InfoRow(label: tr.updatedLabel, value: Formatters.dateTime(p.updatedAt), icon: Icons.update),
       ],
     ),
   );
@@ -367,32 +311,17 @@ class _StageSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    tr.opportunityLost,
-                    style: context.text.titleSmall?.copyWith(color: crm.danger),
-                  ),
+                  Text(tr.opportunityLost, style: context.text.titleSmall?.copyWith(color: crm.danger)),
                   const SizedBox(height: 6),
-                  InfoRow(
-                    label: tr.reason,
-                    value: prospect.lossReason?.label,
-                    labelWidth: 90,
-                  ),
-                  InfoRow(
-                    label: tr.details,
-                    value: prospect.lossDetails,
-                    labelWidth: 90,
-                  ),
+                  InfoRow(label: tr.reason, value: prospect.lossReason?.label, labelWidth: 90),
+                  InfoRow(label: tr.details, value: prospect.lossDetails, labelWidth: 90),
                 ],
               ),
             ),
           ],
           if (prospect.isWon) ...[
             const SizedBox(height: 12),
-            StatusPill(
-              label: tr.saleWon,
-              color: crm.success,
-              icon: Icons.emoji_events_outlined,
-            ),
+            StatusPill(label: tr.saleWon, color: crm.success, icon: Icons.emoji_events_outlined),
           ],
         ],
       ),
@@ -427,9 +356,7 @@ class _HistorySection extends StatelessWidget {
                       width: 112,
                       child: Text(
                         Formatters.dateTime(h.changedAt),
-                        style: context.text.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
+                        style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
                       ),
                     ),
                     Expanded(
@@ -445,10 +372,7 @@ class _HistorySection extends StatelessWidget {
                                 StageChip(stage: h.fromStage, dense: true),
                                 const Icon(Icons.arrow_forward, size: 14),
                               ] else
-                                Text(
-                                  tr.creationArrow,
-                                  style: context.text.bodySmall,
-                                ),
+                                Text(tr.creationArrow, style: context.text.bodySmall),
                               StageChip(stage: h.toStage, dense: true),
                             ],
                           ),
@@ -457,12 +381,8 @@ class _HistorySection extends StatelessWidget {
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 tr.lossReasonLine(h.lossReason!.label) +
-                                    (h.lossDetails != null
-                                        ? ' — ${h.lossDetails}'
-                                        : ''),
-                                style: context.text.bodySmall?.copyWith(
-                                  color: context.crm.danger,
-                                ),
+                                    (h.lossDetails != null ? ' — ${h.lossDetails}' : ''),
+                                style: context.text.bodySmall?.copyWith(color: context.crm.danger),
                               ),
                             ),
                         ],
@@ -498,8 +418,7 @@ class _FollowUpsSection extends StatelessWidget {
       icon: Icons.event_note_outlined,
       actions: [
         TextButton.icon(
-          onPressed: () =>
-              _after(showFollowUpFormDialog(prospect: prospect.toRef())),
+          onPressed: () => _after(showFollowUpFormDialog(prospect: prospect.toRef())),
           icon: const Icon(Icons.add, size: 18),
           label: Text(tr.actionSchedule),
         ),
@@ -521,14 +440,10 @@ class _FollowUpsSection extends StatelessWidget {
               ),
             if (closed.isNotEmpty)
               Theme(
-                data: Theme.of(context)
-                    .copyWith(dividerColor: Colors.transparent),
+                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.zero,
-                  title: Text(
-                    tr.closedFollowUps(closed.length),
-                    style: context.text.bodyMedium,
-                  ),
+                  title: Text(tr.closedFollowUps(closed.length), style: context.text.bodyMedium),
                   children: [for (final f in closed) FollowUpTile(followUp: f)],
                 ),
               ),
@@ -554,9 +469,7 @@ class _TimelineSection extends StatelessWidget {
       actions: [
         TextButton.icon(
           onPressed: () async {
-            final result = await showActivityFormDialog(
-              prospect: prospect.toRef(),
-            );
+            final result = await showActivityFormDialog(prospect: prospect.toRef());
             if (result != null) await c.onActivityAdded();
           },
           icon: const Icon(Icons.add, size: 18),
@@ -572,21 +485,12 @@ class _TimelineSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (var i = 0; i < c.activities.length; i++)
-              ActivityTimelineTile(
-                activity: c.activities[i],
-                isLast: i == c.activities.length - 1,
-              ),
+              ActivityTimelineTile(activity: c.activities[i], isLast: i == c.activities.length - 1),
             if (c.hasMoreActivities.value)
               Center(
                 child: OutlinedButton(
-                  onPressed: c.isLoadingMoreActivities.value
-                      ? null
-                      : c.loadMoreActivities,
-                  child: Text(
-                    c.isLoadingMoreActivities.value
-                        ? tr.loading
-                        : tr.showOlderActivities,
-                  ),
+                  onPressed: c.isLoadingMoreActivities.value ? null : c.loadMoreActivities,
+                  child: Text(c.isLoadingMoreActivities.value ? tr.loading : tr.showOlderActivities),
                 ),
               ),
           ],
@@ -618,28 +522,17 @@ class _SectionState extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ErrorBanner(
-            message: state.errorMessage.value ?? '',
-            onRetry: onRetry,
-          ),
+          ErrorBanner(message: state.errorMessage.value ?? '', onRetry: onRetry),
           if (!isEmpty) ...[const SizedBox(height: 10), child],
         ],
       );
     }
     if (isEmpty) {
       return state.isLoading
-          ? const Padding(
-              padding: EdgeInsets.all(12),
-              child: LinearProgressIndicator(),
-            )
+          ? const Padding(padding: EdgeInsets.all(12), child: LinearProgressIndicator())
           : Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                emptyText,
-                style: context.text.bodyMedium?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
+              child: Text(emptyText, style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant)),
             );
     }
     return child;

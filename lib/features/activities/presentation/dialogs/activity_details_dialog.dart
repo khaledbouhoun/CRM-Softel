@@ -30,7 +30,7 @@ class _ActivityDetailsDialogState extends State<_ActivityDetailsDialog> {
   bool _changed = false;
 
   Future<void> _link() async {
-    final updated = await linkActivityToProspect(_activity);
+    final updated = await linkActivityToFollowUp(_activity);
     if (updated != null && mounted) {
       setState(() {
         _activity = updated;
@@ -90,10 +90,10 @@ class _ActivityDetailsDialogState extends State<_ActivityDetailsDialog> {
                         value: Formatters.dateTime(a.occurredAt),
                       ),
                       InfoRow(
-                        label: tr.originLabel,
-                        value: a.isFromFollowUp
-                            ? tr.originFollowUp
-                            : tr.originDirect,
+                        label: 'Linked follow-up',
+                        child: a.isLinkedToFollowUp
+                            ? Text('Follow-up #')
+                            : const ActivityLinkPill(linked: false),
                       ),
                       InfoRow(
                         label: tr.linkedProspectLabel,
@@ -187,15 +187,11 @@ class _ActivityDetailsDialogState extends State<_ActivityDetailsDialog> {
                       label: Text(tr.openProspect),
                     ),
                   const SizedBox(width: 8),
-                  if (!a.isFromFollowUp)
+                  if (!a.isLinkedToFollowUp)
                     FilledButton.icon(
                       onPressed: _link,
                       icon: const Icon(Icons.link, size: 18),
-                      label: Text(
-                        a.isLinked
-                            ? tr.changeLinkedProspect
-                            : tr.linkToProspect,
-                      ),
+                      label: const Text('Link to follow-up'),
                     ),
                 ],
               ),

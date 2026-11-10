@@ -49,7 +49,8 @@ class Activity {
   final DateTime? createdAt;
 
   /// Linked to a prospect (native activities start unlinked).
-  bool get isLinked => prospect != null;
+  bool get isLinked => followUpId != null;
+  bool get isLinkedToFollowUp => followUpId != null;
 
   /// Converted from a follow-up: stays with that follow-up's prospect.
   bool get isFromFollowUp => origin == ActivityOrigin.followUp;
@@ -105,6 +106,7 @@ class Activity {
 class ActivityPayload {
   const ActivityPayload({
     this.prospectId,
+    this.followUpId,
     required this.type,
     required this.occurredAt,
     required this.description,
@@ -113,6 +115,7 @@ class ActivityPayload {
   });
 
   final int? prospectId;
+  final int? followUpId;
   final String? title;
   final ActivityType type;
   final DateTime occurredAt;
@@ -141,6 +144,7 @@ class ActivityPayload {
       'outcome': (result == null || result.isEmpty) ? null : result,
       'activity_at': toApiDateTime(occurredAt),
       if (prospectId != null) 'prospect_id': prospectId,
+      if (followUpId != null) 'follow_up_id': followUpId,
     };
   }
 }
@@ -151,6 +155,7 @@ class ActivityFilter {
     this.search = '',
     this.type,
     this.prospectId,
+    this.followUpId,
     this.linked,
     this.dateFrom,
     this.dateTo,
@@ -161,6 +166,7 @@ class ActivityFilter {
   final String search;
   final ActivityType? type;
   final int? prospectId;
+  final int? followUpId;
 
   /// true = linked only, false = unlinked only, null = both.
   final bool? linked;

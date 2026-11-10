@@ -56,7 +56,11 @@ class FollowUpsPage extends GetView<FollowUpsController> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               _ViewTabs(controller),
-              SearchField(initialValue: controller.search.value, hint: tr.followUpSearchHint, onChanged: controller.setSearch),
+              SearchField(
+                initialValue: controller.search.value,
+                hint: tr.followUpSearchHint,
+                onChanged: controller.setSearch,
+              ),
             ],
           ),
         ),
@@ -75,7 +79,10 @@ class FollowUpsPage extends GetView<FollowUpsController> {
                     if (controller.state.hasError && !page.isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(8),
-                        child: ErrorBanner(message: controller.state.errorMessage.value ?? '', onRetry: controller.load),
+                        child: ErrorBanner(
+                          message: controller.state.errorMessage.value ?? '',
+                          onRetry: controller.load,
+                        ),
                       ),
                     Expanded(
                       child: LoadStateView(
@@ -83,7 +90,9 @@ class FollowUpsPage extends GetView<FollowUpsController> {
                         isEmpty: page.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: view == FollowUpView.overdue ? Icons.celebration_outlined : Icons.event_available_outlined,
+                          icon: view == FollowUpView.overdue
+                              ? Icons.celebration_outlined
+                              : Icons.event_available_outlined,
                           title: switch (view) {
                             FollowUpView.today => tr.noFollowUpsToday,
                             FollowUpView.overdue => tr.noFollowUpsOverdue,
@@ -185,7 +194,10 @@ class _FollowUpsTable extends StatelessWidget {
             final overdue = f.isOverdue();
             return Row(
               children: [
-                if (overdue) ...[Icon(Icons.warning_amber_rounded, size: 18, color: crm.danger), const SizedBox(width: 6)],
+                if (overdue) ...[
+                  Icon(Icons.warning_amber_rounded, size: 18, color: crm.danger),
+                  const SizedBox(width: 6),
+                ],
                 Expanded(
                   child: CellText(
                     Formatters.dateTime(f.dueAt),
@@ -211,7 +223,8 @@ class _FollowUpsTable extends StatelessWidget {
         CrmColumn(
           label: tr.fieldDescription,
           flex: 5,
-          cell: (f) => Text(f.description ?? '—', maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.bodyMedium),
+          cell: (f) =>
+              Text(f.description ?? '—', maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.bodyMedium),
         ),
         CrmColumn(label: tr.colStatus, width: 120, cell: (f) => FollowUpStatusPill(f)),
         CrmColumn(
@@ -228,8 +241,16 @@ class _FollowUpsTable extends StatelessWidget {
                       icon: Icon(Icons.task_alt, color: crm.success),
                       onPressed: () => onComplete(f),
                     ),
-                    IconButton(tooltip: tr.actionEdit, icon: const Icon(Icons.edit_outlined, size: 20), onPressed: () => onEdit(f)),
-                    IconButton(tooltip: tr.actionCancel, icon: const Icon(Icons.event_busy_outlined, size: 20), onPressed: () => onCancel(f)),
+                    IconButton(
+                      tooltip: tr.actionEdit,
+                      icon: const Icon(Icons.edit_outlined, size: 20),
+                      onPressed: () => onEdit(f),
+                    ),
+                    IconButton(
+                      tooltip: tr.actionCancel,
+                      icon: const Icon(Icons.event_busy_outlined, size: 20),
+                      onPressed: () => onCancel(f),
+                    ),
                   ],
                 ),
         ),

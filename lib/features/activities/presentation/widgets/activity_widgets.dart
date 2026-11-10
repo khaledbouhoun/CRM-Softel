@@ -10,17 +10,17 @@ import '../../../../app/l10n/l10n.dart';
 
 IconData activityIcon(ActivityType type) => switch (type) {
   ActivityType.call => Icons.call_outlined,
-  ActivityType.meeting || ActivityType.appointment => Icons.groups_outlined,
+  ActivityType.meeting => Icons.groups_outlined,
   ActivityType.message => Icons.chat_bubble_outline,
-  ActivityType.note => Icons.sticky_note_2_outlined,
+
   ActivityType.other => Icons.more_horiz,
 };
 
 Color activityColor(ActivityType type) => switch (type) {
   ActivityType.call => const Color(0xFF2563EB),
-  ActivityType.meeting || ActivityType.appointment => const Color(0xFF7C3AED),
+  ActivityType.meeting => const Color(0xFF7C3AED),
   ActivityType.message => const Color(0xFF0891B2),
-  ActivityType.note => const Color(0xFFCA8A04),
+
   ActivityType.other => const Color(0xFF64748B),
 };
 

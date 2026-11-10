@@ -39,6 +39,15 @@ class ActivitiesRemoteDataSource {
     return Activity.fromJson(ApiResponse.object(body));
   }
 
+  /// Links the existing activity to a follow-up.
+  Future<Activity> linkFollowUp(int activityId, int followUpId) async {
+    final body = await _api.post(
+      ApiEndpoints.activityLinkFollowUp(activityId),
+      data: {'follow_up_id': followUpId},
+    );
+    return Activity.fromJson(ApiResponse.object(body));
+  }
+
   /// Links the existing activity to a prospect (no new activity is created).
   Future<Activity> linkProspect(
     int activityId,

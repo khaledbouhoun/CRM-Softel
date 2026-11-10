@@ -26,19 +26,25 @@ class ActivityFormResult {
   final ApiException? followUpError;
 }
 
-/// Creates an activity on its own. The prospect is optional: an activity
-/// created without one can be linked to a prospect afterwards.
+/// Creates an activity on its own or linked to a follow-up.
 class ActivityFormController extends GetxController {
   ActivityFormController({
     required ActivitiesRepository activitiesRepository,
     required FollowUpsRepository followUpsRepository,
     ProspectRef? prospect,
+    FollowUp? followUp,
     DateTime Function()? clock,
   }) : _activities = activitiesRepository,
        _followUps = followUpsRepository,
-       prospectLocked = prospect != null,
+       followUpLocked = followUp != null,
+       prospectLocked = prospect != null || followUp?.prospect != null,
        _clock = clock ?? DateTime.now {
-    this.prospect.value = prospect;
+    if (followUp != null) {
+      selectedFollowUp.value = followUp;
+      this.prospect.value = followUp.prospect;
+    } else {
+      this.prospect.value = prospect;
+    }
     final now = _clock();
     occurredAt.value = DateTime(
       now.year,
@@ -53,11 +59,16 @@ class ActivityFormController extends GetxController {
   final FollowUpsRepository _followUps;
   final DateTime Function() _clock;
 
-  /// True when opened from a prospect page (prospect cannot be changed).
+  /// True when opened with a pre-set follow-up.
+  final bool followUpLocked;
+
+  /// True when opened from a prospect page or pre-set follow-up.
   final bool prospectLocked;
 
   final formKey = GlobalKey<FormState>();
   final prospect = Rxn<ProspectRef>();
+  final selectedFollowUp = Rxn<FollowUp>();
+
   final type = ActivityType.call.obs;
   final occurredAt = Rx<DateTime>(DateTime.now());
   final title = TextEditingController();
@@ -73,6 +84,15 @@ class ActivityFormController extends GetxController {
   final errorMessage = RxnString();
   final serverErrors = <String, String>{}.obs;
   final showValidation = false.obs;
+
+  void selectFollowUp(FollowUp? fu) {
+    selectedFollowUp.value = fu;
+    if (fu?.prospect != null && !prospectLocked) {
+      prospect.value = fu!.prospect;
+    } else if (fu == null && !prospectLocked) {
+      prospect.value = null;
+    }
+  }
 
   String? validateTitle(String? v) =>
       serverErrors['title'] ??
@@ -135,6 +155,7 @@ class ActivityFormController extends GetxController {
 
   ActivityPayload buildPayload() => ActivityPayload(
     prospectId: prospect.value?.id,
+    followUpId: selectedFollowUp.value?.id,
     type: type.value,
     occurredAt: occurredAt.value,
     title: title.text,

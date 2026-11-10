@@ -13,6 +13,9 @@ abstract interface class ActivitiesRepository {
   /// Created on its own through POST `/activities` (prospect optional).
   Future<Activity> createNativeActivity(ActivityPayload payload);
 
+  /// Links an existing activity to a follow-up.
+  Future<Activity> linkToFollowUp(int activityId, int followUpId);
+
   /// Links an existing activity to a prospect. Moving an activity that
   /// already belongs to another prospect needs [confirmRelink].
   Future<Activity> linkToProspect(

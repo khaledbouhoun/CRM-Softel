@@ -18,6 +18,7 @@ import '../../features/prospects/data/datasources/prospects_remote_data_source.d
 import '../../features/prospects/data/repositories/prospects_repository_impl.dart';
 import '../../features/prospects/domain/prospects_repository.dart';
 import '../../features/settings/data/datasources/loss_reasons_remote_data_source.dart';
+import '../../features/settings/data/datasources/prospect_form_options_remote_data_source.dart';
 import '../../features/settings/data/datasources/sales_stages_remote_data_source.dart';
 import '../../features/settings/data/repositories/settings_repositories_impl.dart';
 import '../../features/settings/domain/settings_repositories.dart';
@@ -65,6 +66,12 @@ class InitialBinding extends Bindings {
       LossReasonsRepositoryImpl(LossReasonsRemoteDataSource(api)),
       permanent: true,
     );
+    Get.put<ProspectFormOptionsRepository>(
+      ProspectFormOptionsRepositoryImpl(
+        ProspectFormOptionsRemoteDataSource(api),
+      ),
+      permanent: true,
+    );
     Get.put<DashboardRepository>(
       DashboardRepositoryImpl(DashboardRemoteDataSource(api)),
       permanent: true,
@@ -75,6 +82,7 @@ class InitialBinding extends Bindings {
         stagesRepository: Get.find(),
         productsRepository: Get.find(),
         lossReasonsRepository: Get.find(),
+        prospectFormOptionsRepository: Get.find(),
       ),
       permanent: true,
     );

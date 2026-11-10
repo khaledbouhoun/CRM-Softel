@@ -22,9 +22,14 @@ class Prospect {
     this.address,
     this.city,
     this.businessActivity,
+    this.businessActivityDetails,
+    this.profession,
+    this.professionDetails,
     this.source,
+    this.sourceDetails,
     this.sourceOther,
     this.previousSoftware,
+    this.previousSoftwareDetails,
     this.notes,
     this.stage,
     this.products = const [],
@@ -50,15 +55,25 @@ class Prospect {
   final String? address;
   final String? city;
 
-  /// Stable code (e.g. `wholesale`) or free text. Null on older prospects.
+  /// Configurable business activity / category.
   final String? businessActivity;
+  final String? businessActivityDetails;
 
-  /// Stable code (e.g. `facebook`); [sourceOther] holds the detail for `other`.
+  /// Configurable profession.
+  final String? profession;
+  final String? professionDetails;
+
+  /// Configurable source (e.g. Facebook, Friend referral).
   final String? source;
+  final String? sourceDetails;
+
+  /// Retired legacy field, kept for reading historical records.
   final String? sourceOther;
 
-  /// Stable code (e.g. `sage`) or free text.
+  /// Configurable previous software (e.g. Sage, Excel).
   final String? previousSoftware;
+  final String? previousSoftwareDetails;
+
   final String? notes;
   final SalesStage? stage;
   final List<Product> products;
@@ -104,9 +119,18 @@ class Prospect {
       address: asStringOrNull(json['address']),
       city: asStringOrNull(json['city']),
       businessActivity: asStringOrNull(json['business_activity']),
+      businessActivityDetails: asStringOrNull(
+        json['business_activity_details'],
+      ),
+      profession: asStringOrNull(json['profession']),
+      professionDetails: asStringOrNull(json['profession_details']),
       source: asStringOrNull(json['source']),
+      sourceDetails: asStringOrNull(json['source_details']),
       sourceOther: asStringOrNull(json['source_other']),
       previousSoftware: asStringOrNull(json['previous_software']),
+      previousSoftwareDetails: asStringOrNull(
+        json['previous_software_details'],
+      ),
       notes: asStringOrNull(json['notes']),
       stage: stageJson == null ? null : SalesStage.fromJson(stageJson),
       products: asList(json['products'], Product.fromJson),
@@ -131,9 +155,14 @@ class Prospect {
     'address': address,
     'city': city,
     'business_activity': businessActivity,
+    'business_activity_details': businessActivityDetails,
+    'profession': profession,
+    'profession_details': professionDetails,
     'source': source,
+    'source_details': sourceDetails,
     'source_other': sourceOther,
     'previous_software': previousSoftware,
+    'previous_software_details': previousSoftwareDetails,
     'notes': notes,
     'sales_stage_id': stage?.id,
     'sales_stage': stage?.toJson(),

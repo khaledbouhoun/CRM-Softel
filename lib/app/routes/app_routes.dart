@@ -9,6 +9,7 @@ abstract final class Routes {
   static const settings = '/settings';
   static const stagesSettings = '/settings/stages';
   static const lossReasonsSettings = '/settings/loss-reasons';
+  static const prospectListsSettings = '/settings/prospect-lists';
 
   static String prospect(int id) => '/prospects/$id';
 }

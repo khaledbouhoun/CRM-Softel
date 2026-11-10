@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../app/services/lookup_service.dart';
 import '../../../../app/theme/app_theme.dart';
+import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../../../core/widgets/state_views.dart';
@@ -12,10 +13,12 @@ import '../../../settings/data/models/sales_stage.dart';
 import '../../../settings/presentation/widgets/stage_widgets.dart';
 import '../../data/models/prospect.dart';
 import '../../data/models/prospect_catalogs.dart';
-import '../widgets/catalog_text_field.dart';
+import '../../../settings/data/models/prospect_form_option.dart';
+
 import '../controllers/prospect_form_controller.dart';
 import '../controllers/prospect_products_controller.dart';
 import '../controllers/stage_change_controller.dart';
+import '../widgets/searchable_option_dropdown.dart';
 import '../../../../app/l10n/l10n.dart';
 
 /// Opens the create/edit form. Resolves with the saved prospect (as returned
@@ -149,30 +152,68 @@ class _ProspectFormDialog extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             FormSectionLabel(tr.sectionBusinessProfile),
-            FormRow(
-              children: [
-                CatalogTextField(
-                  controller: c.businessActivity,
-                  options: ProspectCatalogs.businessActivities,
-                  label: tr.fieldBusinessActivity,
-                  hint: tr.businessActivityHint,
-                  icon: Icons.storefront_outlined,
-                  validator: c.validateBusinessActivity,
-                  onChanged: (_) => c.clearServerError('business_activity'),
-                ),
-                CatalogTextField(
-                  controller: c.previousSoftware,
-                  options: ProspectCatalogs.previousSoftware,
-                  label: tr.fieldPreviousSoftware,
-                  hint: tr.previousSoftwareHint,
-                  icon: Icons.apps_outlined,
-                  validator: c.validatePreviousSoftware,
-                  onChanged: (_) => c.clearServerError('previous_software'),
-                ),
-              ],
+            Obx(
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _configurableField(
+                    type: ProspectFormOption.typeBusinessActivity,
+                    label: tr.fieldBusinessActivity,
+                    icon: Icons.storefront_outlined,
+                    options: c.lookups.activeBusinessActivities,
+                    currentValue: c.businessActivity.value,
+                    onChanged: c.selectBusinessActivity,
+                    requiresDetails: c.isBusinessActivityDetailsRequired,
+                    detailsController: c.businessActivityDetails,
+                    detailsValidator: c.validateBusinessActivityDetails,
+                    detailsFieldKey: 'business_activity_details',
+                    errorText: c.serverErrors['business_activity'],
+                  ),
+                  const SizedBox(height: 14),
+                  _configurableField(
+                    type: ProspectFormOption.typeProfession,
+                    label: ProspectCatalogs.professionLabel,
+                    icon: Icons.work_outline,
+                    options: c.lookups.activeProfessions,
+                    currentValue: c.profession.value,
+                    onChanged: c.selectProfession,
+                    requiresDetails: c.isProfessionDetailsRequired,
+                    detailsController: c.professionDetails,
+                    detailsValidator: c.validateProfessionDetails,
+                    detailsFieldKey: 'profession_details',
+                    errorText: c.serverErrors['profession'],
+                  ),
+                  const SizedBox(height: 14),
+                  _configurableField(
+                    type: ProspectFormOption.typePreviousSoftware,
+                    label: tr.fieldPreviousSoftware,
+                    icon: Icons.apps_outlined,
+                    options: c.lookups.activePreviousSoftware,
+                    currentValue: c.previousSoftware.value,
+                    onChanged: c.selectPreviousSoftware,
+                    requiresDetails: c.isPreviousSoftwareDetailsRequired,
+                    detailsController: c.previousSoftwareDetails,
+                    detailsValidator: c.validatePreviousSoftwareDetails,
+                    detailsFieldKey: 'previous_software_details',
+                    errorText: c.serverErrors['previous_software'],
+                  ),
+                  const SizedBox(height: 14),
+                  _configurableField(
+                    type: ProspectFormOption.typeSource,
+                    label: tr.fieldSource,
+                    icon: Icons.campaign_outlined,
+                    options: c.lookups.activeSources,
+                    currentValue: c.source.value,
+                    onChanged: c.selectSource,
+                    requiresDetails: c.isSourceDetailsRequired,
+                    detailsController: c.sourceDetails,
+                    detailsValidator: c.validateSourceDetails,
+                    detailsFieldKey: 'source_details',
+                    errorText: c.serverErrors['source'],
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 14),
-            _sourceRow(),
             const SizedBox(height: 18),
             FormSectionLabel(tr.sectionSalesFollowUp),
             _stageField(context),
@@ -196,41 +237,63 @@ class _ProspectFormDialog extends StatelessWidget {
     ),
   );
 
-  Widget _sourceRow() {
-    final known = ProspectCatalogs.sources;
-    final current = c.source.value;
-    // A code added by a newer server is still shown (and kept) as-is.
-    final extra = current != null && !known.any((o) => o.code == current)
-        ? [CatalogOption(current, () => current)]
-        : const <CatalogOption>[];
-    final sourceField = DropdownButtonFormField<String?>(
-      key: ValueKey('source-$current'),
-      initialValue: current,
-      isExpanded: true,
-      decoration: InputDecoration(
-        labelText: tr.fieldSource,
-        errorText: c.serverErrors['source'],
-        prefixIcon: const Icon(Icons.campaign_outlined, size: 20),
-      ),
-      items: [
-        DropdownMenuItem<String?>(value: null, child: Text(tr.notSpecified)),
-        for (final o in [...known, ...extra])
-          DropdownMenuItem<String?>(value: o.code, child: Text(o.label)),
-      ],
-      onChanged: c.selectSource,
+  Widget _configurableField({
+    required String type,
+    required String label,
+    required IconData icon,
+    required List<ProspectFormOption> options,
+    required String? currentValue,
+    required ValueChanged<String?> onChanged,
+    required bool requiresDetails,
+    required TextEditingController detailsController,
+    required String? Function(String?) detailsValidator,
+    required String detailsFieldKey,
+    String? errorText,
+  }) {
+    final field = SearchableOptionDropdown(
+      type: type,
+      label: label,
+      icon: icon,
+      options: options,
+      currentValue: currentValue,
+      onChanged: onChanged,
+      onAddNew: (name, {bool requiresDetails = false}) async {
+        final created = await c.addOption(
+          type: type,
+          name: name,
+          requiresDetails: requiresDetails,
+        );
+        if (created != null) {
+          onChanged(created.name);
+          AppFeedback.success(
+            switch (L10n.current.languageCode) {
+              'ar' => 'تمت إضافة "${created.name}" بنجاح',
+              'fr' => 'Option "${created.name}" ajoutée avec succès',
+              _ => 'Option "${created.name}" added successfully',
+            },
+          );
+        }
+      },
+      errorText: errorText,
     );
-    if (current != ProspectCatalogs.otherCode) return sourceField;
+
+    if (!requiresDetails) return field;
+
     return FormRow(
       children: [
-        sourceField,
+        field,
         TextFormField(
-          controller: c.sourceOther,
+          controller: detailsController,
           decoration: InputDecoration(
-            labelText: tr.fieldSourceOther,
+            labelText: switch (L10n.current.languageCode) {
+              'ar' => 'تفاصيل $label',
+              'fr' => 'Précisions ($label)',
+              _ => 'Details ($label)',
+            },
             prefixIcon: const Icon(Icons.edit_note, size: 20),
           ),
-          validator: c.validateSourceOther,
-          onChanged: (_) => c.clearServerError('source_other'),
+          validator: detailsValidator,
+          onChanged: (_) => c.clearServerError(detailsFieldKey),
         ),
       ],
     );

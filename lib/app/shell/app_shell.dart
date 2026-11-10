@@ -74,6 +74,16 @@ List<_NavItem> get _settingsItems => [
     Icons.report,
   ),
   _NavItem(
+    Routes.prospectListsSettings,
+    switch (L10n.current.languageCode) {
+      'ar' => 'قوائم النماذج',
+      'fr' => 'Listes prospect',
+      _ => 'Prospect Lists',
+    },
+    Icons.list_alt_outlined,
+    Icons.list_alt,
+  ),
+  _NavItem(
     Routes.settings,
     tr.navServerDisplay,
     Icons.settings_ethernet_outlined,

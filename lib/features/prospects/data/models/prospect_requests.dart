@@ -1,7 +1,7 @@
+import '../../../../app/l10n/l10n.dart';
 import '../../../../core/utils/json_utils.dart';
 import '../../../settings/data/models/loss_reason.dart';
 import '../../../settings/data/models/sales_stage.dart';
-import '../../../../app/l10n/l10n.dart';
 
 /// Body of POST `/prospects` and PUT `/prospects/{id}`.
 class ProspectPayload {
@@ -13,9 +13,14 @@ class ProspectPayload {
     this.address,
     this.city,
     this.businessActivity,
+    this.businessActivityDetails,
+    this.profession,
+    this.professionDetails,
     this.source,
+    this.sourceDetails,
     this.sourceOther,
     this.previousSoftware,
+    this.previousSoftwareDetails,
     this.notes,
     this.salesStageId,
     this.productIds = const [],
@@ -28,11 +33,16 @@ class ProspectPayload {
   final String? address;
   final String? city;
   final String? businessActivity;
+  final String? businessActivityDetails;
+  final String? profession;
+  final String? professionDetails;
   final String? source;
+  final String? sourceDetails;
 
-  /// Only meaningful (and only kept by the API) when [source] is `other`.
+  /// Retired legacy field.
   final String? sourceOther;
   final String? previousSoftware;
+  final String? previousSoftwareDetails;
   final String? notes;
 
   /// Only sent on creation. Later changes go through `change-stage` so the
@@ -55,9 +65,13 @@ class ProspectPayload {
     'address': _clean(address),
     'city': _clean(city),
     'business_activity': _clean(businessActivity),
+    'business_activity_details': _clean(businessActivityDetails),
+    'profession': _clean(profession),
+    'profession_details': _clean(professionDetails),
     'source': _clean(source),
-    'source_other': source == 'other' ? _clean(sourceOther) : null,
+    'source_details': _clean(sourceDetails),
     'previous_software': _clean(previousSoftware),
+    'previous_software_details': _clean(previousSoftwareDetails),
     'notes': _clean(notes),
     if (isCreate) 'sales_stage_id': salesStageId,
     'product_ids': productIds,

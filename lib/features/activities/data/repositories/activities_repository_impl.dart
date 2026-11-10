@@ -26,6 +26,10 @@ class ActivitiesRepositoryImpl implements ActivitiesRepository {
       _remote.createNative(payload);
 
   @override
+  Future<Activity> linkToFollowUp(int activityId, int followUpId) =>
+      _remote.linkFollowUp(activityId, followUpId);
+
+  @override
   Future<Activity> linkToProspect(
     int activityId,
     int prospectId, {

@@ -45,8 +45,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
         Obx(
           () => PageHeader(
             title: tr.navProspects,
-            subtitle:
-                controller.state.isSuccess || controller.page.value.total > 0
+            subtitle: controller.state.isSuccess || controller.page.value.total > 0
                 ? tr.countProspects(controller.page.value.total)
                 : tr.prospectsSubtitle,
             actions: [
@@ -55,11 +54,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
-              FilledButton.icon(
-                onPressed: _create,
-                icon: const Icon(Icons.add, size: 18),
-                label: Text(tr.newProspect),
-              ),
+              FilledButton.icon(onPressed: _create, icon: const Icon(Icons.add, size: 18), label: Text(tr.newProspect)),
             ],
           ),
         ),
@@ -74,9 +69,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
                 final page = controller.page.value;
                 return Column(
                   children: [
-                    RefreshingBar(
-                      visible: controller.state.isLoading && !page.isEmpty,
-                    ),
+                    RefreshingBar(visible: controller.state.isLoading && !page.isEmpty),
                     if (controller.state.hasError && !page.isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(8),
@@ -96,10 +89,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
                               ? tr.noProspectMatchesFilters
                               : tr.noProspectsYet,
                           action: controller.filter.value.hasActiveFilters
-                              ? OutlinedButton(
-                                  onPressed: controller.clearFilters,
-                                  child: Text(tr.clearFilters),
-                                )
+                              ? OutlinedButton(onPressed: controller.clearFilters, child: Text(tr.clearFilters))
                               : FilledButton.icon(
                                   onPressed: _create,
                                   icon: const Icon(Icons.add, size: 18),
@@ -142,26 +132,19 @@ class _FilterBar extends StatelessWidget {
         runSpacing: 10,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          SearchField(
-            initialValue: f.search,
-            hint: tr.prospectSearchHint,
-            onChanged: c.setSearch,
-          ),
+          SearchField(initialValue: f.search, hint: tr.prospectSearchHint, onChanged: c.setSearch),
           FilterDropdown<SalesStage>(
             label: tr.fieldStage,
             value: lookups.stageById(f.stageId),
             items: lookups.stages.toList(),
-            itemLabel: (s) =>
-                s.isActive ? s.name : tr.stageInactiveSuffix(s.name),
+            itemLabel: (s) => s.isActive ? s.name : tr.stageInactiveSuffix(s.name),
             leading: (s) => StageDot(s),
             allLabel: tr.allStages,
             onChanged: (s) => c.setStage(s?.id),
           ),
           FilterDropdown<Product>(
             label: tr.fieldProduct,
-            value: lookups.products.firstWhereOrNull(
-              (p) => p.id == f.productId,
-            ),
+            value: lookups.products.firstWhereOrNull((p) => p.id == f.productId),
             items: lookups.products.toList(),
             itemLabel: (p) => p.name,
             allLabel: tr.allProducts,
@@ -170,9 +153,7 @@ class _FilterBar extends StatelessWidget {
           if (c.hasLostStages)
             FilterDropdown<LossReason>(
               label: tr.fieldLossReason,
-              value: lookups.lossReasons.firstWhereOrNull(
-                (r) => r.id == f.lossReasonId,
-              ),
+              value: lookups.lossReasons.firstWhereOrNull((r) => r.id == f.lossReasonId),
               items: lookups.lossReasons.toList(),
               itemLabel: (r) => r.label,
               allLabel: tr.allReasons,
@@ -180,9 +161,7 @@ class _FilterBar extends StatelessWidget {
             ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldSource,
-            value: ProspectCatalogs.sources.firstWhereOrNull(
-              (o) => o.code == f.source,
-            ),
+            value: ProspectCatalogs.sources.firstWhereOrNull((o) => o.code == f.source),
             items: ProspectCatalogs.sources,
             itemLabel: (o) => o.label,
             allLabel: tr.allSources,
@@ -190,18 +169,14 @@ class _FilterBar extends StatelessWidget {
           ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldBusinessActivity,
-            value: ProspectCatalogs.businessActivities.firstWhereOrNull(
-              (o) => o.code == f.businessActivity,
-            ),
+            value: ProspectCatalogs.businessActivities.firstWhereOrNull((o) => o.code == f.businessActivity),
             items: ProspectCatalogs.businessActivities,
             itemLabel: (o) => o.label,
             onChanged: (o) => c.setBusinessActivity(o?.code),
           ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldPreviousSoftware,
-            value: ProspectCatalogs.previousSoftware.firstWhereOrNull(
-              (o) => o.code == f.previousSoftware,
-            ),
+            value: ProspectCatalogs.previousSoftware.firstWhereOrNull((o) => o.code == f.previousSoftware),
             items: ProspectCatalogs.previousSoftware,
             itemLabel: (o) => o.label,
             onChanged: (o) => c.setPreviousSoftware(o?.code),
@@ -222,10 +197,7 @@ class _FilterBar extends StatelessWidget {
             Tooltip(
               message: tr.filtersUnavailable(lookups.lastError.value!.message),
               child: IconButton(
-                icon: Icon(
-                  Icons.warning_amber_rounded,
-                  color: context.crm.warning,
-                ),
+                icon: Icon(Icons.warning_amber_rounded, color: context.crm.warning),
                 onPressed: lookups.refreshQuietly,
               ),
             ),
@@ -256,9 +228,7 @@ class _ProspectsTable extends StatelessWidget {
   Future<void> _changeStage(Prospect p) async {
     final updated = await showStageChangeDialog(p);
     if (updated == null) return;
-    AppFeedback.success(
-      tr.prospectMovedTo(updated.companyName, updated.stage?.name ?? ''),
-    );
+    AppFeedback.success(tr.prospectMovedTo(updated.companyName, updated.stage?.name ?? ''));
     await c.refreshAfterMutation();
   }
 
@@ -288,20 +258,10 @@ class _ProspectsTable extends StatelessWidget {
           label: tr.colCompanyContact,
           flex: 3,
           sortKey: ProspectSort.companyName,
-          cell: (p) =>
-              CellText(p.companyName, secondary: p.contactName, bold: true),
+          cell: (p) => CellText(p.companyName, secondary: p.contactName, bold: true),
         ),
-        CrmColumn(
-          label: tr.colContactDetails,
-          flex: 3,
-          cell: (p) => CellText(p.phone ?? '', secondary: p.email),
-        ),
-        CrmColumn(
-          label: tr.fieldCity,
-          flex: 2,
-          sortKey: ProspectSort.city,
-          cell: (p) => CellText(p.city ?? ''),
-        ),
+        CrmColumn(label: tr.colContactDetails, flex: 3, cell: (p) => CellText(p.phone ?? '')),
+        CrmColumn(label: tr.fieldCity, flex: 2, sortKey: ProspectSort.city, cell: (p) => CellText(p.city ?? '')),
         CrmColumn(
           label: tr.fieldStage,
           flex: 3,
@@ -316,9 +276,7 @@ class _ProspectsTable extends StatelessWidget {
                   child: Text(
                     p.lossReason!.label,
                     overflow: TextOverflow.ellipsis,
-                    style: context.text.bodySmall?.copyWith(
-                      color: context.crm.danger,
-                    ),
+                    style: context.text.bodySmall?.copyWith(color: context.crm.danger),
                   ),
                 ),
             ],
@@ -335,10 +293,7 @@ class _ProspectsTable extends StatelessWidget {
           cell: (p) {
             final at = p.lastActivityAt;
             if (at == null) return const CellText('');
-            return CellText(
-              Formatters.date(at),
-              secondary: Formatters.relative(at),
-            );
+            return CellText(Formatters.date(at), secondary: Formatters.relative(at));
           },
         ),
         CrmColumn(
@@ -351,19 +306,13 @@ class _ProspectsTable extends StatelessWidget {
             return Row(
               children: [
                 if (overdue) ...[
-                  Icon(
-                    Icons.warning_amber_rounded,
-                    size: 16,
-                    color: context.crm.danger,
-                  ),
+                  Icon(Icons.warning_amber_rounded, size: 16, color: context.crm.danger),
                   const SizedBox(width: 4),
                 ],
                 Expanded(
                   child: CellText(
                     Formatters.dateTime(next),
-                    secondary: overdue
-                        ? tr.followUpViewOverdue
-                        : Formatters.relative(next),
+                    secondary: overdue ? tr.followUpViewOverdue : Formatters.relative(next),
                     color: overdue ? context.crm.danger : null,
                   ),
                 ),
@@ -403,38 +352,23 @@ class _ProspectsTable extends StatelessWidget {
                 itemBuilder: (_) => [
                   PopupMenuItem(
                     value: 'open',
-                    child: ListTile(
-                      leading: Icon(Icons.open_in_new),
-                      title: Text(tr.actionOpenRecord),
-                    ),
+                    child: ListTile(leading: Icon(Icons.open_in_new), title: Text(tr.actionOpenRecord)),
                   ),
                   PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit_outlined),
-                      title: Text(tr.actionEdit),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit_outlined), title: Text(tr.actionEdit)),
                   ),
                   PopupMenuItem(
                     value: 'stage',
-                    child: ListTile(
-                      leading: Icon(Icons.swap_horiz),
-                      title: Text(tr.changeStage),
-                    ),
+                    child: ListTile(leading: Icon(Icons.swap_horiz), title: Text(tr.changeStage)),
                   ),
                   PopupMenuItem(
                     value: 'activity',
-                    child: ListTile(
-                      leading: Icon(Icons.add_comment_outlined),
-                      title: Text(tr.addActivity),
-                    ),
+                    child: ListTile(leading: Icon(Icons.add_comment_outlined), title: Text(tr.addActivity)),
                   ),
                   PopupMenuItem(
                     value: 'followup',
-                    child: ListTile(
-                      leading: Icon(Icons.event_available_outlined),
-                      title: Text(tr.scheduleFollowUp),
-                    ),
+                    child: ListTile(leading: Icon(Icons.event_available_outlined), title: Text(tr.scheduleFollowUp)),
                   ),
                 ],
               ),

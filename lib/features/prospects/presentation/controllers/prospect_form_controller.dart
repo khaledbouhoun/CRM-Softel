@@ -1,16 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/l10n/l10n.dart';
 import '../../../../app/services/lookup_service.dart';
 import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/state/load_state.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/app_feedback.dart';
+import '../../../settings/data/models/prospect_form_option.dart';
 import '../../../settings/data/models/sales_stage.dart';
 import '../../data/models/prospect.dart';
-import '../../data/models/prospect_catalogs.dart';
 import '../../data/models/prospect_requests.dart';
 import '../../domain/prospects_repository.dart';
-import '../../../../app/l10n/l10n.dart';
 
 /// Create / edit a prospect.
 ///
@@ -38,30 +39,37 @@ class ProspectFormController extends GetxController {
   late final city = TextEditingController(text: initial?.city);
   late final notes = TextEditingController(text: initial?.notes);
 
-  // Business profile. business activity / previous software are a catalogue
-  // code or free text: the field shows the label (or the text), and the
-  // matching code is what gets saved.
-  late final businessActivity = TextEditingController(
-    text: initial?.businessActivity == null
-        ? ''
-        : ProspectCatalogs.labelOf(
-            ProspectCatalogs.businessActivities,
-            initial!.businessActivity,
-          ),
-  );
-  late final previousSoftware = TextEditingController(
-    text: initial?.previousSoftware == null
-        ? ''
-        : ProspectCatalogs.labelOf(
-            ProspectCatalogs.previousSoftware,
-            initial!.previousSoftware,
-          ),
-  );
-  late final sourceOther = TextEditingController(text: initial?.sourceOther);
-
-  /// Stable source code (`facebook`, `other`, ...) or null.
+  // 4 Configurable Lists: Source, Previous software, Business activity, Profession
   late final source = Rxn<String>(
     (initial?.source ?? '').trim().isEmpty ? null : initial!.source,
+  );
+  late final sourceDetails = TextEditingController(
+    text: initial?.sourceDetails ?? initial?.sourceOther,
+  );
+
+  late final businessActivity = Rxn<String>(
+    (initial?.businessActivity ?? '').trim().isEmpty
+        ? null
+        : initial!.businessActivity,
+  );
+  late final businessActivityDetails = TextEditingController(
+    text: initial?.businessActivityDetails,
+  );
+
+  late final previousSoftware = Rxn<String>(
+    (initial?.previousSoftware ?? '').trim().isEmpty
+        ? null
+        : initial!.previousSoftware,
+  );
+  late final previousSoftwareDetails = TextEditingController(
+    text: initial?.previousSoftwareDetails,
+  );
+
+  late final profession = Rxn<String>(
+    (initial?.profession ?? '').trim().isEmpty ? null : initial!.profession,
+  );
+  late final professionDetails = TextEditingController(
+    text: initial?.professionDetails,
   );
 
   final selectedStage = Rxn<SalesStage>();
@@ -84,9 +92,13 @@ class ProspectFormController extends GetxController {
     'address',
     'city',
     'business_activity',
+    'business_activity_details',
+    'profession',
+    'profession_details',
     'source',
-    'source_other',
+    'source_details',
     'previous_software',
+    'previous_software_details',
     'notes',
     'sales_stage_id',
     'product_ids',
@@ -94,6 +106,35 @@ class ProspectFormController extends GetxController {
 
   /// Set after the first submit attempt so non-text fields show errors.
   final showValidation = false.obs;
+
+  bool get isSourceDetailsRequired {
+    final opt = lookups.findOption(ProspectFormOption.typeSource, source.value);
+    return opt?.requiresDetails ?? false;
+  }
+
+  bool get isBusinessActivityDetailsRequired {
+    final opt = lookups.findOption(
+      ProspectFormOption.typeBusinessActivity,
+      businessActivity.value,
+    );
+    return opt?.requiresDetails ?? false;
+  }
+
+  bool get isPreviousSoftwareDetailsRequired {
+    final opt = lookups.findOption(
+      ProspectFormOption.typePreviousSoftware,
+      previousSoftware.value,
+    );
+    return opt?.requiresDetails ?? false;
+  }
+
+  bool get isProfessionDetailsRequired {
+    final opt = lookups.findOption(
+      ProspectFormOption.typeProfession,
+      profession.value,
+    );
+    return opt?.requiresDetails ?? false;
+  }
 
   @override
   void onInit() {
@@ -126,11 +167,55 @@ class ProspectFormController extends GetxController {
     serverErrors.remove('sales_stage_id');
   }
 
+  void selectSource(String? value) {
+    source.value = value;
+    serverErrors.remove('source');
+    serverErrors.remove('source_details');
+  }
+
+  void selectBusinessActivity(String? value) {
+    businessActivity.value = value;
+    serverErrors.remove('business_activity');
+    serverErrors.remove('business_activity_details');
+  }
+
+  void selectPreviousSoftware(String? value) {
+    previousSoftware.value = value;
+    serverErrors.remove('previous_software');
+    serverErrors.remove('previous_software_details');
+  }
+
+  void selectProfession(String? value) {
+    profession.value = value;
+    serverErrors.remove('profession');
+    serverErrors.remove('profession_details');
+  }
+
+  Future<ProspectFormOption?> addOption({
+    required String type,
+    required String name,
+    bool requiresDetails = false,
+  }) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return null;
+    try {
+      final created = await lookups.addProspectFormOption(
+        type: type,
+        name: trimmed,
+        requiresDetails: requiresDetails,
+      );
+      return created;
+    } catch (e) {
+      final error = ApiException.from(e);
+      AppFeedback.error(error.message);
+      return null;
+    }
+  }
+
   void clearServerError(String field) => serverErrors.remove(field);
 
   // --- Field validators (client rules + server message for that field) ---
 
-  // Length limits match the API's validation rules.
   String? validateCompanyName(String? v) =>
       serverErrors['name'] ??
       Validators.combine([
@@ -157,18 +242,44 @@ class ProspectFormController extends GetxController {
   String? validateCity(String? v) =>
       serverErrors['city'] ?? Validators.maxLength(v, 100);
 
-  String? validateBusinessActivity(String? v) =>
-      serverErrors['business_activity'] ?? Validators.maxLength(v, 150);
+  String? validateSourceDetails(String? v) {
+    if (serverErrors['source_details'] != null) {
+      return serverErrors['source_details'];
+    }
+    if (isSourceDetailsRequired && (v == null || v.trim().isEmpty)) {
+      return tr.validDetailsRequired;
+    }
+    return Validators.maxLength(v, 255);
+  }
 
-  String? validatePreviousSoftware(String? v) =>
-      serverErrors['previous_software'] ?? Validators.maxLength(v, 150);
+  String? validateBusinessActivityDetails(String? v) {
+    if (serverErrors['business_activity_details'] != null) {
+      return serverErrors['business_activity_details'];
+    }
+    if (isBusinessActivityDetailsRequired && (v == null || v.trim().isEmpty)) {
+      return tr.validDetailsRequired;
+    }
+    return Validators.maxLength(v, 255);
+  }
 
-  String? validateSourceOther(String? v) =>
-      serverErrors['source_other'] ?? Validators.maxLength(v, 150);
+  String? validatePreviousSoftwareDetails(String? v) {
+    if (serverErrors['previous_software_details'] != null) {
+      return serverErrors['previous_software_details'];
+    }
+    if (isPreviousSoftwareDetailsRequired && (v == null || v.trim().isEmpty)) {
+      return tr.validDetailsRequired;
+    }
+    return Validators.maxLength(v, 255);
+  }
 
-  void selectSource(String? code) {
-    source.value = code;
-    serverErrors.remove('source');
+  String? validateProfessionDetails(String? v) {
+    if (serverErrors['profession_details'] != null) {
+      return serverErrors['profession_details'];
+    }
+    if (isProfessionDetailsRequired && (v == null || v.trim().isEmpty)) {
+      return tr.validDetailsRequired;
+    }
+    return Validators.maxLength(v, 255);
   }
 
   String? validateNotes(String? v) =>
@@ -201,9 +312,19 @@ class ProspectFormController extends GetxController {
     check('email', validateEmail(email.text));
     check('address', validateAddress(address.text));
     check('city', validateCity(city.text));
-    check('business_activity', validateBusinessActivity(businessActivity.text));
-    check('previous_software', validatePreviousSoftware(previousSoftware.text));
-    check('source_other', validateSourceOther(sourceOther.text));
+    check('source_details', validateSourceDetails(sourceDetails.text));
+    check(
+      'business_activity_details',
+      validateBusinessActivityDetails(businessActivityDetails.text),
+    );
+    check(
+      'previous_software_details',
+      validatePreviousSoftwareDetails(previousSoftwareDetails.text),
+    );
+    check(
+      'profession_details',
+      validateProfessionDetails(professionDetails.text),
+    );
     check('notes', validateNotes(notes.text));
     if (!isEdit) {
       final stage = selectedStage.value;
@@ -223,16 +344,22 @@ class ProspectFormController extends GetxController {
     email: email.text,
     address: address.text,
     city: city.text,
-    businessActivity: ProspectCatalogs.codeFor(
-      ProspectCatalogs.businessActivities,
-      businessActivity.text,
-    ),
+    businessActivity: businessActivity.value,
+    businessActivityDetails: businessActivityDetails.text.trim().isEmpty
+        ? null
+        : businessActivityDetails.text.trim(),
+    profession: profession.value,
+    professionDetails: professionDetails.text.trim().isEmpty
+        ? null
+        : professionDetails.text.trim(),
     source: source.value,
-    sourceOther: sourceOther.text,
-    previousSoftware: ProspectCatalogs.codeFor(
-      ProspectCatalogs.previousSoftware,
-      previousSoftware.text,
-    ),
+    sourceDetails: sourceDetails.text.trim().isEmpty
+        ? null
+        : sourceDetails.text.trim(),
+    previousSoftware: previousSoftware.value,
+    previousSoftwareDetails: previousSoftwareDetails.text.trim().isEmpty
+        ? null
+        : previousSoftwareDetails.text.trim(),
     notes: notes.text,
     salesStageId: isEdit ? null : selectedStage.value?.id,
     productIds: selectedProductIds.toList()..sort(),
@@ -293,9 +420,10 @@ class ProspectFormController extends GetxController {
       address,
       city,
       notes,
-      businessActivity,
-      previousSoftware,
-      sourceOther,
+      sourceDetails,
+      businessActivityDetails,
+      previousSoftwareDetails,
+      professionDetails,
     ]) {
       c.dispose();
     }

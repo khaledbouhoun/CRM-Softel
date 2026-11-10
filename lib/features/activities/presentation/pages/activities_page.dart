@@ -14,7 +14,7 @@ import '../../../../core/widgets/state_views.dart';
 import '../../data/models/activity.dart';
 import '../../data/models/activity_type.dart';
 import '../controllers/activities_controller.dart';
-import '../../../settings/presentation/widgets/stage_widgets.dart';
+
 import '../dialogs/activity_details_dialog.dart';
 import '../dialogs/activity_form_dialog.dart';
 import '../dialogs/link_activity_flow.dart';
@@ -170,8 +170,8 @@ class _ActivitiesTable extends StatelessWidget {
     if (updated != null) controller.replaceActivity(updated);
   }
 
-  Future<void> _link(Activity a) async {
-    final updated = await linkActivityToProspect(a);
+  Future<void> _linkFollowUp(Activity a) async {
+    final updated = await linkActivityToFollowUp(a);
     if (updated != null) controller.replaceActivity(updated);
   }
 
@@ -234,28 +234,32 @@ class _ActivitiesTable extends StatelessWidget {
       CrmColumn(
         label: tr.colLink,
         flex: 4,
-        cell: (a) => a.prospect == null
-            ? const Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: ActivityLinkPill(linked: false),
-              )
-            : Column(
+        cell: (a) => a.isLinkedToFollowUp
+            ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    a.prospect!.companyName.isEmpty
-                        ? tr.prospectNumber(a.prospect!.id)
-                        : a.prospect!.companyName,
+                    a.prospect?.companyName.isNotEmpty == true
+                        ? a.prospect!.companyName
+                        : 'Follow-up #',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (a.prospect!.stage != null)
-                    StageChip(stage: a.prospect!.stage, dense: true),
+                  Text(
+                    'Follow-up #',
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
                 ],
+              )
+            : const Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: ActivityLinkPill(linked: false),
               ),
       ),
       CrmColumn(
@@ -264,25 +268,18 @@ class _ActivitiesTable extends StatelessWidget {
         cell: (a) => Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (a.prospect == null)
+            if (!a.isLinkedToFollowUp)
               IconButton(
-                tooltip: tr.linkToProspect,
+                tooltip: 'Link to follow-up',
                 icon: const Icon(Icons.add_link, size: 20),
-                onPressed: () => _link(a),
+                onPressed: () => _linkFollowUp(a),
               )
-            else ...[
+            else if (a.prospect != null)
               IconButton(
                 tooltip: tr.openProspect,
                 icon: const Icon(Icons.open_in_new, size: 19),
                 onPressed: () => AppNavigation.openProspect(a.prospect!.id),
               ),
-              if (!a.isFromFollowUp)
-                IconButton(
-                  tooltip: tr.changeLinkedProspect,
-                  icon: const Icon(Icons.link, size: 20),
-                  onPressed: () => _link(a),
-                ),
-            ],
           ],
         ),
       ),

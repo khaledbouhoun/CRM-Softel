@@ -16,6 +16,7 @@ import '../../features/prospects/presentation/pages/prospects_page.dart';
 import '../../features/settings/presentation/bindings/settings_bindings.dart';
 import '../../features/settings/presentation/pages/connection_settings_page.dart';
 import '../../features/settings/presentation/pages/loss_reasons_settings_page.dart';
+import '../../features/settings/presentation/pages/prospect_form_options_settings_page.dart';
 import '../../features/settings/presentation/pages/stages_settings_page.dart';
 import 'app_routes.dart';
 
@@ -90,6 +91,13 @@ abstract final class AppPages {
       name: Routes.lossReasonsSettings,
       page: () => const LossReasonsSettingsPage(),
       binding: LossReasonsSettingsBinding(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: Routes.prospectListsSettings,
+      page: () => const ProspectFormOptionsSettingsPage(),
+      binding: ProspectFormOptionsSettingsBinding(),
       transition: _transition,
       transitionDuration: _duration,
     ),

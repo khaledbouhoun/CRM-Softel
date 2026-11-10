@@ -22,6 +22,7 @@ class ApiEndpoints {
   static const activities = '/activities';
   static String activity(int id) => '/activities/$id';
   static String activityLinkProspect(int id) => '/activities/$id/link-prospect';
+  static String activityLinkFollowUp(int id) => '/activities/$id/link-follow-up';
 
   // Follow-ups
   static const followUps = '/follow-ups';
@@ -44,6 +45,11 @@ class ApiEndpoints {
   static const lossReasons = '/loss-reasons';
   static String lossReason(int id) => '/loss-reasons/$id';
   static const lossReasonsReorder = '/loss-reasons/reorder';
+
+  // Prospect form configurable list options
+  static const prospectFormOptions = '/prospect-form-options';
+  static String prospectFormOption(int id) => '/prospect-form-options/$id';
+  static const prospectFormOptionsReorder = '/prospect-form-options/reorder';
 
   /// Lightweight endpoint used to test the connection (also checks the
   /// database: it answers 503 when MySQL is down).
