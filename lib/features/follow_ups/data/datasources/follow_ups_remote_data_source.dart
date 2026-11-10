@@ -17,40 +17,25 @@ class FollowUpsRemoteDataSource {
     required int perPage,
   }) async {
     final body = await _api.get(
-      prospectId == null
-          ? ApiEndpoints.followUps
-          : ApiEndpoints.prospectFollowUps(prospectId),
-      query: {
-        ...?view?.toQuery(),
-        'search': search,
-        'page': page,
-        'per_page': perPage,
-      },
+      prospectId == null ? ApiEndpoints.followUps : ApiEndpoints.prospectFollowUps(prospectId),
+      query: {...?view?.toQuery(), 'search': search, 'page': page, 'per_page': perPage},
     );
     return ApiResponse.paginated(body, FollowUp.fromJson);
   }
 
   Future<FollowUp> create(FollowUpPayload payload) async {
-    final body = await _api.post(
-      ApiEndpoints.prospectFollowUps(payload.prospectId),
-      data: payload.toJson(),
-    );
+    final body = await _api.post(ApiEndpoints.prospectFollowUps(payload.prospectId), data: payload.toJson());
     return FollowUp.fromJson(ApiResponse.object(body));
   }
 
   Future<FollowUp> update(int id, FollowUpPayload payload) async {
-    final body = await _api.put(
-      ApiEndpoints.followUp(id),
-      data: payload.toJson(),
-    );
+    final body = await _api.put(ApiEndpoints.followUp(id), data: payload.toJson());
     return FollowUp.fromJson(ApiResponse.object(body));
   }
 
   Future<FollowUp> complete(int id, CompleteFollowUpRequest request) async {
-    final body = await _api.post(
-      ApiEndpoints.followUpComplete(id),
-      data: request.toJson(),
-    );
+    final body = await _api.post(ApiEndpoints.followUpComplete(id), data: request.toJson());
+    print('FollowUpsRemoteDataSource.complete: $body');
     return FollowUp.fromJson(ApiResponse.object(body));
   }
 
@@ -64,9 +49,7 @@ class FollowUpsRemoteDataSource {
     final trimmed = reason?.trim();
     final body = await _api.post(
       ApiEndpoints.followUpCancel(id),
-      data: {
-        if (trimmed != null && trimmed.isNotEmpty) 'closing_note': trimmed,
-      },
+      data: {if (trimmed != null && trimmed.isNotEmpty) 'closing_note': trimmed},
     );
     return FollowUp.fromJson(ApiResponse.object(body));
   }

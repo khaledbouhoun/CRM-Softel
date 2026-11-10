@@ -6,7 +6,7 @@ class BrandColors {
 
   static const black = Color(0xFF000000);
   static const navy = Color(0xFF14213D);
-  static const accent = Color(0xFFFCA311);
+  static const accent = Color.fromARGB(255, 13, 194, 240);
   static const grey = Color(0xFFE5E5E5);
   static const white = Color(0xFFFFFFFF);
 
@@ -47,9 +47,7 @@ class AppShadows {
 
   static List<BoxShadow> card(Brightness b) => [
     BoxShadow(
-      color: BrandColors.navy.withValues(
-        alpha: b == Brightness.light ? 0.06 : 0.35,
-      ),
+      color: BrandColors.navy.withValues(alpha: b == Brightness.light ? 0.06 : 0.35),
       blurRadius: 12,
       offset: const Offset(0, 2),
     ),
@@ -57,9 +55,7 @@ class AppShadows {
 
   static List<BoxShadow> dialog(Brightness b) => [
     BoxShadow(
-      color: BrandColors.black.withValues(
-        alpha: b == Brightness.light ? 0.18 : 0.5,
-      ),
+      color: BrandColors.black.withValues(alpha: b == Brightness.light ? 0.18 : 0.5),
       blurRadius: 32,
       offset: const Offset(0, 12),
     ),
@@ -151,8 +147,7 @@ class CrmColors extends ThemeExtension<CrmColors> {
   CrmColors copyWith() => this;
 
   @override
-  CrmColors lerp(ThemeExtension<CrmColors>? other, double t) =>
-      t < 0.5 ? this : (other as CrmColors? ?? this);
+  CrmColors lerp(ThemeExtension<CrmColors>? other, double t) => t < 0.5 ? this : (other as CrmColors? ?? this);
 }
 
 extension CrmThemeX on BuildContext {
@@ -167,20 +162,11 @@ class AppTheme {
   /// Segoe UI covers Latin and Arabic on Windows; the fallbacks keep other
   /// machines readable.
   static const fontFamily = 'Segoe UI';
-  static const fontFallback = [
-    'Segoe UI',
-    'Tahoma',
-    'Arial',
-    'Noto Sans Arabic',
-  ];
+  static const fontFallback = ['Segoe UI', 'Tahoma', 'Arial', 'Noto Sans Arabic'];
 
   /// Button label style. It must name the font family itself: a button theme
   /// replaces (not merges) the default style, and Arabic needs the fallbacks.
-  static const _buttonText = TextStyle(
-    fontFamily: fontFamily,
-    fontFamilyFallback: fontFallback,
-    fontWeight: FontWeight.w600,
-  );
+  static const _buttonText = TextStyle(fontFamily: fontFamily, fontFamilyFallback: fontFallback, fontWeight: FontWeight.w600);
 
   static const _lightScheme = ColorScheme(
     brightness: Brightness.light,
@@ -264,11 +250,10 @@ class AppTheme {
       fontFamilyFallback: fontFallback,
     );
 
-    OutlineInputBorder border(Color color, [double width = 1]) =>
-        OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: color, width: width),
-        );
+    OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      borderSide: BorderSide(color: color, width: width),
+    );
     final focusColor = isLight ? BrandColors.navy : BrandColors.accent;
 
     // Interaction states shared by the button styles.
@@ -281,13 +266,9 @@ class AppTheme {
       return BrandColors.accent;
     }
 
-    BorderSide? focusRing(Set<WidgetState> s) => s.contains(WidgetState.focused)
-        ? BorderSide(color: focusColor, width: 2)
-        : null;
+    BorderSide? focusRing(Set<WidgetState> s) => s.contains(WidgetState.focused) ? BorderSide(color: focusColor, width: 2) : null;
 
-    final buttonShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(AppRadius.md),
-    );
+    final buttonShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md));
 
     return base.copyWith(
       scaffoldBackgroundColor: crm.canvas,
@@ -298,21 +279,10 @@ class AppTheme {
       textTheme: base.textTheme
           .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface)
           .copyWith(
-            headlineSmall: base.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-            ),
-            titleLarge: base.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-            ),
-            titleMedium: base.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-            ),
-            titleSmall: base.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            headlineSmall: base.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, fontSize: 22),
+            titleLarge: base.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+            titleMedium: base.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
+            titleSmall: base.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           ),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -329,14 +299,9 @@ class AppTheme {
         filled: true,
         fillColor: scheme.surfaceContainerLowest,
         hoverColor: scheme.surfaceContainerLow,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: border(scheme.outlineVariant),
-        enabledBorder: border(
-          isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant,
-        ),
+        enabledBorder: border(isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant),
         disabledBorder: border(scheme.outlineVariant.withValues(alpha: 0.6)),
         focusedBorder: border(focusColor, 2),
         errorBorder: border(scheme.error),
@@ -354,16 +319,12 @@ class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          ),
+          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 18, vertical: 14)),
           shape: WidgetStatePropertyAll(buttonShape),
           elevation: const WidgetStatePropertyAll(0),
           backgroundColor: WidgetStateProperty.resolveWith(accentFill),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled)
-                ? scheme.onSurface.withValues(alpha: 0.4)
-                : BrandColors.navy,
+            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.4) : BrandColors.navy,
           ),
           side: WidgetStateProperty.resolveWith(focusRing),
           textStyle: const WidgetStatePropertyAll(_buttonText),
@@ -371,29 +332,17 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          ),
+          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 14)),
           shape: WidgetStatePropertyAll(buttonShape),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled)
-                ? scheme.onSurface.withValues(alpha: 0.38)
-                : (isLight ? BrandColors.navy : scheme.onSurface),
+            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.38) : (isLight ? BrandColors.navy : scheme.onSurface),
           ),
           side: WidgetStateProperty.resolveWith(
             (s) =>
                 focusRing(s) ??
-                BorderSide(
-                  color: s.contains(WidgetState.hovered)
-                      ? scheme.outline
-                      : (isLight
-                            ? const Color(0xFFD2D2D8)
-                            : scheme.outlineVariant),
-                ),
+                BorderSide(color: s.contains(WidgetState.hovered) ? scheme.outline : (isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant)),
           ),
-          overlayColor: WidgetStatePropertyAll(
-            scheme.onSurface.withValues(alpha: 0.06),
-          ),
+          overlayColor: WidgetStatePropertyAll(scheme.onSurface.withValues(alpha: 0.06)),
           textStyle: const WidgetStatePropertyAll(_buttonText),
         ),
       ),
@@ -401,92 +350,49 @@ class AppTheme {
         style: ButtonStyle(
           shape: WidgetStatePropertyAll(buttonShape),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled)
-                ? scheme.onSurface.withValues(alpha: 0.38)
-                : (isLight ? BrandColors.navy : BrandColors.accent),
+            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.38) : (isLight ? BrandColors.navy : BrandColors.accent),
           ),
           side: WidgetStateProperty.resolveWith(focusRing),
-          overlayColor: WidgetStatePropertyAll(
-            scheme.onSurface.withValues(alpha: 0.06),
-          ),
+          overlayColor: WidgetStatePropertyAll(scheme.onSurface.withValues(alpha: 0.06)),
           textStyle: const WidgetStatePropertyAll(_buttonText),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-          ),
+          shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md))),
           side: WidgetStateProperty.resolveWith(focusRing),
-          overlayColor: WidgetStatePropertyAll(
-            scheme.onSurface.withValues(alpha: 0.08),
-          ),
+          overlayColor: WidgetStatePropertyAll(scheme.onSurface.withValues(alpha: 0.08)),
         ),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           shape: WidgetStatePropertyAll(buttonShape),
-          side: WidgetStatePropertyAll(
-            BorderSide(
-              color: isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant,
-            ),
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected)
-                ? scheme.primaryContainer
-                : Colors.transparent,
-          ),
+          side: WidgetStatePropertyAll(BorderSide(color: isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant)),
+          backgroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? scheme.primaryContainer : Colors.transparent),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.selected)
-                ? scheme.onPrimaryContainer
-                : scheme.onSurfaceVariant,
+            (s) => s.contains(WidgetState.selected) ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
           ),
         ),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? BrandColors.navy
-              : scheme.outline,
-        ),
-        trackColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? BrandColors.accent
-              : scheme.surfaceContainerHighest,
-        ),
-        trackOutlineColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? BrandColors.accent
-              : scheme.outline,
-        ),
+        thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.navy : scheme.outline),
+        trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.surfaceContainerHighest),
+        trackOutlineColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.outline),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? BrandColors.accent
-              : Colors.transparent,
-        ),
+        fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : Colors.transparent),
         checkColor: const WidgetStatePropertyAll(BrandColors.navy),
         side: BorderSide(color: scheme.outline, width: 1.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
-      dividerTheme: DividerThemeData(
-        color: scheme.outlineVariant,
-        space: 1,
-        thickness: 1,
-      ),
+      dividerTheme: DividerThemeData(color: scheme.outlineVariant, space: 1, thickness: 1),
       tooltipTheme: TooltipThemeData(
         waitDuration: const Duration(milliseconds: 400),
         decoration: BoxDecoration(
           color: isLight ? BrandColors.navy : scheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
-        textStyle: TextStyle(
-          color: isLight ? BrandColors.white : scheme.onSurface,
-          fontSize: 12.5,
-        ),
+        textStyle: TextStyle(color: isLight ? BrandColors.white : scheme.onSurface, fontSize: 12.5),
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: scheme.surfaceContainerLowest,
@@ -500,39 +406,24 @@ class AppTheme {
       ),
       dropdownMenuTheme: DropdownMenuThemeData(
         menuStyle: MenuStyle(
-          backgroundColor: WidgetStatePropertyAll(
-            scheme.surfaceContainerLowest,
-          ),
+          backgroundColor: WidgetStatePropertyAll(scheme.surfaceContainerLowest),
           surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
         ),
       ),
       chipTheme: base.chipTheme.copyWith(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
         side: BorderSide(color: scheme.outlineVariant),
         backgroundColor: scheme.surfaceContainerLowest,
         selectedColor: scheme.primaryContainer,
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: BrandColors.accent,
-      ),
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: focusColor,
-        selectionColor: BrandColors.accent.withValues(alpha: 0.35),
-      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: BrandColors.accent),
+      textSelectionTheme: TextSelectionThemeData(cursorColor: focusColor, selectionColor: BrandColors.accent.withValues(alpha: 0.35)),
       scrollbarTheme: ScrollbarThemeData(
         thumbVisibility: const WidgetStatePropertyAll(true),
-        thumbColor: WidgetStatePropertyAll(
-          scheme.outline.withValues(alpha: 0.55),
-        ),
+        thumbColor: WidgetStatePropertyAll(scheme.outline.withValues(alpha: 0.55)),
         radius: const Radius.circular(8),
       ),
-      listTileTheme: ListTileThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
-      ),
+      listTileTheme: ListTileThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md))),
     );
   }
 }

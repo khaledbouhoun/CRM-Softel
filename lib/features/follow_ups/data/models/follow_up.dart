@@ -20,10 +20,7 @@ enum FollowUpStatus {
 
   static FollowUpStatus fromApi(Object? value) {
     final text = value?.toString().trim().toLowerCase();
-    return FollowUpStatus.values.firstWhere(
-      (s) => s.apiValue == text,
-      orElse: () => FollowUpStatus.pending,
-    );
+    return FollowUpStatus.values.firstWhere((s) => s.apiValue == text, orElse: () => FollowUpStatus.pending);
   }
 }
 
@@ -53,16 +50,8 @@ enum FollowUpView {
 
   Map<String, dynamic> toQuery() => switch (this) {
     today || overdue || upcoming => {'scope': apiValue},
-    completed => {
-      'status': 'completed',
-      'sort': 'completed_at',
-      'direction': 'desc',
-    },
-    cancelled => {
-      'status': 'cancelled',
-      'sort': 'created_at',
-      'direction': 'desc',
-    },
+    completed => {'status': 'completed', 'sort': 'completed_at', 'direction': 'desc'},
+    cancelled => {'status': 'cancelled', 'sort': 'created_at', 'direction': 'desc'},
   };
 }
 
@@ -130,12 +119,9 @@ class FollowUp {
       id: asInt(json['id']),
       prospect: prospect,
       dueAt: asDateTimeOrNull(json['scheduled_at']),
-      description:
-          asStringOrNull(json['description']) ?? asStringOrNull(json['title']),
+      description: asStringOrNull(json['description']) ?? asStringOrNull(json['title']),
       status: FollowUpStatus.fromApi(json['status']),
-      activityType: json['activity_type'] == null
-          ? null
-          : ActivityType.fromApi(json['activity_type']).canonical,
+      activityType: json['activity_type'] == null ? null : ActivityType.fromApi(json['activity_type']).canonical,
       activityId: asIntOrNull(json['activity_id']),
       dueState: asStringOrNull(json['due_state']),
       completedAt: asDateTimeOrNull(json['completed_at']),
@@ -170,12 +156,7 @@ class FollowUp {
 /// characters): short texts are sent as the title only; longer texts are sent
 /// in full as `description` with their beginning as the title.
 class FollowUpPayload {
-  const FollowUpPayload({
-    required this.prospectId,
-    required this.dueAt,
-    required this.description,
-    this.activityType,
-  });
+  const FollowUpPayload({required this.prospectId, required this.dueAt, required this.description, this.activityType});
 
   static const titleMaxLength = 200;
 
@@ -188,9 +169,7 @@ class FollowUpPayload {
     final text = description.trim();
     final firstLine = text.split('\n').first.trim();
     final fitsInTitle = !text.contains('\n') && text.length <= titleMaxLength;
-    final title = firstLine.length <= titleMaxLength
-        ? firstLine
-        : '${firstLine.substring(0, titleMaxLength - 1)}…';
+    final title = firstLine.length <= titleMaxLength ? firstLine : '${firstLine.substring(0, titleMaxLength - 1)}…';
     return {
       'title': fitsInTitle ? text : title,
       'description': fitsInTitle ? null : text,
@@ -210,7 +189,7 @@ class CompleteFollowUpRequest {
     this.description,
     this.outcome,
     this.occurredAt,
-    this.fallbackType,
+    this.type,
   });
 
   final bool recordActivity;
@@ -223,7 +202,7 @@ class CompleteFollowUpRequest {
   final DateTime? occurredAt;
 
   /// Used by the server only when the follow-up has no type (older rows).
-  final ActivityType? fallbackType;
+  final ActivityType? type;
 
   JsonMap toJson() {
     String? clean(String? v, int max) {
@@ -240,7 +219,7 @@ class CompleteFollowUpRequest {
         'activity_description': ?clean(description, 5000),
         'activity_outcome': ?clean(outcome, 5000),
         if (occurredAt != null) 'activity_at': toApiDateTime(occurredAt!),
-        'activity_type': ?fallbackType?.apiValue,
+        'activity_type': ?type?.apiValue,
       },
     };
   }

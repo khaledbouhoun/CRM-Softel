@@ -1,71 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/l10n/l10n.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../../activities/presentation/dialogs/activity_form_dialog.dart';
-import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../../prospects/data/models/prospect_ref.dart';
 import '../../../prospects/presentation/widgets/prospect_picker_field.dart';
 import '../../data/models/follow_up.dart';
 import '../../domain/follow_ups_repository.dart';
 import '../controllers/follow_up_form_controllers.dart';
-import '../../../../app/l10n/l10n.dart';
 
 /// Create ([existing] null) or edit a pending follow-up.
-Future<FollowUp?> showFollowUpFormDialog({
-  ProspectRef? prospect,
-  FollowUp? existing,
-}) async {
+Future<FollowUp?> showFollowUpFormDialog({ProspectRef? prospect, FollowUp? existing}) async {
   final saved = await showControllerDialog<FollowUpFormController, FollowUp>(
-    controller: FollowUpFormController(
-      repository: Get.find(),
-      prospect: prospect,
-      existing: existing,
-    ),
+    controller: FollowUpFormController(repository: Get.find(), prospect: prospect, existing: existing),
     builder: (c) => _FollowUpFormDialog(c),
   );
   if (saved != null) {
-    AppFeedback.success(
-      existing == null ? tr.followUpScheduled : tr.followUpUpdated,
-    );
+    AppFeedback.success(existing == null ? tr.followUpScheduled : tr.followUpUpdated);
   }
   return saved;
 }
 
 Future<FollowUp?> showCompleteFollowUpDialog(FollowUp followUp) async {
-  final done =
-      await showControllerDialog<
-        CompleteFollowUpController,
-        FollowUpCompletion
-      >(
-        controller: CompleteFollowUpController(
-          repository: Get.find(),
-          followUp: followUp,
-        ),
-        builder: (c) => _CompleteFollowUpDialog(c),
-      );
-  if (done == null) return null;
-  AppFeedback.success(
-    done.activityRecorded
-        ? tr.followUpCompletedWithActivity
-        : tr.followUpCompleted,
+  final done = await showControllerDialog<CompleteFollowUpController, FollowUpCompletion>(
+    controller: CompleteFollowUpController(repository: Get.find(), followUp: followUp),
+    builder: (c) => _CompleteFollowUpDialog(c),
   );
+  if (done == null) return null;
+  AppFeedback.success(done.activityRecorded ? tr.followUpCompletedWithActivity : tr.followUpCompleted);
   return done.followUp;
 }
 
 Future<FollowUp?> showCancelFollowUpDialog(FollowUp followUp) async {
-  final cancelled =
-      await showControllerDialog<CancelFollowUpController, FollowUp>(
-        controller: CancelFollowUpController(
-          repository: Get.find(),
-          followUp: followUp,
-        ),
-        builder: (c) => _CancelFollowUpDialog(c),
-      );
+  final cancelled = await showControllerDialog<CancelFollowUpController, FollowUp>(
+    controller: CancelFollowUpController(repository: Get.find(), followUp: followUp),
+    builder: (c) => _CancelFollowUpDialog(c),
+  );
   if (cancelled != null) AppFeedback.success(tr.followUpCancelled);
   return cancelled;
 }
@@ -103,11 +78,7 @@ class _FollowUpFormDialog extends StatelessWidget {
             const SizedBox(height: 14),
             Text(tr.followUpTypeLabel, style: context.text.labelLarge),
             const SizedBox(height: 6),
-            ActivityTypeSelector(
-              value: c.type.value,
-              errorText: c.typeError,
-              onChanged: (t) => c.type.value = t,
-            ),
+            ActivityTypeSelector(value: c.type.value, errorText: c.typeError, onChanged: (t) => c.type.value = t),
             const SizedBox(height: 14),
             DateTimeField(
               label: tr.fieldDateTimeRequired,
@@ -129,12 +100,7 @@ class _FollowUpFormDialog extends StatelessWidget {
                     label: Text(label),
                     onPressed: () {
                       final now = DateTime.now();
-                      c.dueAt.value = DateTime(
-                        now.year,
-                        now.month,
-                        now.day + days,
-                        9,
-                      );
+                      c.dueAt.value = DateTime(now.year, now.month, now.day + days, 9);
                     },
                   ),
               ],
@@ -188,28 +154,17 @@ class _CompleteFollowUpDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHigh.withValues(
-                  alpha: 0.5,
-                ),
+                color: context.colors.surfaceContainerHigh.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    c.followUp.prospect?.companyName ?? '',
-                    style: context.text.titleSmall,
-                  ),
-                  Text(
-                    tr.dueOn(Formatters.dateTime(c.followUp.dueAt)),
-                    style: context.text.bodySmall,
-                  ),
+                  Text(c.followUp.prospect?.companyName ?? '', style: context.text.titleSmall),
+                  Text(tr.dueOn(Formatters.dateTime(c.followUp.dueAt)), style: context.text.bodySmall),
                   if (c.followUp.description != null) ...[
                     const SizedBox(height: 4),
-                    Text(
-                      c.followUp.description!,
-                      style: context.text.bodyMedium,
-                    ),
+                    Text(c.followUp.description!, style: context.text.bodyMedium),
                   ],
                 ],
               ),
@@ -222,27 +177,7 @@ class _CompleteFollowUpDialog extends StatelessWidget {
               subtitle: Text(tr.recommendedKeepsHistory),
             ),
             if (c.recordActivity.value) ...[
-              if (c.typeComesFromFollowUp)
-                Row(
-                  children: [
-                    ActivityTypeAvatar(c.activityType, size: 26),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        tr.followUpCompletedKeepsType(c.activityType.label),
-                        style: context.text.bodyMedium,
-                      ),
-                    ),
-                  ],
-                )
-              else ...[
-                Text(tr.activityTypeForLegacy, style: context.text.bodySmall),
-                const SizedBox(height: 6),
-                ActivityTypeSelector(
-                  value: c.fallbackType.value,
-                  onChanged: (t) => c.fallbackType.value = t,
-                ),
-              ],
+              ActivityTypeSelector(value: c.type.value, onChanged: (t) => c.type.value = t),
               const SizedBox(height: 14),
               DateTimeField(
                 label: tr.fieldDateTimeRequired,
@@ -257,19 +192,13 @@ class _CompleteFollowUpDialog extends StatelessWidget {
                 controller: c.description,
                 minLines: 2,
                 maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: tr.fieldDescriptionRequired,
-                  alignLabelWithHint: true,
-                ),
+                decoration: InputDecoration(labelText: tr.fieldDescriptionRequired, alignLabelWithHint: true),
                 validator: c.validateDescription,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: c.outcome,
-                decoration: InputDecoration(
-                  labelText: tr.fieldOutcome,
-                  hintText: tr.completeOutcomeHint,
-                ),
+                decoration: InputDecoration(labelText: tr.fieldOutcome, hintText: tr.completeOutcomeHint),
                 validator: c.validateOutcome,
               ),
             ],
@@ -305,10 +234,7 @@ class _CancelFollowUpDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            tr.companyDueOn(
-              c.followUp.prospect?.companyName ?? '',
-              Formatters.dateTime(c.followUp.dueAt),
-            ),
+            tr.companyDueOn(c.followUp.prospect?.companyName ?? '', Formatters.dateTime(c.followUp.dueAt)),
             style: context.text.bodyMedium,
           ),
           const SizedBox(height: 14),
@@ -316,10 +242,7 @@ class _CancelFollowUpDialog extends StatelessWidget {
             controller: c.reason,
             minLines: 2,
             maxLines: 4,
-            decoration: InputDecoration(
-              labelText: tr.reasonOptional,
-              alignLabelWithHint: true,
-            ),
+            decoration: InputDecoration(labelText: tr.reasonOptional, alignLabelWithHint: true),
           ),
         ],
       ),
