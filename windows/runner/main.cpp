@@ -31,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(40, 30);
   Win32Window::Size size(1440, 900);
-  if (!window.Create(L"SOFTEL CRM", origin, size)) {
+  if (!window.Create(L"CRM - Softel", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

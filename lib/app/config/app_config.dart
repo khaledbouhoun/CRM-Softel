@@ -2,7 +2,7 @@
 class AppConfig {
   const AppConfig._();
 
-  static const appName = 'SOFTEL CRM';
+  static const appName = 'CRM - Softel';
 
   /// Shown on first launch. Employees must replace it with the central
   /// computer's LAN address (never `localhost` on employee machines).

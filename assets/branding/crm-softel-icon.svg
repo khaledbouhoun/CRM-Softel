@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">CRM - Softel icon</title>
+  <defs>
+    <linearGradient id="softelBlue" x1="326" y1="122" x2="172" y2="387" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#009EE0"/>
+      <stop offset="1" stop-color="#003B70"/>
+    </linearGradient>
+  </defs>
+  <rect x="36" y="36" width="440" height="440" rx="124" fill="#FFFFFF"/>
+  <rect x="37.5" y="37.5" width="437" height="437" rx="122.5" fill="none" stroke="#E6F2F8" stroke-width="3"/>
+  <path d="M 350 164 C 320 136 282 123 241 128 C 200 133 176 155 176 185 C 176 219 207 235 257 248 C 314 263 342 288 337 322 C 331 361 287 387 238 386 C 202 386 172 370 148 343"
+        fill="none" stroke="url(#softelBlue)" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

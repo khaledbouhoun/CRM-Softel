@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "SOFTEL" "\0"
-            VALUE "FileDescription", "SOFTEL CRM" "\0"
+            VALUE "FileDescription", "CRM - Softel" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "softel_crm" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 SOFTEL. All rights reserved." "\0"
             VALUE "OriginalFilename", "softel_crm.exe" "\0"
-            VALUE "ProductName", "SOFTEL CRM" "\0"
+            VALUE "ProductName", "CRM - Softel" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
