@@ -801,7 +801,7 @@
   "@countProspects": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "num"
       }
     }
   },
@@ -945,6 +945,7 @@
   "filterLinkOnlyLinked": "Liées à un prospect",
   "filterLinkOnlyUnlinked": "Non liées",
   "colLink": "Prospect lié",
+  "colLinkfllowup": "Relance liée",
   "activityOccurredAt": "Date et heure",
   "createdOnLabel": "Créée le",
   "linkedOnLabel": "Liée le",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../app/shell/navigation.dart';
@@ -14,12 +15,10 @@ import '../../../../core/widgets/state_views.dart';
 import '../../data/models/activity.dart';
 import '../../data/models/activity_type.dart';
 import '../controllers/activities_controller.dart';
-
 import '../dialogs/activity_details_dialog.dart';
 import '../dialogs/activity_form_dialog.dart';
 import '../dialogs/link_activity_flow.dart';
 import '../widgets/activity_widgets.dart';
-import '../../../../app/l10n/l10n.dart';
 
 class ActivitiesPage extends GetView<ActivitiesController> {
   const ActivitiesPage({super.key});
@@ -47,11 +46,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
-              FilledButton.icon(
-                onPressed: _create,
-                icon: const Icon(Icons.add, size: 18),
-                label: Text(tr.newActivity),
-              ),
+              FilledButton.icon(onPressed: _create, icon: const Icon(Icons.add, size: 18), label: Text(tr.newActivity)),
             ],
           ),
         ),
@@ -64,18 +59,13 @@ class ActivitiesPage extends GetView<ActivitiesController> {
               runSpacing: 10,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                SearchField(
-                  initialValue: f.search,
-                  hint: tr.activitySearchHint,
-                  onChanged: controller.setSearch,
-                ),
+                SearchField(initialValue: f.search, hint: tr.activitySearchHint, onChanged: controller.setSearch),
                 FilterDropdown<ActivityType>(
                   label: tr.fieldType,
                   value: f.type,
                   items: ActivityType.selectable,
                   itemLabel: (t) => t.label,
-                  leading: (t) =>
-                      Icon(activityIcon(t), size: 16, color: activityColor(t)),
+                  leading: (t) => Icon(activityIcon(t), size: 16, color: activityColor(t)),
                   allLabel: tr.allTypes,
                   onChanged: controller.setType,
                 ),
@@ -83,9 +73,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                   label: tr.colLink,
                   value: f.linked,
                   items: const [true, false],
-                  itemLabel: (linked) => linked
-                      ? tr.filterLinkOnlyLinked
-                      : tr.filterLinkOnlyUnlinked,
+                  itemLabel: (linked) => linked ? tr.filterLinkOnlyLinked : tr.filterLinkOnlyUnlinked,
                   allLabel: tr.filterLinkAll,
                   width: 230,
                   onChanged: controller.setLinked,
@@ -116,9 +104,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                 final page = controller.page.value;
                 return Column(
                   children: [
-                    RefreshingBar(
-                      visible: controller.state.isLoading && !page.isEmpty,
-                    ),
+                    RefreshingBar(visible: controller.state.isLoading && !page.isEmpty),
                     if (controller.state.hasError && !page.isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(8),
@@ -138,8 +124,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                               ? tr.noActivityMatchesFilters
                               : tr.noActivities,
                         ),
-                        builder: (_) =>
-                            _ActivitiesTable(page.items, controller),
+                        builder: (_) => _ActivitiesTable(page.items, controller),
                       ),
                     ),
                     PaginationBar(
@@ -184,10 +169,7 @@ class _ActivitiesTable extends StatelessWidget {
       CrmColumn(
         label: tr.colDate,
         width: 120,
-        cell: (a) => CellText(
-          Formatters.date(a.occurredAt),
-          secondary: Formatters.time(a.occurredAt),
-        ),
+        cell: (a) => CellText(Formatters.date(a.occurredAt), secondary: Formatters.time(a.occurredAt)),
       ),
       CrmColumn(
         label: tr.fieldType,
@@ -214,18 +196,14 @@ class _ActivitiesTable extends StatelessWidget {
                 a.headline,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: context.text.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               if (a.title != null && a.description.trim().isNotEmpty)
                 Text(
                   a.description,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: context.text.bodySmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
+                  style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
             ],
           ),
@@ -234,33 +212,20 @@ class _ActivitiesTable extends StatelessWidget {
       CrmColumn(
         label: tr.colLink,
         flex: 4,
-        cell: (a) => a.isLinkedToFollowUp
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    a.prospect?.companyName.isNotEmpty == true
-                        ? a.prospect!.companyName
-                        : 'Follow-up #',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'Follow-up #',
-                    style: context.text.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              )
-            : const Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: ActivityLinkPill(linked: false),
-              ),
+        cell: (a) => Text(
+          a.prospect?.companyName.isNotEmpty == true ? a.prospect!.companyName : '-- --',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ),
+      CrmColumn(
+        label: tr.colLinkfllowup,
+        flex: 4,
+        cell: (a) => Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: ActivityLinkPill(linked: a.isLinkedToFollowUp ? true : false),
+        ),
       ),
       CrmColumn(
         label: tr.colActions,

@@ -1604,6 +1604,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get colLink => 'Prospect lié';
 
   @override
+  String get colLinkfllowup => 'Relance liée';
+
+  @override
   String get activityOccurredAt => 'Date et heure';
 
   @override

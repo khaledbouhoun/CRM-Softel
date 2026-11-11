@@ -73,6 +73,7 @@ class _FollowUpFormDialog extends StatelessWidget {
               value: c.prospect.value,
               enabled: !c.prospectLocked,
               errorText: c.prospectError,
+              excludeStageIds: const [2, 3],
               onChanged: (p) => c.prospect.value = p,
             ),
             const SizedBox(height: 14),

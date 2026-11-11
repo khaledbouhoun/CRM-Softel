@@ -459,6 +459,7 @@
   "filterLinkOnlyLinked": "Linked to a prospect",
   "filterLinkOnlyUnlinked": "Unlinked",
   "colLink": "Linked prospect",
+  "colLinkfllowup": "Linked follow-up",
   "activityOccurredAt": "Date and time",
   "createdOnLabel": "Created on",
   "linkedOnLabel": "Linked on",

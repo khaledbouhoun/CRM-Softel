@@ -2854,6 +2854,12 @@ abstract class AppLocalizations {
   /// **'Prospect lié'**
   String get colLink;
 
+  /// No description provided for @colLinkfllowup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relance liée'**
+  String get colLinkfllowup;
+
   /// No description provided for @activityOccurredAt.
   ///
   /// In fr, this message translates to:

@@ -15,6 +15,7 @@ class ProspectPickerField extends StatelessWidget {
     this.errorText,
     this.enabled = true,
     this.optional = false,
+    this.excludeStageIds = const [2, 3],
   });
 
   final ProspectRef? value;
@@ -22,17 +23,16 @@ class ProspectPickerField extends StatelessWidget {
   final String? errorText;
   final bool enabled;
   final bool optional;
+  final List<int>? excludeStageIds;
 
   Future<void> _pick() async {
-    final picked = await showProspectSearchDialog(title: tr.pickProspect);
+    final picked = await showProspectSearchDialog(title: tr.pickProspect, excludeStageIds: excludeStageIds);
     if (picked != null) onChanged(picked);
   }
 
   @override
   Widget build(BuildContext context) {
-    final label = optional
-        ? tr.prospectOptionalLabel
-        : tr.prospectRequiredLabel;
+    final label = optional ? tr.prospectOptionalLabel : tr.prospectRequiredLabel;
     final selected = value;
     return InkWell(
       borderRadius: BorderRadius.circular(8),
@@ -44,10 +44,7 @@ class ProspectPickerField extends StatelessWidget {
           hintText: tr.pickProspect,
           errorText: errorText,
           enabled: enabled,
-          prefixIcon: Icon(
-            selected == null ? Icons.search : Icons.business_outlined,
-            size: 20,
-          ),
+          prefixIcon: Icon(selected == null ? Icons.search : Icons.business_outlined, size: 20),
           suffixIcon: !enabled
               ? null
               : selected != null && optional
@@ -57,16 +54,10 @@ class ProspectPickerField extends StatelessWidget {
                   onPressed: () => onChanged(null),
                 )
               : selected != null
-              ? IconButton(
-                  tooltip: tr.changeProspect,
-                  icon: const Icon(Icons.swap_horiz, size: 18),
-                  onPressed: _pick,
-                )
+              ? IconButton(tooltip: tr.changeProspect, icon: const Icon(Icons.swap_horiz, size: 18), onPressed: _pick)
               : null,
         ),
-        child: selected == null
-            ? null
-            : Text(selected.displayName, overflow: TextOverflow.ellipsis),
+        child: selected == null ? null : Text(selected.displayName, overflow: TextOverflow.ellipsis),
       ),
     );
   }

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../app/shell/navigation.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/utils/whatsapp_launcher.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/crm_data_table.dart';
 import '../../../../core/widgets/filter_widgets.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/pagination_bar.dart';
 import '../../../../core/widgets/state_views.dart';
+import '../../../../core/widgets/whatsapp_button.dart';
 import '../../../activities/presentation/dialogs/activity_form_dialog.dart';
 import '../../../follow_ups/presentation/dialogs/follow_up_dialogs.dart';
 import '../../../products/data/models/product.dart';
@@ -24,7 +28,6 @@ import '../../data/models/prospect_catalogs.dart';
 import '../../data/models/prospect_filter.dart';
 import '../controllers/prospects_list_controller.dart';
 import '../dialogs/prospect_dialogs.dart';
-import '../../../../app/l10n/l10n.dart';
 
 class ProspectsPage extends GetView<ProspectsListController> {
   const ProspectsPage({super.key});
@@ -256,11 +259,26 @@ class _ProspectsTable extends StatelessWidget {
       columns: [
         CrmColumn(
           label: tr.colCompanyContact,
-          flex: 3,
+          flex: 4,
           sortKey: ProspectSort.companyName,
           cell: (p) => CellText(p.companyName, secondary: p.contactName, bold: true),
         ),
-        CrmColumn(label: tr.colContactDetails, flex: 3, cell: (p) => CellText(p.phone ?? '')),
+        CrmColumn(
+          label: tr.colContactDetails,
+          flex: 4,
+          cell: (p) {
+            final phone = p.phone?.trim();
+            if (phone == null || phone.isEmpty) return const CellText('—');
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: CellText(phone)),
+                const SizedBox(width: 6),
+                WhatsAppIconButton(phone: phone, size: 28, iconSize: 20),
+              ],
+            );
+          },
+        ),
         CrmColumn(label: tr.fieldCity, flex: 2, sortKey: ProspectSort.city, cell: (p) => CellText(p.city ?? '')),
         CrmColumn(
           label: tr.fieldStage,
@@ -328,11 +346,13 @@ class _ProspectsTable extends StatelessWidget {
         ),
         CrmColumn(
           label: '',
-          width: 116,
+          width: 100,
           alignment: AlignmentDirectional.centerEnd,
           cell: (p) => Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // if (WhatsAppLauncher.isValid(p.phone)) WhatsAppIconButton(phone: p.phone),
+
               IconButton(
                 tooltip: tr.changeStage,
                 icon: const Icon(Icons.swap_horiz, size: 20),
@@ -343,6 +363,7 @@ class _ProspectsTable extends StatelessWidget {
                 icon: const Icon(Icons.more_vert, size: 20),
                 onSelected: (action) => switch (action) {
                   'open' => _open(p),
+                  'whatsapp' => WhatsAppLauncher.launch(p.phone),
                   'edit' => _edit(p),
                   'stage' => _changeStage(p),
                   'activity' => _addActivity(p),
@@ -354,6 +375,22 @@ class _ProspectsTable extends StatelessWidget {
                     value: 'open',
                     child: ListTile(leading: Icon(Icons.open_in_new), title: Text(tr.actionOpenRecord)),
                   ),
+                  if (WhatsAppLauncher.isValid(p.phone))
+                    PopupMenuItem(
+                      value: 'whatsapp',
+                      child: ListTile(
+                        leading: const FaIcon(FontAwesomeIcons.whatsapp, size: 20, color: WhatsAppLauncher.brandColor),
+                        title: Text(WhatsAppLauncher.tooltip),
+                      ),
+                    ),
+                  if (WhatsAppLauncher.isValid(p.phone))
+                    PopupMenuItem(
+                      value: 'whatsapp',
+                      child: ListTile(
+                        leading: const FaIcon(FontAwesomeIcons.whatsapp, size: 20, color: WhatsAppLauncher.brandColor),
+                        title: Text(WhatsAppLauncher.tooltip),
+                      ),
+                    ),
                   PopupMenuItem(
                     value: 'edit',
                     child: ListTile(leading: Icon(Icons.edit_outlined), title: Text(tr.actionEdit)),

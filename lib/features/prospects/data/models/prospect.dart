@@ -95,6 +95,7 @@ class Prospect {
   /// Lost status is derived from the stage type, never from its name.
   bool get isLost => stage?.isLost ?? false;
   bool get isWon => stage?.isWon ?? false;
+  int? get salesStageId => stage?.id;
 
   bool isNextFollowUpOverdue([DateTime? now]) =>
       isBeforeToday(nextFollowUpAt, now);
@@ -109,6 +110,7 @@ class Prospect {
 
   factory Prospect.fromJson(JsonMap json) {
     final stageJson = asMapOrNull(json['sales_stage']);
+    final stageId = asIntOrNull(json['sales_stage_id']);
     final reasonJson = asMapOrNull(json['loss_reason']);
     return Prospect(
       id: asInt(json['id']),
@@ -132,7 +134,18 @@ class Prospect {
         json['previous_software_details'],
       ),
       notes: asStringOrNull(json['notes']),
-      stage: stageJson == null ? null : SalesStage.fromJson(stageJson),
+      stage: stageJson != null
+          ? SalesStage.fromJson(stageJson)
+          : (stageId != null
+              ? SalesStage(
+                  id: stageId,
+                  name: '',
+                  colorHex: SalesStage.defaultColorHex,
+                  type: StageType.open,
+                  position: 0,
+                  isActive: true,
+                )
+              : null),
       products: asList(json['products'], Product.fromJson),
       lossReason: reasonJson == null ? null : LossReason.fromJson(reasonJson),
       lossDetails: asStringOrNull(json['loss_note']),

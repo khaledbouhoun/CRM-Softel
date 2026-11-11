@@ -16,25 +16,16 @@ import '../../domain/follow_ups_repository.dart';
 ///
 /// When [prospectId] is supplied, only follow-ups belonging to that prospect are
 /// returned (enforcing prospect consistency).
-Future<FollowUp?> showFollowUpSearchDialog({
-  String? title,
-  int? prospectId,
-  String? prospectName,
-}) => Get.dialog<FollowUp>(
-  _FollowUpSearchDialog(
-    title: title ??
-        (prospectName != null
-            ? 'Select follow-up for $prospectName'
-            : 'Select follow-up'),
-    prospectId: prospectId,
-  ),
-);
+Future<FollowUp?> showFollowUpSearchDialog({String? title, int? prospectId, String? prospectName}) =>
+    Get.dialog<FollowUp>(
+      _FollowUpSearchDialog(
+        title: title ?? (prospectName != null ? 'Select follow-up for $prospectName' : 'Select follow-up'),
+        prospectId: prospectId,
+      ),
+    );
 
 class _FollowUpSearchDialog extends StatefulWidget {
-  const _FollowUpSearchDialog({
-    required this.title,
-    this.prospectId,
-  });
+  const _FollowUpSearchDialog({required this.title, this.prospectId});
 
   final String title;
   final int? prospectId;
@@ -88,7 +79,7 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
 
       if (id != _requestId || !mounted) return;
       setState(() {
-        _results = res.items;
+        _results = res.items.where((f) => f.dueAt!.isBefore(DateTime.now())).toList();
         _loading = false;
       });
     } catch (e) {
@@ -114,17 +105,8 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
                 children: [
                   Icon(Icons.event_note, color: context.colors.primary, size: 24),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      style: context.text.titleLarge,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: tr.actionClose,
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Get.back(),
-                  ),
+                  Expanded(child: Text(widget.title, style: context.text.titleLarge)),
+                  IconButton(tooltip: tr.actionClose, icon: const Icon(Icons.close), onPressed: () => Get.back()),
                 ],
               ),
               const SizedBox(height: 12),
@@ -151,61 +133,49 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
                 child: _loading
                     ? const Center(child: CircularProgressIndicator())
                     : _error != null
-                        ? ErrorBanner(message: _error!, onRetry: () => _search(_controller.text))
-                        : _results.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'No follow-ups found.',
-                                  style: context.text.bodyMedium?.copyWith(
-                                    color: context.colors.onSurfaceVariant,
+                    ? ErrorBanner(message: _error!, onRetry: () => _search(_controller.text))
+                    : _results.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No follow-ups found.',
+                          style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+                        ),
+                      )
+                    : ListView.separated(
+                        itemCount: _results.length,
+                        separatorBuilder: (context, index) => const Divider(height: 1),
+                        itemBuilder: (context, i) {
+                          final item = _results[i];
+                          final prospect = item.prospect;
+                          return ListTile(
+                            dense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            leading: item.activityType != null
+                                ? ActivityTypeAvatar(item.activityType!, size: 28)
+                                : CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: context.colors.surfaceContainerHighest,
+                                    child: const Icon(Icons.event, size: 16),
                                   ),
-                                ),
-                              )
-                            : ListView.separated(
-                                itemCount: _results.length,
-                                separatorBuilder: (context, index) => const Divider(height: 1),
-                                itemBuilder: (context, i) {
-                                  final item = _results[i];
-                                  final prospect = item.prospect;
-                                  return ListTile(
-                                    dense: true,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 4,
-                                    ),
-                                    leading: item.activityType != null
-                                        ? ActivityTypeAvatar(item.activityType!, size: 28)
-                                        : CircleAvatar(
-                                            radius: 14,
-                                            backgroundColor: context.colors.surfaceContainerHighest,
-                                            child: const Icon(Icons.event, size: 16),
-                                          ),
-                                    title: Text(
-                                      item.description?.trim().isNotEmpty == true
-                                          ? item.description!
-                                          : 'Follow-up #${item.id}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: context.text.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      [
-                                        Formatters.dateTime(item.dueAt),
-                                        if (prospect != null && widget.prospectId == null)
-                                          prospect.companyName,
-                                        item.status.label,
-                                      ].join(' • '),
-                                      style: context.text.bodySmall?.copyWith(
-                                        color: context.colors.onSurfaceVariant,
-                                      ),
-                                    ),
-                                    trailing: const Icon(Icons.chevron_right, size: 20),
-                                    onTap: () => Get.back(result: item),
-                                  );
-                                },
-                              ),
+                            title: Text(
+                              item.description?.trim().isNotEmpty == true ? item.description! : 'Follow-up #${item.id}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text(
+                              [
+                                Formatters.dateTime(item.dueAt),
+                                if (prospect != null && widget.prospectId == null) prospect.companyName,
+                                item.status.label,
+                              ].join(' • '),
+                              style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
+                            ),
+                            trailing: const Icon(Icons.chevron_right, size: 20),
+                            onTap: () => Get.back(result: item),
+                          );
+                        },
+                      ),
               ),
             ],
           ),

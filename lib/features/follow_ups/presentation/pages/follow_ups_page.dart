@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:softel_crm/core/widgets/whatsapp_button.dart';
 
 import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
@@ -213,10 +214,17 @@ class _FollowUpsTable extends StatelessWidget {
         CrmColumn(
           label: tr.colProspect,
           flex: 3,
-          cell: (f) => CellText(
-            f.prospect?.companyName ?? '',
-            secondary: [f.prospect?.contactName, f.prospect?.phone].whereType<String>().join(' · '),
-            bold: true,
+          cell: (f) => Row(
+            children: [
+              CellText(
+                f.prospect?.companyName ?? '',
+                secondary: [f.prospect?.contactName, f.prospect?.phone].whereType<String>().join(' · '),
+                bold: true,
+              ),
+              const SizedBox(width: 15),
+              if (f.prospect?.phone != null)
+                WhatsAppIconButton(phone: f.prospect!.phone, message: f.description, size: 28, iconSize: 23),
+            ],
           ),
         ),
         CrmColumn(label: tr.fieldType, width: 140, cell: (f) => FollowUpTypeLabel(f)),
@@ -229,7 +237,7 @@ class _FollowUpsTable extends StatelessWidget {
         CrmColumn(label: tr.colStatus, width: 120, cell: (f) => FollowUpStatusPill(f)),
         CrmColumn(
           label: '',
-          width: 168,
+          width: 212,
           alignment: AlignmentDirectional.centerEnd,
           cell: (f) => !f.isPending
               ? const SizedBox.shrink()

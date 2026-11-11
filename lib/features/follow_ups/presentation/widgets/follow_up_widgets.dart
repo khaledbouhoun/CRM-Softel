@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/layout_widgets.dart';
+import '../../../../core/widgets/whatsapp_button.dart';
 import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../data/models/follow_up.dart';
 import '../../../../app/l10n/l10n.dart';
@@ -82,12 +83,14 @@ class FollowUpTile extends StatelessWidget {
   const FollowUpTile({
     super.key,
     required this.followUp,
+    this.phone,
     this.onComplete,
     this.onEdit,
     this.onCancel,
   });
 
   final FollowUp followUp;
+  final String? phone;
   final VoidCallback? onComplete;
   final VoidCallback? onEdit;
   final VoidCallback? onCancel;
@@ -153,6 +156,8 @@ class FollowUpTile extends StatelessWidget {
             ),
           ),
           if (followUp.isPending) ...[
+            if (phone != null || followUp.prospect?.phone != null)
+              WhatsAppIconButton(phone: phone ?? followUp.prospect?.phone),
             if (onComplete != null)
               IconButton(
                 tooltip: tr.markAsDone,

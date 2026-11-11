@@ -97,22 +97,12 @@ class ProspectFilter {
     search: search ?? this.search,
     stageId: identical(stageId, _keep) ? this.stageId : stageId as int?,
     productId: identical(productId, _keep) ? this.productId : productId as int?,
-    lossReasonId: identical(lossReasonId, _keep)
-        ? this.lossReasonId
-        : lossReasonId as int?,
+    lossReasonId: identical(lossReasonId, _keep) ? this.lossReasonId : lossReasonId as int?,
     source: identical(source, _keep) ? this.source : source as String?,
-    businessActivity: identical(businessActivity, _keep)
-        ? this.businessActivity
-        : businessActivity as String?,
-    previousSoftware: identical(previousSoftware, _keep)
-        ? this.previousSoftware
-        : previousSoftware as String?,
-    createdFrom: identical(createdFrom, _keep)
-        ? this.createdFrom
-        : createdFrom as DateTime?,
-    createdTo: identical(createdTo, _keep)
-        ? this.createdTo
-        : createdTo as DateTime?,
+    businessActivity: identical(businessActivity, _keep) ? this.businessActivity : businessActivity as String?,
+    previousSoftware: identical(previousSoftware, _keep) ? this.previousSoftware : previousSoftware as String?,
+    createdFrom: identical(createdFrom, _keep) ? this.createdFrom : createdFrom as DateTime?,
+    createdTo: identical(createdTo, _keep) ? this.createdTo : createdTo as DateTime?,
     sort: sort ?? this.sort,
     ascending: ascending ?? this.ascending,
     page: page ?? this.page,

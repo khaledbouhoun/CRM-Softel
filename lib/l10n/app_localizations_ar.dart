@@ -1607,6 +1607,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get colLink => 'العميل المرتبط';
 
   @override
+  String get colLinkfllowup => 'المتابعة المرتبطة';
+
+  @override
   String get activityOccurredAt => 'التاريخ والوقت';
 
   @override

@@ -9,6 +9,7 @@ import '../../../../core/widgets/form_widgets.dart';
 import '../../../follow_ups/data/models/follow_up.dart';
 import '../../../follow_ups/presentation/dialogs/follow_up_search_dialog.dart';
 import '../../../prospects/data/models/prospect_ref.dart';
+import '../../../prospects/presentation/widgets/prospect_picker_field.dart';
 import '../../data/models/activity_type.dart';
 import '../controllers/activity_form_controller.dart';
 import '../widgets/activity_widgets.dart';
@@ -18,29 +19,20 @@ import '../widgets/activity_widgets.dart';
 ///
 /// An activity can be created linked to a [followUp] (or [prospect]), or on its own
 /// to be linked to a follow-up later.
-Future<ActivityFormResult?> showActivityFormDialog({
-  ProspectRef? prospect,
-  FollowUp? followUp,
-}) async {
-  final result =
-      await showControllerDialog<ActivityFormController, ActivityFormResult>(
-        controller: ActivityFormController(
-          activitiesRepository: Get.find(),
-          followUpsRepository: Get.find(),
-          prospect: prospect,
-          followUp: followUp,
-        ),
-        builder: (c) => _ActivityFormDialog(c),
-      );
+Future<ActivityFormResult?> showActivityFormDialog({ProspectRef? prospect, FollowUp? followUp}) async {
+  final result = await showControllerDialog<ActivityFormController, ActivityFormResult>(
+    controller: ActivityFormController(
+      activitiesRepository: Get.find(),
+      followUpsRepository: Get.find(),
+      prospect: prospect,
+      followUp: followUp,
+    ),
+    builder: (c) => _ActivityFormDialog(c),
+  );
   if (result != null) {
-    AppFeedback.success(
-      result.followUp != null ? tr.activitySavedAndFollowUp : tr.activitySaved,
-    );
+    AppFeedback.success(result.followUp != null ? tr.activitySavedAndFollowUp : tr.activitySaved);
     if (result.followUpError != null) {
-      AppFeedback.error(
-        result.followUpError!,
-        prefix: tr.activitySavedFollowUpFailed,
-      );
+      AppFeedback.error(result.followUpError!, prefix: tr.activitySavedFollowUpFailed);
     }
   }
   return result;
@@ -49,12 +41,7 @@ Future<ActivityFormResult?> showActivityFormDialog({
 /// Segmented selector of the types offered for new activities and follow-ups
 /// (Call, Meeting, Message, Other).
 class ActivityTypeSelector extends StatelessWidget {
-  const ActivityTypeSelector({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    this.errorText,
-  });
+  const ActivityTypeSelector({super.key, required this.value, required this.onChanged, this.errorText});
 
   /// Null shows nothing selected (a follow-up without a type).
   final ActivityType? value;
@@ -70,11 +57,7 @@ class ActivityTypeSelector extends StatelessWidget {
         emptySelectionAllowed: true,
         segments: [
           for (final t in ActivityType.selectable)
-            ButtonSegment(
-              value: t,
-              label: Text(t.label),
-              icon: Icon(activityIcon(t), size: 18),
-            ),
+            ButtonSegment(value: t, label: Text(t.label), icon: Icon(activityIcon(t), size: 18)),
         ],
         selected: value == null ? const {} : {value!.canonical},
         onSelectionChanged: (s) {
@@ -84,12 +67,7 @@ class ActivityTypeSelector extends StatelessWidget {
       if (errorText != null)
         Padding(
           padding: const EdgeInsetsDirectional.only(top: 4, start: 12, end: 12),
-          child: Text(
-            errorText!,
-            style: context.text.bodySmall?.copyWith(
-              color: context.colors.error,
-            ),
-          ),
+          child: Text(errorText!, style: context.text.bodySmall?.copyWith(color: context.colors.error)),
         ),
     ],
   );
@@ -124,22 +102,16 @@ class _ActivityFormDialog extends StatelessWidget {
               children: [
                 Text(
                   fu != null
-                      ? (fu.description?.trim().isNotEmpty == true
-                          ? fu.description!
-                          : 'Follow-up #${fu.id}')
+                      ? (fu.description?.trim().isNotEmpty == true ? fu.description! : 'Follow-up #${fu.id}')
                       : 'No follow-up linked (optional)',
                   style: context.text.bodyMedium?.copyWith(
-                    fontWeight: fu != null
-                        ? FontWeight.w600
-                        : FontWeight.normal,
+                    fontWeight: fu != null ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
-                if (prospect != null)
+                if (fu != null && prospect != null)
                   Text(
                     'Prospect: ${prospect.companyName}',
-                    style: context.text.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
+                    style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
               ],
             ),
@@ -182,12 +154,17 @@ class _ActivityFormDialog extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            ProspectPickerField(
+              value: c.prospect.value,
+              enabled: !c.prospectLocked,
+              optional: true,
+              excludeStageIds: const [2, 3],
+              onChanged: c.selectProspect,
+            ),
+            const SizedBox(height: 14),
             Text(tr.typeLabelRequired, style: context.text.labelLarge),
             const SizedBox(height: 6),
-            ActivityTypeSelector(
-              value: c.type.value,
-              onChanged: (t) => c.type.value = t,
-            ),
+            ActivityTypeSelector(value: c.type.value, onChanged: (t) => c.type.value = t),
             const SizedBox(height: 16),
             DateTimeField(
               label: tr.fieldDateTimeRequired,
@@ -227,10 +204,7 @@ class _ActivityFormDialog extends StatelessWidget {
               controller: c.outcome,
               minLines: 1,
               maxLines: 3,
-              decoration: InputDecoration(
-                labelText: tr.fieldOutcome,
-                hintText: tr.activityOutcomeHint,
-              ),
+              decoration: InputDecoration(labelText: tr.fieldOutcome, hintText: tr.activityOutcomeHint),
               validator: c.validateOutcome,
             ),
             const SizedBox(height: 14),
@@ -257,10 +231,7 @@ class _ActivityFormDialog extends StatelessWidget {
                 if (c.scheduleFollowUp.value)
                   TextFormField(
                     controller: c.followUpDescription,
-                    decoration: InputDecoration(
-                      labelText: tr.followUpSubject,
-                      hintText: tr.leaveEmptyAuto,
-                    ),
+                    decoration: InputDecoration(labelText: tr.followUpSubject, hintText: tr.leaveEmptyAuto),
                   ),
               ],
             ],

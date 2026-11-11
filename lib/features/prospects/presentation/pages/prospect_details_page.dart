@@ -10,6 +10,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/state_views.dart';
+import '../../../../core/widgets/whatsapp_button.dart';
 import '../../../activities/presentation/dialogs/activity_form_dialog.dart';
 import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../../follow_ups/data/models/follow_up.dart';
@@ -214,7 +215,20 @@ class _InfoSection extends StatelessWidget {
       children: [
         InfoRow(label: tr.fieldCompany, value: p.companyName, icon: Icons.business_outlined),
         InfoRow(label: tr.fieldContact, value: p.contactName, icon: Icons.person_outline),
-        InfoRow(label: tr.fieldPhone, value: p.phone, icon: Icons.phone_outlined),
+        InfoRow(
+          label: tr.fieldPhone,
+          icon: Icons.phone_outlined,
+          child: (p.phone == null || p.phone!.trim().isEmpty)
+              ? SelectableText('—', style: context.text.bodyMedium)
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SelectableText(p.phone!, style: context.text.bodyMedium),
+                    const SizedBox(width: 10),
+                    WhatsAppButton(phone: p.phone!),
+                  ],
+                ),
+        ),
         InfoRow(label: tr.fieldEmail, value: p.email, icon: Icons.alternate_email),
         InfoRow(label: tr.fieldAddress, value: p.address, icon: Icons.place_outlined),
         InfoRow(label: tr.fieldCity, value: p.city, icon: Icons.location_city_outlined),
@@ -434,6 +448,7 @@ class _FollowUpsSection extends StatelessWidget {
             for (final f in pending)
               FollowUpTile(
                 followUp: f,
+                phone: prospect.phone,
                 onComplete: () => _after(showCompleteFollowUpDialog(f)),
                 onEdit: () => _after(showFollowUpFormDialog(existing: f)),
                 onCancel: () => _after(showCancelFollowUpDialog(f)),

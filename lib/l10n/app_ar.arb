@@ -459,6 +459,7 @@
   "filterLinkOnlyLinked": "المرتبطة بعميل",
   "filterLinkOnlyUnlinked": "غير المرتبطة",
   "colLink": "العميل المرتبط",
+  "colLinkfllowup": "المتابعة المرتبطة",
   "activityOccurredAt": "التاريخ والوقت",
   "createdOnLabel": "أُنشئ في",
   "linkedOnLabel": "رُبط في",

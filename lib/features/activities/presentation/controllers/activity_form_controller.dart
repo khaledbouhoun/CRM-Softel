@@ -85,12 +85,20 @@ class ActivityFormController extends GetxController {
   final serverErrors = <String, String>{}.obs;
   final showValidation = false.obs;
 
+  void selectProspect(ProspectRef? p) {
+    if (prospectLocked) return;
+    prospect.value = p;
+    if (selectedFollowUp.value != null && !followUpLocked) {
+      if (p == null || selectedFollowUp.value!.prospect?.id != p.id) {
+        selectedFollowUp.value = null;
+      }
+    }
+  }
+
   void selectFollowUp(FollowUp? fu) {
     selectedFollowUp.value = fu;
     if (fu?.prospect != null && !prospectLocked) {
       prospect.value = fu!.prospect;
-    } else if (fu == null && !prospectLocked) {
-      prospect.value = null;
     }
   }
 
