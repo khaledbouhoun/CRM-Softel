@@ -21,7 +21,7 @@ class ActivityLinkController extends GetxController {
   /// Whether linking [activity] to [target] replaces another prospect and
   /// therefore needs the user's confirmation first.
   bool needsConfirmation(Activity activity, ProspectRef target) =>
-      activity.isLinked && activity.prospect!.id != target.id;
+      activity.prospect != null && activity.prospect!.id != target.id;
 
   Future<ActionResult<Activity>> link(
     Activity activity,

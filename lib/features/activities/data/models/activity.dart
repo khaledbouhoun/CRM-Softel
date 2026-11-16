@@ -49,7 +49,7 @@ class Activity {
   final DateTime? createdAt;
 
   /// Linked to a prospect (native activities start unlinked).
-  bool get isLinked => followUpId != null;
+  bool get isLinked => prospect != null || followUpId != null;
   bool get isLinkedToFollowUp => followUpId != null;
 
   /// Converted from a follow-up: stays with that follow-up's prospect.
