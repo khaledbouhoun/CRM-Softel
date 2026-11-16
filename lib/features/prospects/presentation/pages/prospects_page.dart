@@ -346,7 +346,7 @@ class _ProspectsTable extends StatelessWidget {
         ),
         CrmColumn(
           label: '',
-          width: 100,
+          width: 112,
           alignment: AlignmentDirectional.centerEnd,
           cell: (p) => Row(
             mainAxisSize: MainAxisSize.min,

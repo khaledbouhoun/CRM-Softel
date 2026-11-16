@@ -18,6 +18,7 @@ import '../../../follow_ups/presentation/dialogs/follow_up_dialogs.dart';
 import '../../../follow_ups/presentation/widgets/follow_up_widgets.dart';
 import '../../../products/presentation/widgets/product_selector.dart';
 import '../../../settings/presentation/widgets/stage_widgets.dart';
+import '../../../customers/presentation/dialogs/customer_dialogs.dart';
 import '../../data/models/prospect.dart';
 import '../../data/models/prospect_catalogs.dart';
 import '../controllers/prospect_details_controller.dart';
@@ -162,6 +163,14 @@ class _Header extends StatelessWidget {
     if (result != null) await c.onActivityAdded();
   }
 
+  /// Explicit, audited prospect -> customer transition. The record, its
+  /// history and its product interests are kept.
+  Future<void> _convert() async {
+    final converted = await showConvertProspectDialog(prospect);
+    if (converted == null) return;
+    await c.loadAll();
+    AppFeedback.success(tr.wfConverted(prospect.companyName));
+  }
   Future<void> _scheduleFollowUp() async {
     final saved = await showFollowUpFormDialog(prospect: prospect.toRef());
     if (saved != null) await c.onFollowUpChanged();
@@ -175,6 +184,7 @@ class _Header extends StatelessWidget {
       if (prospect.contactName != null) prospect.contactName!,
       if (prospect.city != null) prospect.city!,
       tr.createdOnDate(Formatters.date(prospect.createdAt)),
+      if (prospect.isCustomer) tr.wfCustomerBadge,
     ].join('  ·  '),
     actions: [
       IconButton(tooltip: tr.actionRefresh, onPressed: c.loadAll, icon: const Icon(Icons.refresh)),
@@ -193,7 +203,18 @@ class _Header extends StatelessWidget {
         icon: const Icon(Icons.add_comment_outlined, size: 18),
         label: Text(tr.addActivity),
       ),
-      FilledButton.icon(
+      if (prospect.isCustomer)
+        OutlinedButton.icon(
+          onPressed: () => Get.toNamed(Routes.customer(prospect.id)),
+          icon: const Icon(Icons.verified_user_outlined, size: 18),
+          label: Text(tr.wfOpenCustomerProfile),
+        )
+      else
+        OutlinedButton.icon(
+          onPressed: _convert,
+          icon: const Icon(Icons.verified_user_outlined, size: 18),
+          label: Text(tr.wfConvertAction),
+        ),      FilledButton.icon(
         onPressed: _changeStage,
         icon: const Icon(Icons.swap_horiz, size: 18),
         label: Text(tr.changeStage),

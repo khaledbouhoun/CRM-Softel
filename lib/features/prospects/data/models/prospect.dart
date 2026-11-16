@@ -41,6 +41,10 @@ class Prospect {
     this.pendingFollowUpsCount,
     this.createdAt,
     this.updatedAt,
+    this.isCustomer = false,
+    this.convertedAt,
+    this.convertedBy,
+    this.conversionNote,
   });
 
   final int id;
@@ -91,6 +95,13 @@ class Prospect {
   final int? pendingFollowUpsCount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  /// A customer is the same record as the prospect, converted explicitly
+  /// (`converted_at`); its history, products and stages are kept.
+  final bool isCustomer;
+  final DateTime? convertedAt;
+  final String? convertedBy;
+  final String? conversionNote;
 
   /// Lost status is derived from the stage type, never from its name.
   bool get isLost => stage?.isLost ?? false;
@@ -155,6 +166,10 @@ class Prospect {
       pendingFollowUpsCount: asIntOrNull(json['pending_follow_ups_count']),
       createdAt: asDateTimeOrNull(json['created_at']),
       updatedAt: asDateTimeOrNull(json['updated_at']),
+      isCustomer: asBool(json['is_customer']),
+      convertedAt: asDateTimeOrNull(json['converted_at']),
+      convertedBy: asStringOrNull(json['converted_by']),
+      conversionNote: asStringOrNull(json['conversion_note']),
     );
   }
 
@@ -193,6 +208,10 @@ class Prospect {
         : toApiDateTime(nextFollowUpAt!),
     'created_at': createdAt == null ? null : toApiDateTime(createdAt!),
     'updated_at': updatedAt == null ? null : toApiDateTime(updatedAt!),
+    'is_customer': isCustomer,
+    'converted_at': convertedAt == null ? null : toApiDateTime(convertedAt!),
+    'converted_by': convertedBy,
+    'conversion_note': conversionNote,
   };
 
   @override
