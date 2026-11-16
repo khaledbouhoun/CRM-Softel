@@ -11,6 +11,7 @@ import '../../../../core/widgets/filter_widgets.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/state_views.dart';
+import '../../../workflow_settings/presentation/product_resources_dialog.dart';
 import '../../data/models/product.dart';
 import '../controllers/products_controllers.dart';
 import '../../../../app/l10n/l10n.dart';
@@ -180,7 +181,7 @@ class ProductsPage extends GetView<ProductsController> {
                             ),
                             CrmColumn(
                               label: '',
-                              width: 130,
+                              width: 176,
                               alignment: AlignmentDirectional.centerEnd,
                               cell: (p) => Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -196,6 +197,12 @@ class ProductsPage extends GetView<ProductsController> {
                                           ? null
                                           : (_) => _toggle(p),
                                     ),
+                                  ),
+                                  IconButton(
+                                    tooltip: tr.wfProductResources,
+                                    icon: const Icon(Icons.link, size: 20),
+                                    onPressed: () =>
+                                        showProductResourcesDialog(p),
                                   ),
                                   IconButton(
                                     tooltip: tr.actionEdit,
