@@ -14,6 +14,7 @@ class ApiClient {
     required Duration timeout,
     HttpClientAdapter? httpClientAdapter,
     bool enableLogging = true,
+    String? Function()? employeeName,
   }) : _dio = Dio(
          BaseOptions(
            baseUrl: baseUrl,
@@ -30,6 +31,7 @@ class ApiClient {
     if (httpClientAdapter != null) _dio.httpClientAdapter = httpClientAdapter;
     _dio.interceptors.addAll([
       JsonHeadersInterceptor(),
+      if (employeeName != null) EmployeeHeaderInterceptor(employeeName),
       JsonResponseGuardInterceptor(),
       if (enableLogging) DebugLogInterceptor(),
     ]);

@@ -14,6 +14,27 @@ class JsonHeadersInterceptor extends Interceptor {
   }
 }
 
+/// Adds `X-Employee-Name` to write requests so the CRM can audit who decided
+/// what (confirmed a hold, converted a prospect...). It is a label, not an
+/// authentication: all employees keep the same access.
+class EmployeeHeaderInterceptor extends Interceptor {
+  EmployeeHeaderInterceptor(this._name);
+
+  final String? Function() _name;
+
+  static const header = 'X-Employee-Name';
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final method = options.method.toUpperCase();
+    if (method != 'GET' && method != 'HEAD') {
+      final name = _name();
+      if (name != null && name.isNotEmpty) options.headers[header] = name;
+    }
+    handler.next(options);
+  }
+}
+
 /// Rejects 2xx responses whose body is not JSON (typically an Apache/IIS
 /// welcome page when the configured URL points to the wrong place).
 class JsonResponseGuardInterceptor extends Interceptor {

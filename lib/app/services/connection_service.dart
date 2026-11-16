@@ -12,11 +12,20 @@ enum ConnectionStatus { unknown, checking, online, offline }
 /// Periodically checks that the central server answers, for the status
 /// indicator in the top bar.
 class ConnectionService extends GetxService {
-  ConnectionService(this._networkInfo, this._settings, {this.autoCheck = true});
+  ConnectionService(
+    this._networkInfo,
+    this._settings, {
+    this.autoCheck = true,
+    this.onHeartbeat,
+  });
 
   final NetworkInfo _networkInfo;
   final AppSettingsService _settings;
   final bool autoCheck;
+
+  /// Called after each successful server check so the CRM knows this
+  /// workstation is alive (`POST /system/heartbeat`). Failures are ignored.
+  final Future<void> Function()? onHeartbeat;
 
   final status = ConnectionStatus.unknown.obs;
   final lastError = Rxn<ApiException>();
@@ -69,6 +78,13 @@ class ConnectionService extends GetxService {
               previous == ConnectionStatus.checking)) {
         for (final listener in _onReconnectListeners) {
           listener();
+        }
+      }
+      if (error == null && onHeartbeat != null) {
+        try {
+          await onHeartbeat!();
+        } catch (_) {
+          // Best effort: the heartbeat must never affect the indicator.
         }
       }
       return error == null;

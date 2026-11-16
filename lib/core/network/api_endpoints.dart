@@ -51,6 +51,39 @@ class ApiEndpoints {
   static String prospectFormOption(int id) => '/prospect-form-options/$id';
   static const prospectFormOptionsReorder = '/prospect-form-options/reorder';
 
+  // Employees (heartbeat sessions)
+  static const heartbeat = '/system/heartbeat';
+  static const employees = '/system/employees';
+
+  // Customers and conversion (docs/PORTAL_AND_WORKFLOWS.md section 3)
+  static const customers = '/customers';
+  static String customer(int id) => '/customers/$id';
+  static String prospectConvert(int id) => '/prospects/$id/convert';
+  static String prospectTrials(int id) => '/prospects/$id/trials';
+  static String trialRevoke(int id) => '/trials/$id/revoke';
+
+  // Appointments, calendar, website requests
+  static const calendar = '/calendar';
+  static const appointments = '/appointments';
+  static String appointment(int id) => '/appointments/$id';
+  static String appointmentAction(int id, String action) =>
+      '/appointments/$id/$action';
+  static String appointmentSeriesCancel(int id) =>
+      '/appointment-series/$id/cancel';
+  static const portalRequests = '/portal-requests';
+  static String portalRequest(int id) => '/portal-requests/$id';
+
+  // Interventions (after-sales)
+  static const interventions = '/interventions';
+  static String intervention(int id) => '/interventions/$id';
+  static String interventionAction(int id, String action) =>
+      '/interventions/$id/$action';
+
+  // Settings
+  static const schedulingSettings = '/settings/scheduling';
+  static String config(String entity) => '/config/$entity';
+  static String configRow(String entity, int id) => '/config/$entity/$id';
+
   /// Lightweight endpoint used to test the connection (also checks the
   /// database: it answers 503 when MySQL is down).
   static const connectionCheck = health;

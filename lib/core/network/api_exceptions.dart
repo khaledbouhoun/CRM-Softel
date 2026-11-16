@@ -8,10 +8,22 @@ import '../../app/l10n/l10n.dart';
 /// Controllers catch [ApiException] and display [message]; they never need to
 /// know about Dio.
 sealed class ApiException implements Exception {
-  const ApiException(this.message, {this.statusCode});
+  const ApiException(
+    this.message, {
+    this.statusCode,
+    this.errorCode,
+    this.details = const {},
+  });
 
   final String message;
   final int? statusCode;
+
+  /// Machine-readable `error_code` of the API envelope (for example
+  /// `HOLD_EXPIRED` or `APPOINTMENT_CONFLICT`), when the server sent one.
+  final String? errorCode;
+
+  /// Raw `errors` object of the envelope (for example `{conflicts: [...]}`).
+  final Map<String, dynamic> details;
 
   @override
   String toString() => '$runtimeType($statusCode): $message';
@@ -66,6 +78,8 @@ sealed class ApiException implements Exception {
     final status = response?.statusCode ?? 0;
     final body = asMapOrNull(response?.data);
     final serverMessage = asStringOrNull(body?['message']);
+    final code = asStringOrNull(body?['error_code']);
+    final details = asMapOrNull(body?['errors']) ?? const <String, dynamic>{};
 
     switch (status) {
       case 400:
@@ -87,6 +101,14 @@ sealed class ApiException implements Exception {
         return ConflictException(
           serverMessage ?? tr.errConflict,
           statusCode: status,
+          errorCode: code,
+          details: details,
+        );
+      case 410:
+        return GoneException(
+          serverMessage ?? tr.wfHoldExpired,
+          statusCode: status,
+          errorCode: code,
         );
       case 422:
         // Plain field validation carries a generic English message; business
@@ -97,6 +119,7 @@ sealed class ApiException implements Exception {
               ? tr.errValidation
               : serverMessage,
           fieldErrors: _parseFieldErrors(body?['errors']),
+          errorCode: code,
         );
       default:
         if (status >= 500) {
@@ -150,13 +173,25 @@ class NotSupportedException extends ApiException {
 }
 
 class ConflictException extends ApiException {
-  const ConflictException(super.message, {super.statusCode});
+  const ConflictException(
+    super.message, {
+    super.statusCode,
+    super.errorCode,
+    super.details,
+  });
+
+  /// True when the server refused a schedule because of overlaps/holidays
+  /// (`APPOINTMENT_CONFLICT`); the list is in `details['conflicts']`.
+  bool get isScheduleConflict => errorCode == 'APPOINTMENT_CONFLICT';
 }
 
 /// HTTP 422 from a Laravel FormRequest.
 class ValidationException extends ApiException {
-  const ValidationException(super.message, {this.fieldErrors = const {}})
-    : super(statusCode: 422);
+  const ValidationException(
+    super.message, {
+    this.fieldErrors = const {},
+    super.errorCode,
+  }) : super(statusCode: 422);
 
   /// Field name (Laravel dot notation) → messages.
   final Map<String, List<String>> fieldErrors;
@@ -189,6 +224,13 @@ class ValidationException extends ApiException {
   /// [message] followed by [messagesOutside], one per line.
   String describeFor(Set<String> displayedFields) =>
       [message, ...messagesOutside(displayedFields)].join('\n');
+}
+
+/// HTTP 410: the resource existed but is gone (an expired slot hold).
+class GoneException extends ApiException {
+  const GoneException(super.message, {super.statusCode, super.errorCode});
+
+  bool get isHoldExpired => errorCode == 'HOLD_EXPIRED';
 }
 
 class ServerException extends ApiException {
