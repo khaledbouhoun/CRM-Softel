@@ -164,7 +164,7 @@ class CompleteFollowUpController extends GetxController {
     // schedule is recorded as happening now.
     final now = _clock();
     final due = followUp.dueAt;
-    occurredAt.value = due ?? now;
+    occurredAt.value = (due != null && due.isBefore(now)) ? due : now;
     description.text = followUp.description ?? '';
     type.value = followUp.activityType;
   }
