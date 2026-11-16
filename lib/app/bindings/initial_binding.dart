@@ -22,9 +22,24 @@ import '../../features/settings/data/datasources/prospect_form_options_remote_da
 import '../../features/settings/data/datasources/sales_stages_remote_data_source.dart';
 import '../../features/settings/data/repositories/settings_repositories_impl.dart';
 import '../../features/settings/domain/settings_repositories.dart';
+import '../../features/customers/data/datasources/customers_remote_data_source.dart';
+import '../../features/customers/data/repositories/customers_repository_impl.dart';
+import '../../features/customers/domain/customers_repository.dart';
+import '../../features/employees/data/employees_repository.dart';
+import '../../features/interventions/data/datasources/interventions_remote_data_source.dart';
+import '../../features/interventions/data/repositories/interventions_repository_impl.dart';
+import '../../features/interventions/domain/interventions_repository.dart';
+import '../../features/scheduling/data/datasources/scheduling_remote_data_source.dart';
+import '../../features/scheduling/data/repositories/scheduling_repository_impl.dart';
+import '../../features/scheduling/domain/scheduling_repository.dart';
+import '../../features/workflow_settings/data/datasources/workflow_config_remote_data_source.dart';
+import '../../features/workflow_settings/data/repositories/workflow_config_repository_impl.dart';
+import '../../features/workflow_settings/domain/workflow_config_repository.dart';
 import '../config/app_settings_service.dart';
 import '../services/connection_service.dart';
+import '../services/employee_identity.dart';
 import '../services/lookup_service.dart';
+import '../services/workflow_lookup_service.dart';
 
 /// App-wide singletons. [AppSettingsService] is registered in `main()`
 /// before this binding runs.
@@ -33,9 +48,14 @@ class InitialBinding extends Bindings {
   void dependencies() {
     final settings = Get.find<AppSettingsService>();
 
+    final identity = Get.put<EmployeeIdentity>(
+      EmployeeIdentity(),
+      permanent: true,
+    );
     final api = ApiClient(
       baseUrl: settings.apiBaseUrl.value,
       timeout: settings.timeout,
+      employeeName: () => identity.headerValue,
     );
     Get.put<ApiClient>(api, permanent: true);
     Get.put<NetworkInfo>(NetworkInfo(), permanent: true);
@@ -77,6 +97,36 @@ class InitialBinding extends Bindings {
       permanent: true,
     );
 
+    // Customer journey workflows (docs/PORTAL_AND_WORKFLOWS.md, section 3).
+    Get.put<CustomersRepository>(
+      CustomersRepositoryImpl(CustomersRemoteDataSource(api)),
+      permanent: true,
+    );
+    Get.put<SchedulingRepository>(
+      SchedulingRepositoryImpl(SchedulingRemoteDataSource(api)),
+      permanent: true,
+    );
+    Get.put<InterventionsRepository>(
+      InterventionsRepositoryImpl(InterventionsRemoteDataSource(api)),
+      permanent: true,
+    );
+    Get.put<WorkflowConfigRepository>(
+      WorkflowConfigRepositoryImpl(WorkflowConfigRemoteDataSource(api)),
+      permanent: true,
+    );
+    final employees = Get.put<EmployeesRepository>(
+      EmployeesRepositoryImpl(api),
+      permanent: true,
+    );
+    Get.put<WorkflowLookupService>(
+      WorkflowLookupService(
+        config: Get.find(),
+        employees: employees,
+        identity: identity,
+      ),
+      permanent: true,
+    );
+
     final lookups = Get.put<LookupService>(
       LookupService(
         stagesRepository: Get.find(),
@@ -88,7 +138,15 @@ class InitialBinding extends Bindings {
     );
 
     final connection = Get.put<ConnectionService>(
-      ConnectionService(Get.find(), settings),
+      ConnectionService(
+        Get.find(),
+        settings,
+        onHeartbeat: () => employees.sendHeartbeat(
+          employeeId: identity.employeeId,
+          username: identity.username,
+          deviceName: identity.deviceName.isEmpty ? null : identity.deviceName,
+        ),
+      ),
       permanent: true,
     );
     connection.addReconnectListener(lookups.refreshQuietly);

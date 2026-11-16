@@ -21,45 +21,100 @@ class _NavItem {
   final IconData selectedIcon;
 }
 
-List<_NavItem> get _mainItems => [
-  _NavItem(
-    Routes.dashboard,
-    tr.navDashboard,
-    Icons.space_dashboard_outlined,
-    Icons.space_dashboard,
-  ),
-  _NavItem(
-    Routes.prospects,
-    tr.navProspects,
-    Icons.people_alt_outlined,
-    Icons.people_alt,
-  ),
-  _NavItem(
-    Routes.pipeline,
-    tr.navPipeline,
-    Icons.view_kanban_outlined,
-    Icons.view_kanban,
-  ),
-  _NavItem(
-    Routes.activities,
-    tr.navActivities,
-    Icons.history_outlined,
-    Icons.history,
-  ),
-  _NavItem(
-    Routes.followUps,
-    tr.navFollowUps,
-    Icons.event_note_outlined,
-    Icons.event_note,
-  ),
-  _NavItem(
-    Routes.products,
-    tr.navProducts,
-    Icons.inventory_2_outlined,
-    Icons.inventory_2,
-  ),
-];
+class _NavGroup {
+  const _NavGroup(this.label, this.items);
 
+  /// Null for the first, unlabeled group.
+  final String? label;
+  final List<_NavItem> items;
+}
+
+/// Sidebar sections. Employees all share the same access level, so every
+/// entry is always visible (no role checks).
+List<_NavGroup> get _mainGroups => [
+  _NavGroup(null, [
+    _NavItem(
+      Routes.dashboard,
+      tr.navDashboard,
+      Icons.space_dashboard_outlined,
+      Icons.space_dashboard,
+    ),
+  ]),
+  _NavGroup(tr.navGroupCrm, [
+    _NavItem(
+      Routes.prospects,
+      tr.navProspects,
+      Icons.people_alt_outlined,
+      Icons.people_alt,
+    ),
+    _NavItem(
+      Routes.pipeline,
+      tr.navPipeline,
+      Icons.view_kanban_outlined,
+      Icons.view_kanban,
+    ),
+    _NavItem(
+      Routes.activities,
+      tr.navActivities,
+      Icons.history_outlined,
+      Icons.history,
+    ),
+    _NavItem(
+      Routes.followUps,
+      tr.navFollowUps,
+      Icons.event_note_outlined,
+      Icons.event_note,
+    ),
+    _NavItem(
+      Routes.calendar,
+      tr.navCalendar,
+      Icons.calendar_month_outlined,
+      Icons.calendar_month,
+    ),
+  ]),
+  _NavGroup(tr.navGroupCustomers, [
+    _NavItem(
+      Routes.customers,
+      tr.navCustomers,
+      Icons.verified_user_outlined,
+      Icons.verified_user,
+    ),
+    _NavItem(
+      Routes.products,
+      tr.navProducts,
+      Icons.inventory_2_outlined,
+      Icons.inventory_2,
+    ),
+    _NavItem(
+      Routes.training,
+      tr.navTraining,
+      Icons.school_outlined,
+      Icons.school,
+    ),
+  ]),
+  _NavGroup(tr.navGroupService, [
+    _NavItem(
+      Routes.requests,
+      tr.navRequests,
+      Icons.hourglass_empty_outlined,
+      Icons.hourglass_top,
+    ),
+    _NavItem(
+      Routes.afterSales,
+      tr.navAfterSales,
+      Icons.support_agent_outlined,
+      Icons.support_agent,
+    ),
+  ]),
+  _NavGroup(tr.navGroupTeam, [
+    _NavItem(
+      Routes.employees,
+      tr.navEmployees,
+      Icons.badge_outlined,
+      Icons.badge,
+    ),
+  ]),
+];
 List<_NavItem> get _settingsItems => [
   _NavItem(
     Routes.stagesSettings,
@@ -82,6 +137,12 @@ List<_NavItem> get _settingsItems => [
     },
     Icons.list_alt_outlined,
     Icons.list_alt,
+  ),
+  _NavItem(
+    Routes.workflowSettings,
+    tr.navWorkflowSettings,
+    Icons.tune_outlined,
+    Icons.tune,
   ),
   _NavItem(
     Routes.settings,
@@ -159,13 +220,16 @@ class _Sidebar extends StatelessWidget {
                 ),
                 if (!compact) ...[
                   const SizedBox(width: 12),
-                  Text(
-                    AppConfig.appName,
-                    style: TextStyle(
-                      color: crm.sidebarForeground,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      letterSpacing: 0.3,
+                  Flexible(
+                    child: Text(
+                      AppConfig.appName,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: crm.sidebarForeground,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        letterSpacing: 0.3,
+                      ),
                     ),
                   ),
                 ],
@@ -177,7 +241,11 @@ class _Sidebar extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               children: [
-                for (final item in _mainItems) _tile(context, item),
+                for (final group in _mainGroups) ...[
+                  if (group.label != null)
+                    _groupHeader(context, group.label!),
+                  for (final item in group.items) _tile(context, item),
+                ],
                 const SizedBox(height: 18),
                 if (!compact)
                   Padding(
@@ -199,6 +267,28 @@ class _Sidebar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _groupHeader(BuildContext context, String label) {
+    final crm = context.crm;
+    if (compact) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Divider(color: crm.sidebarMuted.withValues(alpha: 0.3)),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 14, 0, 6),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          color: crm.sidebarMuted,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1,
+        ),
       ),
     );
   }
