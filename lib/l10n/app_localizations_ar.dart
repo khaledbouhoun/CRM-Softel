@@ -1331,7 +1331,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'ردّ الخادم، لكن ليس بصيغة JSON. تأكد من أن العنوان ينتهي بـ /api/v1.';
 
   @override
-  String countProspects(int count) {
+  String countProspects(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1671,4 +1671,1115 @@ class AppLocalizationsAr extends AppLocalizations {
   String validMinLength(Object min) {
     return '$min أحرف كحد أدنى.';
   }
+
+  @override
+  String get navAfterSales => 'ما بعد البيع';
+
+  @override
+  String get navCalendar => 'التقويم';
+
+  @override
+  String get navCustomers => 'العملاء';
+
+  @override
+  String get navEmployees => 'الموظفون';
+
+  @override
+  String get navGroupCrm => 'إدارة العملاء';
+
+  @override
+  String get navGroupCustomers => 'العملاء والمنتجات';
+
+  @override
+  String get navGroupService => 'الخدمة';
+
+  @override
+  String get navGroupTeam => 'الفريق';
+
+  @override
+  String get navRequests => 'الطلبات والحجوزات';
+
+  @override
+  String get navTraining => 'التكوين والمرافقة';
+
+  @override
+  String get navWorkflowSettings => 'المواعيد وما بعد البيع';
+
+  @override
+  String get wfYes => 'نعم';
+
+  @override
+  String get wfNo => 'لا';
+
+  @override
+  String get wfSaved => 'تم الحفظ.';
+
+  @override
+  String get wfDate => 'التاريخ';
+
+  @override
+  String get wfWhen => 'الموعد';
+
+  @override
+  String get wfToday => 'اليوم';
+
+  @override
+  String get wfPrevious => 'السابق';
+
+  @override
+  String get wfNext => 'التالي';
+
+  @override
+  String get wfTitle => 'العنوان';
+
+  @override
+  String get wfUpdated => 'آخر تحديث';
+
+  @override
+  String get wfReceived => 'تاريخ الاستلام';
+
+  @override
+  String get wfReference => 'المرجع';
+
+  @override
+  String get wfEmployee => 'الموظف';
+
+  @override
+  String get wfAssignedTo => 'مسند إلى';
+
+  @override
+  String get wfUnassigned => 'غير مسند';
+
+  @override
+  String get wfTrainer => 'المكوّن';
+
+  @override
+  String get wfCode => 'الرمز';
+
+  @override
+  String get wfCodeInvalid => 'أحرف صغيرة وأرقام و _ ؛ يجب أن يبدأ بحرف.';
+
+  @override
+  String get wfFieldRequired => 'هذا الحقل مطلوب.';
+
+  @override
+  String get wfNumberInvalid => 'يُرجى إدخال عدد صحيح موجب.';
+
+  @override
+  String wfTooLong(Object max) {
+    return '$max حرفًا كحد أقصى.';
+  }
+
+  @override
+  String wfRangeError(Object min, Object max) {
+    return 'بين $min و $max.';
+  }
+
+  @override
+  String get wfUrl => 'الرابط';
+
+  @override
+  String get wfUrlInvalid => 'رابط http(s) غير صالح.';
+
+  @override
+  String get wfUrlRequired => 'الرابط مطلوب.';
+
+  @override
+  String get wfInvalidId => 'معرّف غير صالح.';
+
+  @override
+  String get wfStartInPast => 'وقت البدء في الماضي.';
+
+  @override
+  String get wfEndAfterStart => 'يجب أن تكون النهاية بعد البداية.';
+
+  @override
+  String get wfStarts => 'البداية';
+
+  @override
+  String get wfEnds => 'النهاية';
+
+  @override
+  String get wfStartTime => 'ساعة البدء';
+
+  @override
+  String get wfEndTime => 'ساعة الانتهاء';
+
+  @override
+  String get wfLanguage => 'اللغة';
+
+  @override
+  String get wfSortOrder => 'ترتيب العرض';
+
+  @override
+  String get wfSortOrderHint => 'الرقم الأصغر = الأكثر استعجالًا.';
+
+  @override
+  String get wfStatusHeld => 'محجوز مؤقتًا';
+
+  @override
+  String get wfStatusProposed => 'مقترح';
+
+  @override
+  String get wfStatusConfirmed => 'مؤكد';
+
+  @override
+  String get wfStatusRejected => 'مرفوض';
+
+  @override
+  String get wfStatusCancelled => 'ملغى';
+
+  @override
+  String get wfStatusExpired => 'منتهي';
+
+  @override
+  String get wfStatusCompleted => 'منجز';
+
+  @override
+  String get wfStatusNoShow => 'لم يحضر';
+
+  @override
+  String get wfKindAppointment => 'موعد';
+
+  @override
+  String get wfKindFollowUp => 'متابعة';
+
+  @override
+  String get wfKindIntervention => 'تدخل';
+
+  @override
+  String get wfKindActivity => 'الأنشطة المنجزة';
+
+  @override
+  String get wfGroupDemo => 'عرض تجريبي';
+
+  @override
+  String get wfGroupMeeting => 'اجتماع';
+
+  @override
+  String get wfGroupTraining => 'تكوين';
+
+  @override
+  String get wfGroup => 'المجموعة';
+
+  @override
+  String get wfGroupAccompaniment => 'مرافقة';
+
+  @override
+  String get wfConflictHoliday => 'يوم عطلة';
+
+  @override
+  String get wfConflictEmployee => 'الموظف مشغول';
+
+  @override
+  String get wfConflictCustomer => 'العميل مشغول';
+
+  @override
+  String get wfConflictsTitle => 'تم رفض الجدولة: توجد تعارضات';
+
+  @override
+  String wfConflictLine(Object occurrence, Object date, Object reason) {
+    return 'الحصة $occurrence ($date): $reason';
+  }
+
+  @override
+  String get wfConflictNothingSaved =>
+      'تعارض في الجدولة: لم يُحفظ شيء. صحّح الحصص المذكورة.';
+
+  @override
+  String wfConflictExplain(Object reasons) {
+    return 'تعارض: $reasons';
+  }
+
+  @override
+  String get wfHoldExpired => 'انتهت مدة الحجز وتم تحرير الموعد. حدّث القائمة.';
+
+  @override
+  String get wfHoldExpiredChip => 'انتهى الحجز';
+
+  @override
+  String get wfHoldExpires => 'انتهاء الحجز';
+
+  @override
+  String wfExpiresIn(Object time) {
+    return 'ينتهي بعد $time';
+  }
+
+  @override
+  String get wfCalendarSubtitle =>
+      'المواعيد والمتابعات والتدخلات المجدولة؛ الأنشطة المنجزة تظهر بلون خافت.';
+
+  @override
+  String get wfViewMonth => 'شهر';
+
+  @override
+  String get wfViewWeek => 'أسبوع';
+
+  @override
+  String get wfViewDay => 'يوم';
+
+  @override
+  String get wfLegendScheduled => 'مجدول';
+
+  @override
+  String get wfLegendCompleted => 'منجز';
+
+  @override
+  String get wfFilterCustomer => 'العميل';
+
+  @override
+  String get wfClearFilters => 'مسح الفلاتر';
+
+  @override
+  String wfMoreItems(Object count) {
+    return '+$count أخرى';
+  }
+
+  @override
+  String get wfNothingScheduled => 'لا شيء مجدول في هذا اليوم';
+
+  @override
+  String get wfNothingScheduledHint =>
+      'تظهر هنا المواعيد المؤكدة والمتابعات والتدخلات.';
+
+  @override
+  String wfActivitiesNotLoaded(Object message) {
+    return 'تعذر تحميل الأنشطة المنجزة: $message';
+  }
+
+  @override
+  String get wfConfirmHoldTitle => 'تأكيد الموعد';
+
+  @override
+  String get wfRejectTitle => 'رفض الطلب';
+
+  @override
+  String get wfCancelAppointmentTitle => 'إلغاء الموعد';
+
+  @override
+  String get wfProposeTitle => 'اقتراح موعد آخر';
+
+  @override
+  String get wfRescheduleTitle => 'تغيير موعد الحصة';
+
+  @override
+  String get wfRecordOutcomeTitle => 'تسجيل النتيجة';
+
+  @override
+  String get wfReject => 'رفض';
+
+  @override
+  String get wfCancelAppointment => 'إلغاء الموعد';
+
+  @override
+  String get wfCancelProposal => 'سحب الاقتراح';
+
+  @override
+  String get wfProposeOther => 'اقتراح موعد آخر';
+
+  @override
+  String get wfSendProposal => 'إرسال الاقتراح';
+
+  @override
+  String get wfReschedule => 'تغيير الموعد';
+
+  @override
+  String get wfRecordOutcome => 'تسجيل النتيجة';
+
+  @override
+  String get wfMarkNoShow => 'تسجيل الغياب';
+
+  @override
+  String get wfMeetingLink => 'رابط الاجتماع';
+
+  @override
+  String get wfMeetingLinkHint => 'يظهر للعميل بعد التأكيد.';
+
+  @override
+  String get wfNewTime => 'الموعد الجديد';
+
+  @override
+  String get wfReasonVisible => 'السبب (يظهر للعميل)';
+
+  @override
+  String get wfMessageVisible => 'رسالة (تظهر للعميل)';
+
+  @override
+  String get wfCustomerVisibleHint => 'هذا النص يظهر للعميل في فضائه.';
+
+  @override
+  String get wfOutcome => 'النتيجة';
+
+  @override
+  String get wfOutcomeHint => 'سيتم إنشاء نشاط في النظام بهذه النتيجة.';
+
+  @override
+  String get wfOutcomeRequired => 'النتيجة مطلوبة.';
+
+  @override
+  String get wfActivityRecorded => 'تم تسجيل النشاط';
+
+  @override
+  String get wfCustomerMessage => 'رسالة إلى العميل';
+
+  @override
+  String get wfInternalNotes => 'ملاحظات داخلية';
+
+  @override
+  String get wfOpenProspectRecord => 'فتح الملف';
+
+  @override
+  String get wfNewProspect => 'عميل محتمل جديد';
+
+  @override
+  String get wfWaitingForCustomer => 'في انتظار رد العميل.';
+
+  @override
+  String get wfRequestsSubtitle =>
+      'المواعيد المحجوزة للزوار والطلبات الواردة من الموقع.';
+
+  @override
+  String wfHoldsTab(Object count) {
+    return 'الحجوزات ($count)';
+  }
+
+  @override
+  String get wfWebsiteRequestsTab => 'طلبات الموقع';
+
+  @override
+  String get wfNoHolds => 'لا توجد حجوزات معلقة';
+
+  @override
+  String get wfNoHoldsHint => 'تظهر هنا المواعيد المطلوبة من الموقع حتى تقرر.';
+
+  @override
+  String get wfNoRequests => 'لا توجد طلبات';
+
+  @override
+  String get wfRequestDemo => 'عرض تجريبي';
+
+  @override
+  String get wfRequestQuotation => 'عرض سعر';
+
+  @override
+  String get wfRequestTrial => 'تجربة';
+
+  @override
+  String get wfReqPending => 'قيد المعالجة';
+
+  @override
+  String get wfReqScheduled => 'مجدولة';
+
+  @override
+  String get wfReqHandled => 'تمت معالجتها';
+
+  @override
+  String get wfMarkHandled => 'تحديد كمعالجة';
+
+  @override
+  String get wfRequestUpdated => 'تم تحديث الطلب.';
+
+  @override
+  String get wfTrainingSubtitle => 'حصص التكوين وسلاسل المرافقة للعملاء.';
+
+  @override
+  String get wfNewTraining => 'تكوين جديد';
+
+  @override
+  String get wfNewAccompaniment => 'مرافقة جديدة';
+
+  @override
+  String get wfNoSessions => 'لا توجد حصص';
+
+  @override
+  String get wfNoSessionsHint => 'جدول حصة تكوين أو سلسلة مرافقة.';
+
+  @override
+  String get wfShowPast => 'إظهار الماضي';
+
+  @override
+  String get wfPartOfSeries => 'سلسلة مرافقة';
+
+  @override
+  String get wfCancelThisSession => 'إلغاء هذه الحصة';
+
+  @override
+  String get wfCancelRemainingSeries => 'إلغاء بقية السلسلة';
+
+  @override
+  String get wfCancelSessionTitle => 'إلغاء هذه الحصة؟';
+
+  @override
+  String get wfCancelSessionBody =>
+      'تُلغى هذه الحصة المستقبلية فقط؛ باقي السلسلة لا يتغير.';
+
+  @override
+  String get wfCancelSeriesTitle => 'إلغاء بقية السلسلة؟';
+
+  @override
+  String get wfCancelSeriesBody =>
+      'تُلغى هذه الحصة وما بعدها. الحصص المنجزة لا تتأثر.';
+
+  @override
+  String get wfCancelSeries => 'إلغاء المتبقي';
+
+  @override
+  String get wfSessionCancelled => 'تم إلغاء الحصة.';
+
+  @override
+  String wfSeriesCancelled(Object count) {
+    return 'تم إلغاء $count حصة.';
+  }
+
+  @override
+  String get wfSessionScheduled => 'تمت جدولة الحصة.';
+
+  @override
+  String wfSeriesScheduled(Object count) {
+    return 'تمت جدولة السلسلة: $count حصص.';
+  }
+
+  @override
+  String get wfMoreActions => 'إجراءات أخرى';
+
+  @override
+  String get wfSessionType => 'نوع الحصة';
+
+  @override
+  String get wfNoTypesConfigured =>
+      'لا يوجد نوع موعد نشط لهذه المجموعة. اضبطه من الإعدادات.';
+
+  @override
+  String get wfSelectType => 'اختر نوعًا.';
+
+  @override
+  String get wfSelectProduct => 'اختر منتجًا.';
+
+  @override
+  String get wfNoProduct => 'بدون منتج';
+
+  @override
+  String get wfOccurrences => 'عدد الحصص';
+
+  @override
+  String get wfOccurrencesHint => 'القيمة الافتراضية من الإعدادات.';
+
+  @override
+  String get wfIntervalDays => 'الفاصل (أيام)';
+
+  @override
+  String get wfIntervalHint => 'عدد الأيام بين حصتين.';
+
+  @override
+  String wfPlannedSessions(Object count) {
+    return '$count حصص مخططة';
+  }
+
+  @override
+  String get wfPickResource => 'اختر مرجع تكوين';
+
+  @override
+  String get wfResourceLink => 'رابط المرجع (اختياري)';
+
+  @override
+  String get wfPrepareWhatsApp => 'تجهيز رسالة واتساب';
+
+  @override
+  String get wfPrepareWhatsAppHint => 'يجهز النص؛ ترسله بنفسك من واتساب.';
+
+  @override
+  String get wfOpenWhatsApp => 'فتح واتساب';
+
+  @override
+  String get wfWhatsAppHint =>
+      'يفتح رسالة جاهزة. الإرسال يتم داخل واتساب ولا يؤكده النظام.';
+
+  @override
+  String get wfWhatsappInvalidLink => 'رابط واتساب غير معروف: لم يتم فتحه.';
+
+  @override
+  String get wfCustomersSubtitle => 'العملاء المحتملون الذين تحولوا إلى عملاء.';
+
+  @override
+  String get wfCustomerSearchHint => 'ابحث عن عميل…';
+
+  @override
+  String get wfNoCustomers => 'لا يوجد عملاء';
+
+  @override
+  String get wfNoCustomersHint => 'حوّل عميلًا محتملًا من ملفه.';
+
+  @override
+  String get wfCustomerSince => 'عميل منذ';
+
+  @override
+  String wfCustomerSinceDate(Object date) {
+    return 'عميل منذ $date';
+  }
+
+  @override
+  String get wfCustomerBadge => 'عميل';
+
+  @override
+  String wfCustomersCount(Object count) {
+    return '$count عملاء';
+  }
+
+  @override
+  String get wfConvertTitle => 'تحويل إلى عميل';
+
+  @override
+  String get wfConvertAction => 'تحويل إلى عميل';
+
+  @override
+  String wfConvertIntro(Object name) {
+    return 'سيصبح «$name» عميلًا. يتم الاحتفاظ بالملف والسجل والأنشطة والمراحل.';
+  }
+
+  @override
+  String get wfPurchasedProducts => 'المنتجات المشتراة';
+
+  @override
+  String get wfConversionNote => 'ملاحظة التحويل';
+
+  @override
+  String get wfConvertedBy => 'تاريخ ومنفّذ التحويل';
+
+  @override
+  String wfConverted(Object name) {
+    return 'أصبح «$name» عميلًا.';
+  }
+
+  @override
+  String get wfAlreadyCustomer =>
+      'هذا العميل المحتمل أصبح عميلًا بالفعل. حدّث الملف.';
+
+  @override
+  String get wfOpenCustomerProfile => 'فتح ملف العميل';
+
+  @override
+  String get wfCustomerProducts => 'منتجات العميل';
+
+  @override
+  String get wfNoCustomerProducts => 'لا توجد منتجات مرتبطة';
+
+  @override
+  String wfPurchasedOn(Object date) {
+    return 'اشتري في $date';
+  }
+
+  @override
+  String get wfPortalAccounts => 'حسابات فضاء العميل';
+
+  @override
+  String get wfPortalAccountsHint =>
+      'هويات الموقع، منفصلة عن صلاحيات الموظفين.';
+
+  @override
+  String get wfNoPortalAccount => 'لا يوجد حساب مرتبط بالفضاء';
+
+  @override
+  String wfLastLogin(Object date) {
+    return 'آخر دخول: $date';
+  }
+
+  @override
+  String get wfTrials => 'فترات التجربة';
+
+  @override
+  String get wfNoTrials => 'لا توجد تجارب';
+
+  @override
+  String get wfNewTrial => 'تجربة جديدة';
+
+  @override
+  String get wfTrialUrl => 'رابط الوصول للتجربة';
+
+  @override
+  String get wfTrialUrlHint => 'لا يراه العميل إلا أثناء التجربة الفعالة.';
+
+  @override
+  String get wfTrialStarts => 'بداية التجربة';
+
+  @override
+  String get wfTrialEnds => 'نهاية التجربة';
+
+  @override
+  String get wfTrialDays => 'مدة التجربة الافتراضية (أيام)';
+
+  @override
+  String get wfTrialActive => 'فعّال';
+
+  @override
+  String get wfTrialScheduled => 'مبرمج';
+
+  @override
+  String get wfTrialRevoked => 'ملغى الوصول';
+
+  @override
+  String get wfTrialActivated => 'تم تفعيل التجربة.';
+
+  @override
+  String get wfTrialOverlap => 'توجد تجربة لهذا المنتج في نفس الفترة.';
+
+  @override
+  String get wfRevoke => 'سحب الوصول';
+
+  @override
+  String get wfRevokeTrialTitle => 'سحب الوصول إلى التجربة؟';
+
+  @override
+  String wfRevokeTrialBody(Object product) {
+    return 'لن يرى العميل رابط تجربة «$product» بعد الآن.';
+  }
+
+  @override
+  String get wfTrialRevokedDone => 'تم سحب الوصول.';
+
+  @override
+  String get wfAppointments => 'المواعيد';
+
+  @override
+  String get wfAppointmentsHint => 'مجدولة أو منجزة (النتيجة تصبح نشاطًا).';
+
+  @override
+  String get wfNoAppointments => 'لا توجد مواعيد';
+
+  @override
+  String get wfScheduleTraining => 'جدولة تكوين';
+
+  @override
+  String get wfAfterSalesSubtitle =>
+      'طلبات العملاء والتدخلات التي ينشرها الفريق.';
+
+  @override
+  String get wfNewIntervention => 'تدخل جديد';
+
+  @override
+  String wfInterventionCreated(Object reference) {
+    return 'تم إنشاء التدخل $reference.';
+  }
+
+  @override
+  String get wfInterventionType => 'نوع التدخل';
+
+  @override
+  String get wfPriority => 'الأولوية';
+
+  @override
+  String get wfNoPriority => 'بدون أولوية';
+
+  @override
+  String get wfSource => 'المصدر';
+
+  @override
+  String get wfSourceCustomer => 'العميل';
+
+  @override
+  String get wfSourceEmployee => 'الموظف';
+
+  @override
+  String get wfSourceBoth => 'العميل والموظف';
+
+  @override
+  String get wfOpenItems => 'مفتوحة';
+
+  @override
+  String get wfClosedItems => 'مغلقة';
+
+  @override
+  String get wfNoInterventions => 'لا توجد تدخلات';
+
+  @override
+  String get wfNoInterventionsHint => 'تظهر هنا طلبات العملاء وتدخلاتك.';
+
+  @override
+  String get wfAffectedCustomers => 'العملاء المعنيون';
+
+  @override
+  String get wfAddCustomer => 'إضافة عميل';
+
+  @override
+  String get wfScheduledAt => 'مجدولة في';
+
+  @override
+  String get wfTitleRequired => 'العنوان مطلوب.';
+
+  @override
+  String get wfDescriptionRequired => 'الوصف مطلوب.';
+
+  @override
+  String get wfClosedAt => 'أغلقت في';
+
+  @override
+  String get wfStatusWorkflow => 'الحالة';
+
+  @override
+  String get wfStatusWorkflowHint =>
+      'تُعرض الحالات المسموح بها من الحالة الحالية فقط.';
+
+  @override
+  String get wfCurrentStatus => 'الحالة الحالية';
+
+  @override
+  String get wfCustomerSees => 'ما يراه العميل';
+
+  @override
+  String get wfNoTransitions => 'لا يوجد انتقال مسموح من هذه الحالة.';
+
+  @override
+  String get wfTransitionNotAllowed => 'تغيير الحالة هذا غير مسموح.';
+
+  @override
+  String wfChangeStatusTo(Object status) {
+    return 'تغيير إلى «$status»';
+  }
+
+  @override
+  String wfCustomerSeesStatus(Object label) {
+    return 'سيرى العميل: «$label».';
+  }
+
+  @override
+  String get wfStatusExplanation => 'شرح للعميل (اختياري)';
+
+  @override
+  String get wfStatusChanged => 'تم تحديث الحالة.';
+
+  @override
+  String get wfTriage => 'الفرز والتخطيط';
+
+  @override
+  String get wfReleaseNotes => 'ملاحظات الإصدار';
+
+  @override
+  String get wfReleaseNotesHint => 'انشر الإصلاح أو التحديث للعملاء المعنيين.';
+
+  @override
+  String get wfPublish => 'نشر';
+
+  @override
+  String get wfPublished => 'تم النشر للعملاء المعنيين.';
+
+  @override
+  String get wfPublishTitle => 'النشر للعملاء';
+
+  @override
+  String wfPublishTo(Object names) {
+    return 'سيظهر لـ: $names';
+  }
+
+  @override
+  String get wfPublishNoCustomers =>
+      'لا يوجد عملاء معنيون: أضفهم عند الإنشاء ليتم النشر.';
+
+  @override
+  String wfPublishedOn(Object date) {
+    return 'نُشر في $date';
+  }
+
+  @override
+  String get wfNotPublished => 'لم يُنشر بعد: لا يراه العملاء.';
+
+  @override
+  String get wfResolutionRequired => 'نص النشر مطلوب.';
+
+  @override
+  String get wfUnpublish => 'إلغاء النشر';
+
+  @override
+  String get wfUnpublishTitle => 'إلغاء النشر؟';
+
+  @override
+  String get wfUnpublishBody => 'لن يرى العملاء هذه الملاحظات بعد الآن.';
+
+  @override
+  String get wfUnpublished => 'تم إلغاء النشر.';
+
+  @override
+  String get wfConversation => 'المحادثة';
+
+  @override
+  String get wfNoMessages => 'لا توجد رسائل';
+
+  @override
+  String get wfInternalNote => 'ملاحظة داخلية';
+
+  @override
+  String get wfCustomerReply => 'رد على العميل';
+
+  @override
+  String get wfInternalNoteHint => 'للفريق فقط: لا يراها العميل أبدًا.';
+
+  @override
+  String get wfCustomerReplyWarning => 'ستظهر هذه الرسالة للعميل في فضائه.';
+
+  @override
+  String get wfConfirmCustomerReplyTitle => 'الإرسال إلى العميل؟';
+
+  @override
+  String get wfConfirmCustomerReplyBody =>
+      'سيظهر الرد للعميل. لا تذكر أي نقاش داخلي.';
+
+  @override
+  String get wfSendReply => 'إرسال الرد';
+
+  @override
+  String get wfAddNote => 'إضافة الملاحظة';
+
+  @override
+  String get wfReplySaved => 'تم حفظ الرد للعميل.';
+
+  @override
+  String get wfNoteSaved => 'تم حفظ الملاحظة الداخلية.';
+
+  @override
+  String get wfMessageRequired => 'الرسالة فارغة.';
+
+  @override
+  String get wfEmployeesSubtitle =>
+      'المحطات المتصلة بالنظام والعمل المسند. لجميع الموظفين نفس الصلاحيات.';
+
+  @override
+  String get wfNoEmployees => 'لا يوجد موظفون معروفون';
+
+  @override
+  String get wfNoEmployeesHint => 'يظهر الموظفون عند اتصال تطبيقهم بالخادم.';
+
+  @override
+  String get wfSelectEmployee => 'اختر موظفًا';
+
+  @override
+  String get wfIdle => 'خامل';
+
+  @override
+  String wfAssignedAppointments(Object name) {
+    return 'المواعيد القادمة لـ $name';
+  }
+
+  @override
+  String wfAssignedInterventions(Object name) {
+    return 'التدخلات المفتوحة لـ $name';
+  }
+
+  @override
+  String get wfNothingAssigned => 'لا شيء مسند';
+
+  @override
+  String get wfSettingsSubtitle =>
+      'الأوقات والأنواع والحالات والأولويات والنماذج. كل شيء محفوظ في النظام.';
+
+  @override
+  String get wfSettingsSaved => 'تم حفظ الإعدادات.';
+
+  @override
+  String get wfCfgScheduling => 'الأوقات والحجز';
+
+  @override
+  String get wfCfgSchedulingHint =>
+      'أيام وساعات العمل ومدة المواعيد وانتهاء الحجز وتكرار المرافقة والتجارب.';
+
+  @override
+  String get wfCfgAppointmentTypes => 'أنواع المواعيد';
+
+  @override
+  String get wfCfgAppointmentTypesHint =>
+      'عرض، اجتماع، تكوين، مرافقة: المدة الافتراضية ولون التقويم.';
+
+  @override
+  String get wfCfgHolidays => 'أيام العطل';
+
+  @override
+  String get wfCfgHolidaysHint => 'لا تُعرض مواعيد في هذه الأيام.';
+
+  @override
+  String get wfCfgInterventionTypes => 'أنواع التدخل';
+
+  @override
+  String get wfCfgInterventionTypesHint =>
+      'خلل، سؤال، ملاحظة، إصلاح، إصدار… ومن يحق له إنشاؤها.';
+
+  @override
+  String get wfCfgInterventionStatuses => 'حالات التدخل';
+
+  @override
+  String get wfCfgInterventionStatusesHint =>
+      'التسمية الداخلية والتسمية التي يراها العميل.';
+
+  @override
+  String get wfCfgTransitions => 'انتقالات الحالة';
+
+  @override
+  String get wfCfgTransitionsHint =>
+      'أي حالة يمكن أن تتبع أي حالة، وهل يمكن للعميل إجراء التغيير.';
+
+  @override
+  String get wfCfgPriorities => 'الأولويات';
+
+  @override
+  String get wfCfgPrioritiesHint =>
+      'اللون ومهلة الرد المستهدفة؛ الترتيب يحدد الفرز.';
+
+  @override
+  String get wfCfgTemplates => 'نماذج الرسائل';
+
+  @override
+  String get wfCfgTemplatesHint =>
+      'نصوص واتساب المجهزة للتكوين (لا ترسل تلقائيًا).';
+
+  @override
+  String get wfCfgProductResources => 'مراجع المنتجات';
+
+  @override
+  String get wfCfgProductResourcesHint =>
+      'روابط التكوين والتوثيق مع إمكانية الظهور للعميل.';
+
+  @override
+  String get wfProductResources => 'مراجع وروابط المنتج';
+
+  @override
+  String wfProductResourcesTitle(Object name) {
+    return 'المراجع: $name';
+  }
+
+  @override
+  String get wfNoResources => 'لا توجد مراجع لهذا المنتج';
+
+  @override
+  String get wfNoConfigRows => 'لا توجد عناصر';
+
+  @override
+  String get wfNoConfigRowsHint => 'أضف أول عنصر. يمكن تعطيله لكن لا يُحذف.';
+
+  @override
+  String get wfDeactivateTitle => 'تعطيل هذا العنصر؟';
+
+  @override
+  String get wfDeactivateBody =>
+      'لن يُعرض بعد الآن، لكن السجل المرتبط به يُحفظ.';
+
+  @override
+  String get wfDeactivated => 'تم تعطيل العنصر.';
+
+  @override
+  String get wfReactivated => 'تمت إعادة تفعيل العنصر.';
+
+  @override
+  String get wfDurationMinutes => 'المدة (د)';
+
+  @override
+  String get wfCustomerBookable => 'قابل للحجز من العميل';
+
+  @override
+  String get wfCustomerLabel => 'تسمية العميل';
+
+  @override
+  String get wfCustomerLabelHint => 'ما يراه العميل لهذه الحالة.';
+
+  @override
+  String get wfIsInitial => 'حالة ابتدائية';
+
+  @override
+  String get wfIsClosed => 'تغلق التدخل';
+
+  @override
+  String get wfAwaitsCustomer => 'بانتظار العميل';
+
+  @override
+  String get wfIsDelivered => 'تم تسليمه للعميل';
+
+  @override
+  String get wfFromStatus => 'من الحالة';
+
+  @override
+  String get wfToStatus => 'إلى الحالة';
+
+  @override
+  String get wfCustomerAllowed => 'يمكن للعميل تنفيذه';
+
+  @override
+  String get wfResponseTarget => 'مهلة الرد (ساعة)';
+
+  @override
+  String get wfResponseTargetHint => 'اتركه فارغًا لعدم وجود مهلة.';
+
+  @override
+  String get wfTemplate => 'النموذج';
+
+  @override
+  String get wfTemplateTrainingFirst => 'أول تكوين';
+
+  @override
+  String get wfTemplateTrainingReview => 'متابعة التكوين';
+
+  @override
+  String get wfTemplateBody => 'نص الرسالة';
+
+  @override
+  String get wfTemplatePlaceholders =>
+      'المتغيرات المتاحة (اكتبها بين أقواس معقوفة): contact, product, date, start, end, resource_url';
+
+  @override
+  String get wfKindVideo => 'فيديو';
+
+  @override
+  String get wfKindLink => 'رابط';
+
+  @override
+  String get wfCustomerVisible => 'يظهر للعميل';
+
+  @override
+  String get wfTrainingMaterial => 'مادة تكوين';
+
+  @override
+  String get wfWorkingDays => 'أيام العمل';
+
+  @override
+  String get wfPickWorkingDay => 'اختر يومًا واحدًا على الأقل.';
+
+  @override
+  String get wfWorkStart => 'بداية اليوم';
+
+  @override
+  String get wfWorkEnd => 'نهاية اليوم';
+
+  @override
+  String get wfTimeInvalid => 'الصيغة المطلوبة HH:mm.';
+
+  @override
+  String get wfSlotMinutes => 'مدة الموعد (د)';
+
+  @override
+  String get wfHoldExpiryMinutes => 'انتهاء الحجز (د)';
+
+  @override
+  String get wfHoldExpiryHint => 'بعدها يتحرر الموعد تلقائيًا.';
+
+  @override
+  String get wfBookingHorizon => 'أفق الحجز (أيام)';
+
+  @override
+  String get wfMinNotice => 'أقل مهلة (ساعات)';
+
+  @override
+  String get wfDemoCapacity => 'عروض متزامنة';
+
+  @override
+  String get wfDemoCapacityHint => 'عدد العروض المتزامنة.';
+
+  @override
+  String get wfAccompanimentOccurrences => 'حصص المرافقة (افتراضي)';
+
+  @override
+  String get wfAccompanimentInterval => 'فاصل المرافقة (أيام، افتراضي)';
+
+  @override
+  String get wfWhatsappCountryCode => 'رمز دولة واتساب';
+
+  @override
+  String get wfWhatsappCountryCodeHint =>
+      'أرقام فقط مثل 213. يُستعمل لإكمال الأرقام التي تبدأ بـ 0.';
+
+  @override
+  String get wfCountryCodeInvalid => 'من 1 إلى 4 أرقام.';
 }

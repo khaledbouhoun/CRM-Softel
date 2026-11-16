@@ -978,5 +978,540 @@
         "type": "Object"
       }
     }
-  }
+  },
+  "navAfterSales": "Après-vente",
+  "navCalendar": "Calendrier",
+  "navCustomers": "Clients",
+  "navEmployees": "Employés",
+  "navGroupCrm": "CRM",
+  "navGroupCustomers": "Clients et produits",
+  "navGroupService": "Service",
+  "navGroupTeam": "Équipe",
+  "navRequests": "Demandes et réservations",
+  "navTraining": "Formation et accompagnement",
+  "navWorkflowSettings": "Rendez-vous et après-vente",
+  "wfYes": "Oui",
+  "wfNo": "Non",
+  "wfSaved": "Enregistré.",
+  "wfDate": "Date",
+  "wfWhen": "Quand",
+  "wfToday": "Aujourd'hui",
+  "wfPrevious": "Précédent",
+  "wfNext": "Suivant",
+  "wfTitle": "Titre",
+  "wfUpdated": "Mis à jour",
+  "wfReceived": "Reçue le",
+  "wfReference": "Référence",
+  "wfEmployee": "Employé",
+  "wfAssignedTo": "Assigné à",
+  "wfUnassigned": "Non assigné",
+  "wfTrainer": "Formateur",
+  "wfCode": "Code",
+  "wfCodeInvalid": "Minuscules, chiffres et _ ; commence par une lettre.",
+  "wfFieldRequired": "Champ obligatoire.",
+  "wfNumberInvalid": "Nombre entier positif attendu.",
+  "wfTooLong": "{max} caractères maximum.",
+  "@wfTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfRangeError": "Entre {min} et {max}.",
+  "@wfRangeError": {
+    "placeholders": {
+      "min": {
+        "type": "Object"
+      },
+      "max": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfUrl": "Lien (URL)",
+  "wfUrlInvalid": "Lien http(s) invalide.",
+  "wfUrlRequired": "Le lien est obligatoire.",
+  "wfInvalidId": "Identifiant invalide.",
+  "wfStartInPast": "L'heure de début est déjà passée.",
+  "wfEndAfterStart": "La fin doit être après le début.",
+  "wfStarts": "Début",
+  "wfEnds": "Fin",
+  "wfStartTime": "Heure de début",
+  "wfEndTime": "Heure de fin",
+  "wfLanguage": "Langue",
+  "wfSortOrder": "Ordre d'affichage",
+  "wfSortOrderHint": "Le plus petit nombre = le plus urgent.",
+  "wfStatusHeld": "En attente",
+  "wfStatusProposed": "Proposé",
+  "wfStatusConfirmed": "Confirmé",
+  "wfStatusRejected": "Refusé",
+  "wfStatusCancelled": "Annulé",
+  "wfStatusExpired": "Expiré",
+  "wfStatusCompleted": "Réalisé",
+  "wfStatusNoShow": "Absent",
+  "wfKindAppointment": "Rendez-vous",
+  "wfKindFollowUp": "Relance",
+  "wfKindIntervention": "Intervention",
+  "wfKindActivity": "Activités réalisées",
+  "wfGroupDemo": "Démo",
+  "wfGroupMeeting": "Réunion",
+  "wfGroupTraining": "Formation",
+  "wfGroup": "Groupe",
+  "wfGroupAccompaniment": "Accompagnement",
+  "wfConflictHoliday": "Jour férié",
+  "wfConflictEmployee": "Employé déjà occupé",
+  "wfConflictCustomer": "Client déjà occupé",
+  "wfConflictsTitle": "Planning refusé : conflits détectés",
+  "wfConflictLine": "Séance {occurrence} ({date}) : {reason}",
+  "@wfConflictLine": {
+    "placeholders": {
+      "occurrence": {
+        "type": "Object"
+      },
+      "date": {
+        "type": "Object"
+      },
+      "reason": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfConflictNothingSaved": "Conflit de planning : rien n'a été enregistré. Corrigez les séances listées.",
+  "wfConflictExplain": "Conflit : {reasons}",
+  "@wfConflictExplain": {
+    "placeholders": {
+      "reasons": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfHoldExpired": "La réservation a expiré et le créneau a été libéré. Actualisez la liste.",
+  "wfHoldExpiredChip": "Réservation expirée",
+  "wfHoldExpires": "Expiration de la réservation",
+  "wfExpiresIn": "expire dans {time}",
+  "@wfExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfCalendarSubtitle": "Rendez-vous, relances et interventions planifiés ; les activités réalisées apparaissent en grisé.",
+  "wfViewMonth": "Mois",
+  "wfViewWeek": "Semaine",
+  "wfViewDay": "Jour",
+  "wfLegendScheduled": "Planifié",
+  "wfLegendCompleted": "Réalisé",
+  "wfFilterCustomer": "Client",
+  "wfClearFilters": "Effacer les filtres",
+  "wfMoreItems": "+{count} autres",
+  "@wfMoreItems": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfNothingScheduled": "Rien de planifié ce jour",
+  "wfNothingScheduledHint": "Les rendez-vous confirmés, relances et interventions apparaissent ici.",
+  "wfActivitiesNotLoaded": "Les activités réalisées n'ont pas pu être chargées : {message}",
+  "@wfActivitiesNotLoaded": {
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfConfirmHoldTitle": "Confirmer le rendez-vous",
+  "wfRejectTitle": "Refuser la demande",
+  "wfCancelAppointmentTitle": "Annuler le rendez-vous",
+  "wfProposeTitle": "Proposer un autre horaire",
+  "wfRescheduleTitle": "Déplacer la séance",
+  "wfRecordOutcomeTitle": "Enregistrer le résultat",
+  "wfReject": "Refuser",
+  "wfCancelAppointment": "Annuler le rendez-vous",
+  "wfCancelProposal": "Retirer la proposition",
+  "wfProposeOther": "Proposer un autre horaire",
+  "wfSendProposal": "Envoyer la proposition",
+  "wfReschedule": "Déplacer",
+  "wfRecordOutcome": "Enregistrer le résultat",
+  "wfMarkNoShow": "Marquer absent",
+  "wfMeetingLink": "Lien de la réunion",
+  "wfMeetingLinkHint": "Visible par le client une fois confirmé.",
+  "wfNewTime": "Nouvel horaire",
+  "wfReasonVisible": "Motif (visible par le client)",
+  "wfMessageVisible": "Message (visible par le client)",
+  "wfCustomerVisibleHint": "Ce texte est visible par le client dans son espace.",
+  "wfOutcome": "Résultat",
+  "wfOutcomeHint": "Une activité est créée dans le CRM avec ce résultat.",
+  "wfOutcomeRequired": "Le résultat est obligatoire.",
+  "wfActivityRecorded": "Activité enregistrée",
+  "wfCustomerMessage": "Message au client",
+  "wfInternalNotes": "Notes internes",
+  "wfOpenProspectRecord": "Ouvrir la fiche",
+  "wfNewProspect": "Nouveau prospect",
+  "wfWaitingForCustomer": "En attente de la réponse du client.",
+  "wfRequestsSubtitle": "Créneaux réservés par les visiteurs et demandes reçues du site web.",
+  "wfHoldsTab": "Réservations ({count})",
+  "@wfHoldsTab": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfWebsiteRequestsTab": "Demandes du site",
+  "wfNoHolds": "Aucune réservation en attente",
+  "wfNoHoldsHint": "Les créneaux demandés depuis le site apparaissent ici jusqu'à votre décision.",
+  "wfNoRequests": "Aucune demande",
+  "wfRequestDemo": "Démo",
+  "wfRequestQuotation": "Devis",
+  "wfRequestTrial": "Essai",
+  "wfReqPending": "À traiter",
+  "wfReqScheduled": "Planifiée",
+  "wfReqHandled": "Traitée",
+  "wfMarkHandled": "Marquer comme traitée",
+  "wfRequestUpdated": "Demande mise à jour.",
+  "wfTrainingSubtitle": "Séances de formation et séries d'accompagnement des clients.",
+  "wfNewTraining": "Nouvelle formation",
+  "wfNewAccompaniment": "Nouvel accompagnement",
+  "wfNoSessions": "Aucune séance",
+  "wfNoSessionsHint": "Planifiez une formation ou une série d'accompagnement.",
+  "wfShowPast": "Inclure le passé",
+  "wfPartOfSeries": "Série d'accompagnement",
+  "wfCancelThisSession": "Annuler cette séance",
+  "wfCancelRemainingSeries": "Annuler le reste de la série",
+  "wfCancelSessionTitle": "Annuler cette séance ?",
+  "wfCancelSessionBody": "Seule cette séance future est annulée ; le reste de la série reste inchangé.",
+  "wfCancelSeriesTitle": "Annuler le reste de la série ?",
+  "wfCancelSeriesBody": "Cette séance et les suivantes sont annulées. Les séances déjà réalisées ne sont pas touchées.",
+  "wfCancelSeries": "Annuler la suite",
+  "wfSessionCancelled": "Séance annulée.",
+  "wfSeriesCancelled": "{count} séance(s) annulée(s).",
+  "@wfSeriesCancelled": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfSessionScheduled": "Séance planifiée.",
+  "wfSeriesScheduled": "Série planifiée : {count} séances.",
+  "@wfSeriesScheduled": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfMoreActions": "Autres actions",
+  "wfSessionType": "Type de séance",
+  "wfNoTypesConfigured": "Aucun type de rendez-vous actif pour ce groupe. Configurez-le dans les paramètres.",
+  "wfSelectType": "Choisissez un type.",
+  "wfSelectProduct": "Choisissez un produit.",
+  "wfNoProduct": "Aucun produit",
+  "wfOccurrences": "Nombre de séances",
+  "wfOccurrencesHint": "Valeur par défaut des paramètres.",
+  "wfIntervalDays": "Intervalle (jours)",
+  "wfIntervalHint": "Jours entre deux séances.",
+  "wfPlannedSessions": "{count} séances prévues",
+  "@wfPlannedSessions": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfPickResource": "Choisir un support de formation",
+  "wfResourceLink": "Lien du support (optionnel)",
+  "wfPrepareWhatsApp": "Préparer un message WhatsApp",
+  "wfPrepareWhatsAppHint": "Prépare le texte ; vous l'envoyez vous-même depuis WhatsApp.",
+  "wfOpenWhatsApp": "Ouvrir WhatsApp",
+  "wfWhatsAppHint": "Ouvre un message pré-rempli. L'envoi se fait dans WhatsApp, non confirmé par le CRM.",
+  "wfWhatsappInvalidLink": "Lien WhatsApp non reconnu : il n'a pas été ouvert.",
+  "wfCustomersSubtitle": "Prospects convertis en clients.",
+  "wfCustomerSearchHint": "Rechercher un client…",
+  "wfNoCustomers": "Aucun client",
+  "wfNoCustomersHint": "Convertissez un prospect depuis sa fiche.",
+  "wfCustomerSince": "Client depuis",
+  "wfCustomerSinceDate": "Client depuis le {date}",
+  "@wfCustomerSinceDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfCustomerBadge": "Client",
+  "wfCustomersCount": "{count} clients",
+  "@wfCustomersCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfConvertTitle": "Convertir en client",
+  "wfConvertAction": "Convertir en client",
+  "wfConvertIntro": "« {name} » devient client. La fiche, l'historique, les activités et les étapes sont conservés.",
+  "@wfConvertIntro": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfPurchasedProducts": "Produits achetés",
+  "wfConversionNote": "Note de conversion",
+  "wfConvertedBy": "Converti le / par",
+  "wfConverted": "« {name} » est maintenant client.",
+  "@wfConverted": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfAlreadyCustomer": "Ce prospect est déjà client. Actualisez la fiche.",
+  "wfOpenCustomerProfile": "Voir le profil client",
+  "wfCustomerProducts": "Produits du client",
+  "wfNoCustomerProducts": "Aucun produit lié",
+  "wfPurchasedOn": "Acheté le {date}",
+  "@wfPurchasedOn": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfPortalAccounts": "Comptes du portail client",
+  "wfPortalAccountsHint": "Identités du site web, distinctes des accès employés.",
+  "wfNoPortalAccount": "Aucun compte portail lié",
+  "wfLastLogin": "Dernière connexion : {date}",
+  "@wfLastLogin": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfTrials": "Accès d'essai",
+  "wfNoTrials": "Aucun essai",
+  "wfNewTrial": "Nouvel essai",
+  "wfTrialUrl": "Lien d'accès à l'essai",
+  "wfTrialUrlHint": "Le client ne le voit que pendant l'essai actif.",
+  "wfTrialStarts": "Début de l'essai",
+  "wfTrialEnds": "Fin de l'essai",
+  "wfTrialDays": "Durée d'essai par défaut (jours)",
+  "wfTrialActive": "Actif",
+  "wfTrialScheduled": "Programmé",
+  "wfTrialRevoked": "Révoqué",
+  "wfTrialActivated": "Essai activé.",
+  "wfTrialOverlap": "Un essai existe déjà pour ce produit sur cette période.",
+  "wfRevoke": "Révoquer",
+  "wfRevokeTrialTitle": "Révoquer l'accès à l'essai ?",
+  "wfRevokeTrialBody": "Le client ne verra plus le lien de l'essai « {product} ».",
+  "@wfRevokeTrialBody": {
+    "placeholders": {
+      "product": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfTrialRevokedDone": "Accès révoqué.",
+  "wfAppointments": "Rendez-vous",
+  "wfAppointmentsHint": "Planifiés ou réalisés (le résultat devient une activité).",
+  "wfNoAppointments": "Aucun rendez-vous",
+  "wfScheduleTraining": "Planifier une formation",
+  "wfAfterSalesSubtitle": "Demandes des clients et interventions publiées par l'équipe.",
+  "wfNewIntervention": "Nouvelle intervention",
+  "wfInterventionCreated": "Intervention {reference} créée.",
+  "@wfInterventionCreated": {
+    "placeholders": {
+      "reference": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfInterventionType": "Type d'intervention",
+  "wfPriority": "Priorité",
+  "wfNoPriority": "Sans priorité",
+  "wfSource": "Origine",
+  "wfSourceCustomer": "Client",
+  "wfSourceEmployee": "Employé",
+  "wfSourceBoth": "Client et employé",
+  "wfOpenItems": "Ouvertes",
+  "wfClosedItems": "Clôturées",
+  "wfNoInterventions": "Aucune intervention",
+  "wfNoInterventionsHint": "Les demandes des clients et vos interventions apparaissent ici.",
+  "wfAffectedCustomers": "Clients concernés",
+  "wfAddCustomer": "Ajouter un client",
+  "wfScheduledAt": "Planifiée le",
+  "wfTitleRequired": "Le titre est obligatoire.",
+  "wfDescriptionRequired": "La description est obligatoire.",
+  "wfClosedAt": "Clôturée le",
+  "wfStatusWorkflow": "Statut",
+  "wfStatusWorkflowHint": "Seuls les statuts autorisés depuis le statut actuel sont proposés.",
+  "wfCurrentStatus": "Statut actuel",
+  "wfCustomerSees": "Vu par le client",
+  "wfNoTransitions": "Aucune transition autorisée depuis ce statut.",
+  "wfTransitionNotAllowed": "Ce changement de statut n'est pas autorisé.",
+  "wfChangeStatusTo": "Passer à « {status} »",
+  "@wfChangeStatusTo": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfCustomerSeesStatus": "Le client verra : « {label} ».",
+  "@wfCustomerSeesStatus": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfStatusExplanation": "Explication pour le client (optionnelle)",
+  "wfStatusChanged": "Statut mis à jour.",
+  "wfTriage": "Tri et planification",
+  "wfReleaseNotes": "Notes de version",
+  "wfReleaseNotesHint": "Publiez la correction ou la mise à jour aux clients concernés.",
+  "wfPublish": "Publier",
+  "wfPublished": "Publié aux clients concernés.",
+  "wfPublishTitle": "Publier aux clients",
+  "wfPublishTo": "Sera visible par : {names}",
+  "@wfPublishTo": {
+    "placeholders": {
+      "names": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfPublishNoCustomers": "Aucun client concerné : ajoutez-en à la création pour pouvoir publier.",
+  "wfPublishedOn": "Publié le {date}",
+  "@wfPublishedOn": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfNotPublished": "Pas encore publié : les clients ne le voient pas.",
+  "wfResolutionRequired": "Le texte publié est obligatoire.",
+  "wfUnpublish": "Dépublier",
+  "wfUnpublishTitle": "Dépublier ?",
+  "wfUnpublishBody": "Les clients ne verront plus ces notes.",
+  "wfUnpublished": "Dépublié.",
+  "wfConversation": "Échanges",
+  "wfNoMessages": "Aucun message",
+  "wfInternalNote": "Note interne",
+  "wfCustomerReply": "Réponse au client",
+  "wfInternalNoteHint": "Réservée à l'équipe : le client ne la verra jamais.",
+  "wfCustomerReplyWarning": "Ce message sera visible par le client dans son espace.",
+  "wfConfirmCustomerReplyTitle": "Envoyer au client ?",
+  "wfConfirmCustomerReplyBody": "La réponse sera visible par le client. Ne mentionnez aucune discussion interne.",
+  "wfSendReply": "Envoyer la réponse",
+  "wfAddNote": "Ajouter la note",
+  "wfReplySaved": "Réponse enregistrée pour le client.",
+  "wfNoteSaved": "Note interne enregistrée.",
+  "wfMessageRequired": "Le message est vide.",
+  "wfEmployeesSubtitle": "Postes connectés au CRM et travail assigné. Tous les employés ont le même accès.",
+  "wfNoEmployees": "Aucun employé connu",
+  "wfNoEmployeesHint": "Les employés apparaissent quand leur application se connecte au serveur.",
+  "wfSelectEmployee": "Sélectionnez un employé",
+  "wfIdle": "Inactif",
+  "wfAssignedAppointments": "Rendez-vous à venir de {name}",
+  "@wfAssignedAppointments": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfAssignedInterventions": "Interventions ouvertes de {name}",
+  "@wfAssignedInterventions": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfNothingAssigned": "Rien d'assigné",
+  "wfSettingsSubtitle": "Horaires, types, statuts, priorités et modèles. Tout est stocké dans le CRM.",
+  "wfSettingsSaved": "Paramètres enregistrés.",
+  "wfCfgScheduling": "Horaires et réservations",
+  "wfCfgSchedulingHint": "Jours et heures de travail, durée des créneaux, expiration des réservations, récurrence de l'accompagnement et essais.",
+  "wfCfgAppointmentTypes": "Types de rendez-vous",
+  "wfCfgAppointmentTypesHint": "Démo, réunion, formation, accompagnement : durée par défaut et couleur du calendrier.",
+  "wfCfgHolidays": "Jours fériés",
+  "wfCfgHolidaysHint": "Aucun créneau n'est proposé ces jours-là.",
+  "wfCfgInterventionTypes": "Types d'intervention",
+  "wfCfgInterventionTypesHint": "Bug, question, remarque, correctif, version… et qui peut les créer.",
+  "wfCfgInterventionStatuses": "Statuts d'intervention",
+  "wfCfgInterventionStatusesHint": "Libellé interne et libellé vu par le client.",
+  "wfCfgTransitions": "Transitions de statut",
+  "wfCfgTransitionsHint": "Quels statuts peuvent suivre quels statuts, et si le client peut déclencher le changement.",
+  "wfCfgPriorities": "Priorités",
+  "wfCfgPrioritiesHint": "Couleur et délai de réponse cible ; l'ordre sert au tri.",
+  "wfCfgTemplates": "Modèles de message",
+  "wfCfgTemplatesHint": "Textes WhatsApp préparés pour les formations (jamais envoyés automatiquement).",
+  "wfCfgProductResources": "Supports produit",
+  "wfCfgProductResourcesHint": "Liens de formation et de documentation, avec visibilité client.",
+  "wfProductResources": "Supports et liens du produit",
+  "wfProductResourcesTitle": "Supports : {name}",
+  "@wfProductResourcesTitle": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "wfNoResources": "Aucun support pour ce produit",
+  "wfNoConfigRows": "Aucune entrée",
+  "wfNoConfigRowsHint": "Ajoutez la première entrée. Elle pourra être désactivée, jamais supprimée.",
+  "wfDeactivateTitle": "Désactiver cette entrée ?",
+  "wfDeactivateBody": "Elle n'est plus proposée, mais l'historique qui la référence est conservé.",
+  "wfDeactivated": "Entrée désactivée.",
+  "wfReactivated": "Entrée réactivée.",
+  "wfDurationMinutes": "Durée (min)",
+  "wfCustomerBookable": "Réservable par le client",
+  "wfCustomerLabel": "Libellé client",
+  "wfCustomerLabelHint": "Ce que le client voit pour ce statut.",
+  "wfIsInitial": "Statut initial",
+  "wfIsClosed": "Clôture l'intervention",
+  "wfAwaitsCustomer": "Attend le client",
+  "wfIsDelivered": "Livré au client",
+  "wfFromStatus": "Depuis le statut",
+  "wfToStatus": "Vers le statut",
+  "wfCustomerAllowed": "Déclenchable par le client",
+  "wfResponseTarget": "Délai de réponse (h)",
+  "wfResponseTargetHint": "Laisser vide pour aucun délai.",
+  "wfTemplate": "Modèle",
+  "wfTemplateTrainingFirst": "Première formation",
+  "wfTemplateTrainingReview": "Suivi de formation",
+  "wfTemplateBody": "Texte du message",
+  "wfTemplatePlaceholders": "Variables disponibles (à écrire entre accolades) : contact, product, date, start, end, resource_url",
+  "wfKindVideo": "Vidéo",
+  "wfKindLink": "Lien",
+  "wfCustomerVisible": "Visible par le client",
+  "wfTrainingMaterial": "Support de formation",
+  "wfWorkingDays": "Jours ouvrés",
+  "wfPickWorkingDay": "Choisissez au moins un jour.",
+  "wfWorkStart": "Début de journée",
+  "wfWorkEnd": "Fin de journée",
+  "wfTimeInvalid": "Format HH:mm attendu.",
+  "wfSlotMinutes": "Durée d'un créneau (min)",
+  "wfHoldExpiryMinutes": "Expiration d'une réservation (min)",
+  "wfHoldExpiryHint": "Au-delà, le créneau est libéré automatiquement.",
+  "wfBookingHorizon": "Réservation jusqu'à (jours)",
+  "wfMinNotice": "Préavis minimum (heures)",
+  "wfDemoCapacity": "Démos en parallèle",
+  "wfDemoCapacityHint": "Nombre de démos simultanées.",
+  "wfAccompanimentOccurrences": "Séances d'accompagnement (défaut)",
+  "wfAccompanimentInterval": "Intervalle d'accompagnement (jours, défaut)",
+  "wfWhatsappCountryCode": "Indicatif pays WhatsApp",
+  "wfWhatsappCountryCodeHint": "Chiffres seulement, ex. 213. Sert à compléter les numéros commençant par 0.",
+  "wfCountryCodeInvalid": "1 à 4 chiffres."
 }

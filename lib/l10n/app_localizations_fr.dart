@@ -1342,7 +1342,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le serveur a répondu, mais pas en JSON. Vérifiez que l\'adresse se termine par /api/v1.';
 
   @override
-  String countProspects(int count) {
+  String countProspects(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1670,4 +1670,1137 @@ class AppLocalizationsFr extends AppLocalizations {
   String validMinLength(Object min) {
     return '$min caractères minimum.';
   }
+
+  @override
+  String get navAfterSales => 'Après-vente';
+
+  @override
+  String get navCalendar => 'Calendrier';
+
+  @override
+  String get navCustomers => 'Clients';
+
+  @override
+  String get navEmployees => 'Employés';
+
+  @override
+  String get navGroupCrm => 'CRM';
+
+  @override
+  String get navGroupCustomers => 'Clients et produits';
+
+  @override
+  String get navGroupService => 'Service';
+
+  @override
+  String get navGroupTeam => 'Équipe';
+
+  @override
+  String get navRequests => 'Demandes et réservations';
+
+  @override
+  String get navTraining => 'Formation et accompagnement';
+
+  @override
+  String get navWorkflowSettings => 'Rendez-vous et après-vente';
+
+  @override
+  String get wfYes => 'Oui';
+
+  @override
+  String get wfNo => 'Non';
+
+  @override
+  String get wfSaved => 'Enregistré.';
+
+  @override
+  String get wfDate => 'Date';
+
+  @override
+  String get wfWhen => 'Quand';
+
+  @override
+  String get wfToday => 'Aujourd\'hui';
+
+  @override
+  String get wfPrevious => 'Précédent';
+
+  @override
+  String get wfNext => 'Suivant';
+
+  @override
+  String get wfTitle => 'Titre';
+
+  @override
+  String get wfUpdated => 'Mis à jour';
+
+  @override
+  String get wfReceived => 'Reçue le';
+
+  @override
+  String get wfReference => 'Référence';
+
+  @override
+  String get wfEmployee => 'Employé';
+
+  @override
+  String get wfAssignedTo => 'Assigné à';
+
+  @override
+  String get wfUnassigned => 'Non assigné';
+
+  @override
+  String get wfTrainer => 'Formateur';
+
+  @override
+  String get wfCode => 'Code';
+
+  @override
+  String get wfCodeInvalid =>
+      'Minuscules, chiffres et _ ; commence par une lettre.';
+
+  @override
+  String get wfFieldRequired => 'Champ obligatoire.';
+
+  @override
+  String get wfNumberInvalid => 'Nombre entier positif attendu.';
+
+  @override
+  String wfTooLong(Object max) {
+    return '$max caractères maximum.';
+  }
+
+  @override
+  String wfRangeError(Object min, Object max) {
+    return 'Entre $min et $max.';
+  }
+
+  @override
+  String get wfUrl => 'Lien (URL)';
+
+  @override
+  String get wfUrlInvalid => 'Lien http(s) invalide.';
+
+  @override
+  String get wfUrlRequired => 'Le lien est obligatoire.';
+
+  @override
+  String get wfInvalidId => 'Identifiant invalide.';
+
+  @override
+  String get wfStartInPast => 'L\'heure de début est déjà passée.';
+
+  @override
+  String get wfEndAfterStart => 'La fin doit être après le début.';
+
+  @override
+  String get wfStarts => 'Début';
+
+  @override
+  String get wfEnds => 'Fin';
+
+  @override
+  String get wfStartTime => 'Heure de début';
+
+  @override
+  String get wfEndTime => 'Heure de fin';
+
+  @override
+  String get wfLanguage => 'Langue';
+
+  @override
+  String get wfSortOrder => 'Ordre d\'affichage';
+
+  @override
+  String get wfSortOrderHint => 'Le plus petit nombre = le plus urgent.';
+
+  @override
+  String get wfStatusHeld => 'En attente';
+
+  @override
+  String get wfStatusProposed => 'Proposé';
+
+  @override
+  String get wfStatusConfirmed => 'Confirmé';
+
+  @override
+  String get wfStatusRejected => 'Refusé';
+
+  @override
+  String get wfStatusCancelled => 'Annulé';
+
+  @override
+  String get wfStatusExpired => 'Expiré';
+
+  @override
+  String get wfStatusCompleted => 'Réalisé';
+
+  @override
+  String get wfStatusNoShow => 'Absent';
+
+  @override
+  String get wfKindAppointment => 'Rendez-vous';
+
+  @override
+  String get wfKindFollowUp => 'Relance';
+
+  @override
+  String get wfKindIntervention => 'Intervention';
+
+  @override
+  String get wfKindActivity => 'Activités réalisées';
+
+  @override
+  String get wfGroupDemo => 'Démo';
+
+  @override
+  String get wfGroupMeeting => 'Réunion';
+
+  @override
+  String get wfGroupTraining => 'Formation';
+
+  @override
+  String get wfGroup => 'Groupe';
+
+  @override
+  String get wfGroupAccompaniment => 'Accompagnement';
+
+  @override
+  String get wfConflictHoliday => 'Jour férié';
+
+  @override
+  String get wfConflictEmployee => 'Employé déjà occupé';
+
+  @override
+  String get wfConflictCustomer => 'Client déjà occupé';
+
+  @override
+  String get wfConflictsTitle => 'Planning refusé : conflits détectés';
+
+  @override
+  String wfConflictLine(Object occurrence, Object date, Object reason) {
+    return 'Séance $occurrence ($date) : $reason';
+  }
+
+  @override
+  String get wfConflictNothingSaved =>
+      'Conflit de planning : rien n\'a été enregistré. Corrigez les séances listées.';
+
+  @override
+  String wfConflictExplain(Object reasons) {
+    return 'Conflit : $reasons';
+  }
+
+  @override
+  String get wfHoldExpired =>
+      'La réservation a expiré et le créneau a été libéré. Actualisez la liste.';
+
+  @override
+  String get wfHoldExpiredChip => 'Réservation expirée';
+
+  @override
+  String get wfHoldExpires => 'Expiration de la réservation';
+
+  @override
+  String wfExpiresIn(Object time) {
+    return 'expire dans $time';
+  }
+
+  @override
+  String get wfCalendarSubtitle =>
+      'Rendez-vous, relances et interventions planifiés ; les activités réalisées apparaissent en grisé.';
+
+  @override
+  String get wfViewMonth => 'Mois';
+
+  @override
+  String get wfViewWeek => 'Semaine';
+
+  @override
+  String get wfViewDay => 'Jour';
+
+  @override
+  String get wfLegendScheduled => 'Planifié';
+
+  @override
+  String get wfLegendCompleted => 'Réalisé';
+
+  @override
+  String get wfFilterCustomer => 'Client';
+
+  @override
+  String get wfClearFilters => 'Effacer les filtres';
+
+  @override
+  String wfMoreItems(Object count) {
+    return '+$count autres';
+  }
+
+  @override
+  String get wfNothingScheduled => 'Rien de planifié ce jour';
+
+  @override
+  String get wfNothingScheduledHint =>
+      'Les rendez-vous confirmés, relances et interventions apparaissent ici.';
+
+  @override
+  String wfActivitiesNotLoaded(Object message) {
+    return 'Les activités réalisées n\'ont pas pu être chargées : $message';
+  }
+
+  @override
+  String get wfConfirmHoldTitle => 'Confirmer le rendez-vous';
+
+  @override
+  String get wfRejectTitle => 'Refuser la demande';
+
+  @override
+  String get wfCancelAppointmentTitle => 'Annuler le rendez-vous';
+
+  @override
+  String get wfProposeTitle => 'Proposer un autre horaire';
+
+  @override
+  String get wfRescheduleTitle => 'Déplacer la séance';
+
+  @override
+  String get wfRecordOutcomeTitle => 'Enregistrer le résultat';
+
+  @override
+  String get wfReject => 'Refuser';
+
+  @override
+  String get wfCancelAppointment => 'Annuler le rendez-vous';
+
+  @override
+  String get wfCancelProposal => 'Retirer la proposition';
+
+  @override
+  String get wfProposeOther => 'Proposer un autre horaire';
+
+  @override
+  String get wfSendProposal => 'Envoyer la proposition';
+
+  @override
+  String get wfReschedule => 'Déplacer';
+
+  @override
+  String get wfRecordOutcome => 'Enregistrer le résultat';
+
+  @override
+  String get wfMarkNoShow => 'Marquer absent';
+
+  @override
+  String get wfMeetingLink => 'Lien de la réunion';
+
+  @override
+  String get wfMeetingLinkHint => 'Visible par le client une fois confirmé.';
+
+  @override
+  String get wfNewTime => 'Nouvel horaire';
+
+  @override
+  String get wfReasonVisible => 'Motif (visible par le client)';
+
+  @override
+  String get wfMessageVisible => 'Message (visible par le client)';
+
+  @override
+  String get wfCustomerVisibleHint =>
+      'Ce texte est visible par le client dans son espace.';
+
+  @override
+  String get wfOutcome => 'Résultat';
+
+  @override
+  String get wfOutcomeHint =>
+      'Une activité est créée dans le CRM avec ce résultat.';
+
+  @override
+  String get wfOutcomeRequired => 'Le résultat est obligatoire.';
+
+  @override
+  String get wfActivityRecorded => 'Activité enregistrée';
+
+  @override
+  String get wfCustomerMessage => 'Message au client';
+
+  @override
+  String get wfInternalNotes => 'Notes internes';
+
+  @override
+  String get wfOpenProspectRecord => 'Ouvrir la fiche';
+
+  @override
+  String get wfNewProspect => 'Nouveau prospect';
+
+  @override
+  String get wfWaitingForCustomer => 'En attente de la réponse du client.';
+
+  @override
+  String get wfRequestsSubtitle =>
+      'Créneaux réservés par les visiteurs et demandes reçues du site web.';
+
+  @override
+  String wfHoldsTab(Object count) {
+    return 'Réservations ($count)';
+  }
+
+  @override
+  String get wfWebsiteRequestsTab => 'Demandes du site';
+
+  @override
+  String get wfNoHolds => 'Aucune réservation en attente';
+
+  @override
+  String get wfNoHoldsHint =>
+      'Les créneaux demandés depuis le site apparaissent ici jusqu\'à votre décision.';
+
+  @override
+  String get wfNoRequests => 'Aucune demande';
+
+  @override
+  String get wfRequestDemo => 'Démo';
+
+  @override
+  String get wfRequestQuotation => 'Devis';
+
+  @override
+  String get wfRequestTrial => 'Essai';
+
+  @override
+  String get wfReqPending => 'À traiter';
+
+  @override
+  String get wfReqScheduled => 'Planifiée';
+
+  @override
+  String get wfReqHandled => 'Traitée';
+
+  @override
+  String get wfMarkHandled => 'Marquer comme traitée';
+
+  @override
+  String get wfRequestUpdated => 'Demande mise à jour.';
+
+  @override
+  String get wfTrainingSubtitle =>
+      'Séances de formation et séries d\'accompagnement des clients.';
+
+  @override
+  String get wfNewTraining => 'Nouvelle formation';
+
+  @override
+  String get wfNewAccompaniment => 'Nouvel accompagnement';
+
+  @override
+  String get wfNoSessions => 'Aucune séance';
+
+  @override
+  String get wfNoSessionsHint =>
+      'Planifiez une formation ou une série d\'accompagnement.';
+
+  @override
+  String get wfShowPast => 'Inclure le passé';
+
+  @override
+  String get wfPartOfSeries => 'Série d\'accompagnement';
+
+  @override
+  String get wfCancelThisSession => 'Annuler cette séance';
+
+  @override
+  String get wfCancelRemainingSeries => 'Annuler le reste de la série';
+
+  @override
+  String get wfCancelSessionTitle => 'Annuler cette séance ?';
+
+  @override
+  String get wfCancelSessionBody =>
+      'Seule cette séance future est annulée ; le reste de la série reste inchangé.';
+
+  @override
+  String get wfCancelSeriesTitle => 'Annuler le reste de la série ?';
+
+  @override
+  String get wfCancelSeriesBody =>
+      'Cette séance et les suivantes sont annulées. Les séances déjà réalisées ne sont pas touchées.';
+
+  @override
+  String get wfCancelSeries => 'Annuler la suite';
+
+  @override
+  String get wfSessionCancelled => 'Séance annulée.';
+
+  @override
+  String wfSeriesCancelled(Object count) {
+    return '$count séance(s) annulée(s).';
+  }
+
+  @override
+  String get wfSessionScheduled => 'Séance planifiée.';
+
+  @override
+  String wfSeriesScheduled(Object count) {
+    return 'Série planifiée : $count séances.';
+  }
+
+  @override
+  String get wfMoreActions => 'Autres actions';
+
+  @override
+  String get wfSessionType => 'Type de séance';
+
+  @override
+  String get wfNoTypesConfigured =>
+      'Aucun type de rendez-vous actif pour ce groupe. Configurez-le dans les paramètres.';
+
+  @override
+  String get wfSelectType => 'Choisissez un type.';
+
+  @override
+  String get wfSelectProduct => 'Choisissez un produit.';
+
+  @override
+  String get wfNoProduct => 'Aucun produit';
+
+  @override
+  String get wfOccurrences => 'Nombre de séances';
+
+  @override
+  String get wfOccurrencesHint => 'Valeur par défaut des paramètres.';
+
+  @override
+  String get wfIntervalDays => 'Intervalle (jours)';
+
+  @override
+  String get wfIntervalHint => 'Jours entre deux séances.';
+
+  @override
+  String wfPlannedSessions(Object count) {
+    return '$count séances prévues';
+  }
+
+  @override
+  String get wfPickResource => 'Choisir un support de formation';
+
+  @override
+  String get wfResourceLink => 'Lien du support (optionnel)';
+
+  @override
+  String get wfPrepareWhatsApp => 'Préparer un message WhatsApp';
+
+  @override
+  String get wfPrepareWhatsAppHint =>
+      'Prépare le texte ; vous l\'envoyez vous-même depuis WhatsApp.';
+
+  @override
+  String get wfOpenWhatsApp => 'Ouvrir WhatsApp';
+
+  @override
+  String get wfWhatsAppHint =>
+      'Ouvre un message pré-rempli. L\'envoi se fait dans WhatsApp, non confirmé par le CRM.';
+
+  @override
+  String get wfWhatsappInvalidLink =>
+      'Lien WhatsApp non reconnu : il n\'a pas été ouvert.';
+
+  @override
+  String get wfCustomersSubtitle => 'Prospects convertis en clients.';
+
+  @override
+  String get wfCustomerSearchHint => 'Rechercher un client…';
+
+  @override
+  String get wfNoCustomers => 'Aucun client';
+
+  @override
+  String get wfNoCustomersHint => 'Convertissez un prospect depuis sa fiche.';
+
+  @override
+  String get wfCustomerSince => 'Client depuis';
+
+  @override
+  String wfCustomerSinceDate(Object date) {
+    return 'Client depuis le $date';
+  }
+
+  @override
+  String get wfCustomerBadge => 'Client';
+
+  @override
+  String wfCustomersCount(Object count) {
+    return '$count clients';
+  }
+
+  @override
+  String get wfConvertTitle => 'Convertir en client';
+
+  @override
+  String get wfConvertAction => 'Convertir en client';
+
+  @override
+  String wfConvertIntro(Object name) {
+    return '« $name » devient client. La fiche, l\'historique, les activités et les étapes sont conservés.';
+  }
+
+  @override
+  String get wfPurchasedProducts => 'Produits achetés';
+
+  @override
+  String get wfConversionNote => 'Note de conversion';
+
+  @override
+  String get wfConvertedBy => 'Converti le / par';
+
+  @override
+  String wfConverted(Object name) {
+    return '« $name » est maintenant client.';
+  }
+
+  @override
+  String get wfAlreadyCustomer =>
+      'Ce prospect est déjà client. Actualisez la fiche.';
+
+  @override
+  String get wfOpenCustomerProfile => 'Voir le profil client';
+
+  @override
+  String get wfCustomerProducts => 'Produits du client';
+
+  @override
+  String get wfNoCustomerProducts => 'Aucun produit lié';
+
+  @override
+  String wfPurchasedOn(Object date) {
+    return 'Acheté le $date';
+  }
+
+  @override
+  String get wfPortalAccounts => 'Comptes du portail client';
+
+  @override
+  String get wfPortalAccountsHint =>
+      'Identités du site web, distinctes des accès employés.';
+
+  @override
+  String get wfNoPortalAccount => 'Aucun compte portail lié';
+
+  @override
+  String wfLastLogin(Object date) {
+    return 'Dernière connexion : $date';
+  }
+
+  @override
+  String get wfTrials => 'Accès d\'essai';
+
+  @override
+  String get wfNoTrials => 'Aucun essai';
+
+  @override
+  String get wfNewTrial => 'Nouvel essai';
+
+  @override
+  String get wfTrialUrl => 'Lien d\'accès à l\'essai';
+
+  @override
+  String get wfTrialUrlHint =>
+      'Le client ne le voit que pendant l\'essai actif.';
+
+  @override
+  String get wfTrialStarts => 'Début de l\'essai';
+
+  @override
+  String get wfTrialEnds => 'Fin de l\'essai';
+
+  @override
+  String get wfTrialDays => 'Durée d\'essai par défaut (jours)';
+
+  @override
+  String get wfTrialActive => 'Actif';
+
+  @override
+  String get wfTrialScheduled => 'Programmé';
+
+  @override
+  String get wfTrialRevoked => 'Révoqué';
+
+  @override
+  String get wfTrialActivated => 'Essai activé.';
+
+  @override
+  String get wfTrialOverlap =>
+      'Un essai existe déjà pour ce produit sur cette période.';
+
+  @override
+  String get wfRevoke => 'Révoquer';
+
+  @override
+  String get wfRevokeTrialTitle => 'Révoquer l\'accès à l\'essai ?';
+
+  @override
+  String wfRevokeTrialBody(Object product) {
+    return 'Le client ne verra plus le lien de l\'essai « $product ».';
+  }
+
+  @override
+  String get wfTrialRevokedDone => 'Accès révoqué.';
+
+  @override
+  String get wfAppointments => 'Rendez-vous';
+
+  @override
+  String get wfAppointmentsHint =>
+      'Planifiés ou réalisés (le résultat devient une activité).';
+
+  @override
+  String get wfNoAppointments => 'Aucun rendez-vous';
+
+  @override
+  String get wfScheduleTraining => 'Planifier une formation';
+
+  @override
+  String get wfAfterSalesSubtitle =>
+      'Demandes des clients et interventions publiées par l\'équipe.';
+
+  @override
+  String get wfNewIntervention => 'Nouvelle intervention';
+
+  @override
+  String wfInterventionCreated(Object reference) {
+    return 'Intervention $reference créée.';
+  }
+
+  @override
+  String get wfInterventionType => 'Type d\'intervention';
+
+  @override
+  String get wfPriority => 'Priorité';
+
+  @override
+  String get wfNoPriority => 'Sans priorité';
+
+  @override
+  String get wfSource => 'Origine';
+
+  @override
+  String get wfSourceCustomer => 'Client';
+
+  @override
+  String get wfSourceEmployee => 'Employé';
+
+  @override
+  String get wfSourceBoth => 'Client et employé';
+
+  @override
+  String get wfOpenItems => 'Ouvertes';
+
+  @override
+  String get wfClosedItems => 'Clôturées';
+
+  @override
+  String get wfNoInterventions => 'Aucune intervention';
+
+  @override
+  String get wfNoInterventionsHint =>
+      'Les demandes des clients et vos interventions apparaissent ici.';
+
+  @override
+  String get wfAffectedCustomers => 'Clients concernés';
+
+  @override
+  String get wfAddCustomer => 'Ajouter un client';
+
+  @override
+  String get wfScheduledAt => 'Planifiée le';
+
+  @override
+  String get wfTitleRequired => 'Le titre est obligatoire.';
+
+  @override
+  String get wfDescriptionRequired => 'La description est obligatoire.';
+
+  @override
+  String get wfClosedAt => 'Clôturée le';
+
+  @override
+  String get wfStatusWorkflow => 'Statut';
+
+  @override
+  String get wfStatusWorkflowHint =>
+      'Seuls les statuts autorisés depuis le statut actuel sont proposés.';
+
+  @override
+  String get wfCurrentStatus => 'Statut actuel';
+
+  @override
+  String get wfCustomerSees => 'Vu par le client';
+
+  @override
+  String get wfNoTransitions => 'Aucune transition autorisée depuis ce statut.';
+
+  @override
+  String get wfTransitionNotAllowed =>
+      'Ce changement de statut n\'est pas autorisé.';
+
+  @override
+  String wfChangeStatusTo(Object status) {
+    return 'Passer à « $status »';
+  }
+
+  @override
+  String wfCustomerSeesStatus(Object label) {
+    return 'Le client verra : « $label ».';
+  }
+
+  @override
+  String get wfStatusExplanation => 'Explication pour le client (optionnelle)';
+
+  @override
+  String get wfStatusChanged => 'Statut mis à jour.';
+
+  @override
+  String get wfTriage => 'Tri et planification';
+
+  @override
+  String get wfReleaseNotes => 'Notes de version';
+
+  @override
+  String get wfReleaseNotesHint =>
+      'Publiez la correction ou la mise à jour aux clients concernés.';
+
+  @override
+  String get wfPublish => 'Publier';
+
+  @override
+  String get wfPublished => 'Publié aux clients concernés.';
+
+  @override
+  String get wfPublishTitle => 'Publier aux clients';
+
+  @override
+  String wfPublishTo(Object names) {
+    return 'Sera visible par : $names';
+  }
+
+  @override
+  String get wfPublishNoCustomers =>
+      'Aucun client concerné : ajoutez-en à la création pour pouvoir publier.';
+
+  @override
+  String wfPublishedOn(Object date) {
+    return 'Publié le $date';
+  }
+
+  @override
+  String get wfNotPublished =>
+      'Pas encore publié : les clients ne le voient pas.';
+
+  @override
+  String get wfResolutionRequired => 'Le texte publié est obligatoire.';
+
+  @override
+  String get wfUnpublish => 'Dépublier';
+
+  @override
+  String get wfUnpublishTitle => 'Dépublier ?';
+
+  @override
+  String get wfUnpublishBody => 'Les clients ne verront plus ces notes.';
+
+  @override
+  String get wfUnpublished => 'Dépublié.';
+
+  @override
+  String get wfConversation => 'Échanges';
+
+  @override
+  String get wfNoMessages => 'Aucun message';
+
+  @override
+  String get wfInternalNote => 'Note interne';
+
+  @override
+  String get wfCustomerReply => 'Réponse au client';
+
+  @override
+  String get wfInternalNoteHint =>
+      'Réservée à l\'équipe : le client ne la verra jamais.';
+
+  @override
+  String get wfCustomerReplyWarning =>
+      'Ce message sera visible par le client dans son espace.';
+
+  @override
+  String get wfConfirmCustomerReplyTitle => 'Envoyer au client ?';
+
+  @override
+  String get wfConfirmCustomerReplyBody =>
+      'La réponse sera visible par le client. Ne mentionnez aucune discussion interne.';
+
+  @override
+  String get wfSendReply => 'Envoyer la réponse';
+
+  @override
+  String get wfAddNote => 'Ajouter la note';
+
+  @override
+  String get wfReplySaved => 'Réponse enregistrée pour le client.';
+
+  @override
+  String get wfNoteSaved => 'Note interne enregistrée.';
+
+  @override
+  String get wfMessageRequired => 'Le message est vide.';
+
+  @override
+  String get wfEmployeesSubtitle =>
+      'Postes connectés au CRM et travail assigné. Tous les employés ont le même accès.';
+
+  @override
+  String get wfNoEmployees => 'Aucun employé connu';
+
+  @override
+  String get wfNoEmployeesHint =>
+      'Les employés apparaissent quand leur application se connecte au serveur.';
+
+  @override
+  String get wfSelectEmployee => 'Sélectionnez un employé';
+
+  @override
+  String get wfIdle => 'Inactif';
+
+  @override
+  String wfAssignedAppointments(Object name) {
+    return 'Rendez-vous à venir de $name';
+  }
+
+  @override
+  String wfAssignedInterventions(Object name) {
+    return 'Interventions ouvertes de $name';
+  }
+
+  @override
+  String get wfNothingAssigned => 'Rien d\'assigné';
+
+  @override
+  String get wfSettingsSubtitle =>
+      'Horaires, types, statuts, priorités et modèles. Tout est stocké dans le CRM.';
+
+  @override
+  String get wfSettingsSaved => 'Paramètres enregistrés.';
+
+  @override
+  String get wfCfgScheduling => 'Horaires et réservations';
+
+  @override
+  String get wfCfgSchedulingHint =>
+      'Jours et heures de travail, durée des créneaux, expiration des réservations, récurrence de l\'accompagnement et essais.';
+
+  @override
+  String get wfCfgAppointmentTypes => 'Types de rendez-vous';
+
+  @override
+  String get wfCfgAppointmentTypesHint =>
+      'Démo, réunion, formation, accompagnement : durée par défaut et couleur du calendrier.';
+
+  @override
+  String get wfCfgHolidays => 'Jours fériés';
+
+  @override
+  String get wfCfgHolidaysHint => 'Aucun créneau n\'est proposé ces jours-là.';
+
+  @override
+  String get wfCfgInterventionTypes => 'Types d\'intervention';
+
+  @override
+  String get wfCfgInterventionTypesHint =>
+      'Bug, question, remarque, correctif, version… et qui peut les créer.';
+
+  @override
+  String get wfCfgInterventionStatuses => 'Statuts d\'intervention';
+
+  @override
+  String get wfCfgInterventionStatusesHint =>
+      'Libellé interne et libellé vu par le client.';
+
+  @override
+  String get wfCfgTransitions => 'Transitions de statut';
+
+  @override
+  String get wfCfgTransitionsHint =>
+      'Quels statuts peuvent suivre quels statuts, et si le client peut déclencher le changement.';
+
+  @override
+  String get wfCfgPriorities => 'Priorités';
+
+  @override
+  String get wfCfgPrioritiesHint =>
+      'Couleur et délai de réponse cible ; l\'ordre sert au tri.';
+
+  @override
+  String get wfCfgTemplates => 'Modèles de message';
+
+  @override
+  String get wfCfgTemplatesHint =>
+      'Textes WhatsApp préparés pour les formations (jamais envoyés automatiquement).';
+
+  @override
+  String get wfCfgProductResources => 'Supports produit';
+
+  @override
+  String get wfCfgProductResourcesHint =>
+      'Liens de formation et de documentation, avec visibilité client.';
+
+  @override
+  String get wfProductResources => 'Supports et liens du produit';
+
+  @override
+  String wfProductResourcesTitle(Object name) {
+    return 'Supports : $name';
+  }
+
+  @override
+  String get wfNoResources => 'Aucun support pour ce produit';
+
+  @override
+  String get wfNoConfigRows => 'Aucune entrée';
+
+  @override
+  String get wfNoConfigRowsHint =>
+      'Ajoutez la première entrée. Elle pourra être désactivée, jamais supprimée.';
+
+  @override
+  String get wfDeactivateTitle => 'Désactiver cette entrée ?';
+
+  @override
+  String get wfDeactivateBody =>
+      'Elle n\'est plus proposée, mais l\'historique qui la référence est conservé.';
+
+  @override
+  String get wfDeactivated => 'Entrée désactivée.';
+
+  @override
+  String get wfReactivated => 'Entrée réactivée.';
+
+  @override
+  String get wfDurationMinutes => 'Durée (min)';
+
+  @override
+  String get wfCustomerBookable => 'Réservable par le client';
+
+  @override
+  String get wfCustomerLabel => 'Libellé client';
+
+  @override
+  String get wfCustomerLabelHint => 'Ce que le client voit pour ce statut.';
+
+  @override
+  String get wfIsInitial => 'Statut initial';
+
+  @override
+  String get wfIsClosed => 'Clôture l\'intervention';
+
+  @override
+  String get wfAwaitsCustomer => 'Attend le client';
+
+  @override
+  String get wfIsDelivered => 'Livré au client';
+
+  @override
+  String get wfFromStatus => 'Depuis le statut';
+
+  @override
+  String get wfToStatus => 'Vers le statut';
+
+  @override
+  String get wfCustomerAllowed => 'Déclenchable par le client';
+
+  @override
+  String get wfResponseTarget => 'Délai de réponse (h)';
+
+  @override
+  String get wfResponseTargetHint => 'Laisser vide pour aucun délai.';
+
+  @override
+  String get wfTemplate => 'Modèle';
+
+  @override
+  String get wfTemplateTrainingFirst => 'Première formation';
+
+  @override
+  String get wfTemplateTrainingReview => 'Suivi de formation';
+
+  @override
+  String get wfTemplateBody => 'Texte du message';
+
+  @override
+  String get wfTemplatePlaceholders =>
+      'Variables disponibles (à écrire entre accolades) : contact, product, date, start, end, resource_url';
+
+  @override
+  String get wfKindVideo => 'Vidéo';
+
+  @override
+  String get wfKindLink => 'Lien';
+
+  @override
+  String get wfCustomerVisible => 'Visible par le client';
+
+  @override
+  String get wfTrainingMaterial => 'Support de formation';
+
+  @override
+  String get wfWorkingDays => 'Jours ouvrés';
+
+  @override
+  String get wfPickWorkingDay => 'Choisissez au moins un jour.';
+
+  @override
+  String get wfWorkStart => 'Début de journée';
+
+  @override
+  String get wfWorkEnd => 'Fin de journée';
+
+  @override
+  String get wfTimeInvalid => 'Format HH:mm attendu.';
+
+  @override
+  String get wfSlotMinutes => 'Durée d\'un créneau (min)';
+
+  @override
+  String get wfHoldExpiryMinutes => 'Expiration d\'une réservation (min)';
+
+  @override
+  String get wfHoldExpiryHint =>
+      'Au-delà, le créneau est libéré automatiquement.';
+
+  @override
+  String get wfBookingHorizon => 'Réservation jusqu\'à (jours)';
+
+  @override
+  String get wfMinNotice => 'Préavis minimum (heures)';
+
+  @override
+  String get wfDemoCapacity => 'Démos en parallèle';
+
+  @override
+  String get wfDemoCapacityHint => 'Nombre de démos simultanées.';
+
+  @override
+  String get wfAccompanimentOccurrences => 'Séances d\'accompagnement (défaut)';
+
+  @override
+  String get wfAccompanimentInterval =>
+      'Intervalle d\'accompagnement (jours, défaut)';
+
+  @override
+  String get wfWhatsappCountryCode => 'Indicatif pays WhatsApp';
+
+  @override
+  String get wfWhatsappCountryCodeHint =>
+      'Chiffres seulement, ex. 213. Sert à compléter les numéros commençant par 0.';
+
+  @override
+  String get wfCountryCodeInvalid => '1 à 4 chiffres.';
 }
