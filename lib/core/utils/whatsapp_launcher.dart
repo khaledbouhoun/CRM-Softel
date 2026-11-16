@@ -47,6 +47,35 @@ class WhatsAppLauncher {
     return Uri.https('wa.me', '/$sanitized', query);
   }
 
+  /// Whether [url] is a prefilled `https://wa.me/...` link built by the CRM
+  /// server. Nothing else is ever opened from appointment data.
+  static bool isTrustedLink(String? url) {
+    final uri = url == null ? null : Uri.tryParse(url);
+    return uri != null && uri.scheme == 'https' && uri.host == 'wa.me';
+  }
+
+  /// Opens the prefilled link returned by the API. The employee still has to
+  /// press send in WhatsApp: the CRM never claims a message was delivered.
+  static Future<bool> launchPrefilledLink(String? url) async {
+    if (!isTrustedLink(url)) {
+      AppFeedback.warning(invalidLinkMessage);
+      return false;
+    }
+    try {
+      final launched = await launchUrl(
+        Uri.parse(url!),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) AppFeedback.error(errorLaunchMessage);
+      return launched;
+    } catch (_) {
+      AppFeedback.error(errorLaunchMessage);
+      return false;
+    }
+  }
+
+  static String get invalidLinkMessage => tr.wfWhatsappInvalidLink;
+
   /// Launches WhatsApp in an external application or browser.
   static Future<bool> launch(String? phone, {String? text}) async {
     final uri = getUri(phone, text: text);
