@@ -19,6 +19,7 @@ import '../../../workflow_settings/data/models/config_models.dart';
 import '../../data/models/intervention.dart';
 import '../controllers/interventions_controllers.dart';
 import '../dialogs/intervention_dialogs.dart';
+import '../widgets/chat_widgets.dart';
 
 /// Route `/after-sales/:id`.
 class InterventionDetailPage extends StatefulWidget {
@@ -73,6 +74,14 @@ void _report(ActionResult<Intervention> result, String successMessage) {
   }
 }
 
+/// Employees reopen a closed intervention from the options menu: replies are
+/// enabled again for both sides and the timeline records who reopened it.
+Future<void> _reopen(InterventionDetailController c) async {
+  final note = await showReopenDialog();
+  if (note == null) return;
+  _report(await c.reopen(note: note), tr.ivReopened);
+}
+
 class _Body extends StatelessWidget {
   const _Body(this.c);
 
@@ -113,6 +122,23 @@ class _Body extends StatelessWidget {
             ),
             InterventionStatusBadge(status: i.status),
             PriorityChip(priority: i.priority),
+            if (c.canReopen)
+              PopupMenuButton<String>(
+                enabled: !c.isBusy.value,
+                icon: const Icon(Icons.more_vert),
+                onSelected: (_) => _reopen(c),
+                itemBuilder: (_) => [
+                  PopupMenuItem<String>(
+                    value: 'reopen',
+                    child: ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.lock_open_outlined),
+                      title: Text(tr.ivReopen),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
         RefreshingBar(visible: c.state.isLoading || c.isBusy.value),
@@ -446,59 +472,16 @@ class _ConversationCard extends StatelessWidget {
           if (messages.isEmpty)
             EmptyView(compact: true, title: tr.wfNoMessages)
           else
-            for (final m in messages) _MessageBubble(m),
+            for (final m in messages)
+              m.isEvent
+                  ? ChatEventPill(message: m)
+                  : ChatBubble(message: m, controller: c),
           const Divider(height: 28),
-          _Composer(c: c, send: _send),
-        ],
-      ),
-    );
-  }
-}
-
-class _MessageBubble extends StatelessWidget {
-  const _MessageBubble(this.m);
-
-  final InterventionMessage m;
-
-  @override
-  Widget build(BuildContext context) {
-    final crm = context.crm;
-    final internal = m.isInternal;
-    final tint = internal ? crm.warning : crm.info;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: tint.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10),
-        border: BorderDirectional(start: BorderSide(color: tint, width: 4)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(
-                m.authorName ??
-                    (m.isFromCustomer
-                        ? tr.wfSourceCustomer
-                        : tr.wfSourceEmployee),
-                style: context.text.labelLarge,
-              ),
-              VisibilityBadge(internal: internal),
-              Text(
-                Formatters.dateTime(m.createdAt),
-                style: context.text.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          SelectableText(m.body),
+          // Closed: no composer, no attach button, just the explanation.
+          if (i.canReply)
+            _Composer(c: c, send: _send)
+          else
+            const ClosedInterventionBanner(),
         ],
       ),
     );
@@ -574,17 +557,39 @@ class _Composer extends StatelessWidget {
             ),
           ),
         ),
+        PendingFilesBar(controller: c),
         const SizedBox(height: 8),
-        Align(
-          alignment: AlignmentDirectional.centerEnd,
-          child: FilledButton.icon(
-            onPressed: c.isBusy.value ? null : send,
-            icon: Icon(
-              visible ? Icons.send : Icons.note_add_outlined,
-              size: 18,
+        Row(
+          children: [
+            Tooltip(
+              message: tr.ivAttachLimit(InterventionDetailController.maxFiles),
+              child: OutlinedButton.icon(
+                onPressed: c.isBusy.value
+                    ? null
+                    : () async {
+                        final skipped = await c.pickFiles();
+                        if (skipped > 0) {
+                          AppFeedback.warning(
+                            tr.ivAttachLimit(
+                              InterventionDetailController.maxFiles,
+                            ),
+                          );
+                        }
+                      },
+                icon: const Icon(Icons.attach_file, size: 18),
+                label: Text(tr.ivAttachFiles),
+              ),
             ),
-            label: Text(visible ? tr.wfSendReply : tr.wfAddNote),
-          ),
+            const Spacer(),
+            FilledButton.icon(
+              onPressed: c.isBusy.value ? null : send,
+              icon: Icon(
+                visible ? Icons.send : Icons.note_add_outlined,
+                size: 18,
+              ),
+              label: Text(visible ? tr.wfSendReply : tr.wfAddNote),
+            ),
+          ],
         ),
       ],
     );

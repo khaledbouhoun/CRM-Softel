@@ -2,8 +2,93 @@ import '../../../../core/models/named_ref.dart';
 import '../../../../core/utils/json_utils.dart';
 import '../../../workflow_settings/data/models/config_models.dart';
 
+/// Who wrote a chat entry (`sender` of the API): `client`, `employee` or
+/// `system` (timeline events).
+class InterventionSender {
+  const InterventionSender({required this.role, this.name, this.avatarUrl});
+
+  static const client = 'client';
+  static const employee = 'employee';
+  static const system = 'system';
+
+  final String role;
+  final String? name;
+  final String? avatarUrl;
+
+  bool get isEmployee => role == employee;
+  bool get isClient => role == client;
+  bool get isSystem => role == system;
+
+  static InterventionSender? fromJsonOrNull(Object? value) {
+    final json = asMapOrNull(value);
+    if (json == null) return null;
+    return InterventionSender(
+      role: asString(json['role']),
+      name: asStringOrNull(json['name']),
+      avatarUrl: asStringOrNull(json['avatar_url']),
+    );
+  }
+}
+
+/// A status as embedded in a timeline event.
+class EventStatus {
+  const EventStatus({required this.id, required this.name, this.color});
+
+  final int id;
+  final String name;
+  final String? color;
+
+  static EventStatus? fromJsonOrNull(Object? value) {
+    final json = asMapOrNull(value);
+    if (json == null) return null;
+    return EventStatus(
+      id: asInt(json['id']),
+      name: asString(json['name']),
+      color: asStringOrNull(json['color']),
+    );
+  }
+}
+
+/// A timeline event: a status change or a reopening.
+class InterventionEvent {
+  const InterventionEvent({
+    required this.type,
+    this.actorRole,
+    this.actorName,
+    this.oldStatus,
+    this.newStatus,
+    this.at,
+  });
+
+  /// `status_change` or `reopened`.
+  final String type;
+  final String? actorRole;
+  final String? actorName;
+  final EventStatus? oldStatus;
+  final EventStatus? newStatus;
+  final DateTime? at;
+
+  bool get isReopen => type == 'reopened';
+
+  static InterventionEvent? fromJsonOrNull(Object? value) {
+    final json = asMapOrNull(value);
+    if (json == null) return null;
+    final actor = asMapOrNull(json['actor']);
+    return InterventionEvent(
+      type: asString(json['type'], fallback: 'status_change'),
+      actorRole: asStringOrNull(actor?['role']),
+      actorName: asStringOrNull(actor?['name']),
+      oldStatus: EventStatus.fromJsonOrNull(json['old_status']),
+      newStatus: EventStatus.fromJsonOrNull(json['new_status']),
+      at: asDateTimeOrNull(json['at']),
+    );
+  }
+}
+
 /// One entry of an intervention's conversation. `internal` messages are
 /// employee-only notes; `customer` messages are visible in the portal.
+/// Entries with [isEvent] are timeline events (status change, reopening),
+/// not messages.
 class InterventionMessage {
   const InterventionMessage({
     required this.id,
@@ -13,6 +98,11 @@ class InterventionMessage {
     this.authorName,
     this.statusId,
     this.createdAt,
+    this.kind = 'message',
+    this.sender,
+    this.event,
+    this.attachments = const [],
+    this.statusEventFlag = false,
   });
 
   final int id;
@@ -27,8 +117,36 @@ class InterventionMessage {
   final int? statusId;
   final DateTime? createdAt;
 
+  /// `message`, `status_change` or `reopened`.
+  final String kind;
+  final InterventionSender? sender;
+  final InterventionEvent? event;
+  final List<InterventionAttachment> attachments;
+
+  /// `is_status_event` as sent by some API versions.
+  final bool statusEventFlag;
+
   bool get isInternal => visibility == 'internal';
   bool get isFromCustomer => authorType == 'customer';
+
+  /// A timeline event (rendered as a centred pill), not a chat bubble.
+  bool get isEvent =>
+      event != null ||
+      statusEventFlag ||
+      (kind != 'message' && kind.isNotEmpty);
+
+  /// Who wrote it, from `sender.role` (fallback: `author_type`).
+  String get senderRole =>
+      sender?.role ??
+      (isEvent
+          ? InterventionSender.system
+          : (isFromCustomer
+                ? InterventionSender.client
+                : InterventionSender.employee));
+
+  bool get isFromEmployee => senderRole == InterventionSender.employee;
+
+  String? get displayName => sender?.name ?? authorName;
 
   factory InterventionMessage.fromJson(JsonMap json) => InterventionMessage(
     id: asInt(json['id']),
@@ -38,6 +156,11 @@ class InterventionMessage {
     body: asString(json['body']),
     statusId: asIntOrNull(json['status_id']),
     createdAt: asDateTimeOrNull(json['created_at']),
+    kind: asString(json['kind'], fallback: 'message'),
+    sender: InterventionSender.fromJsonOrNull(json['sender']),
+    event: InterventionEvent.fromJsonOrNull(json['event']),
+    attachments: asList(json['attachments'], InterventionAttachment.fromJson),
+    statusEventFlag: asBool(json['is_status_event']),
   );
 }
 
@@ -48,6 +171,11 @@ class InterventionAttachment {
     this.mime,
     this.size,
     this.visibility,
+    this.messageId,
+    this.isPreviewable = false,
+    this.downloadUrl,
+    this.previewUrl,
+    this.uploadedByName,
   });
 
   final int id;
@@ -55,6 +183,16 @@ class InterventionAttachment {
   final String? mime;
   final int? size;
   final String? visibility;
+  final int? messageId;
+
+  /// The server can show it inline (images and PDFs only).
+  final bool isPreviewable;
+
+  /// API-relative paths sent by the server; the client builds its own URLs
+  /// from the ids (the base URL is configurable), so these are informative.
+  final String? downloadUrl;
+  final String? previewUrl;
+  final String? uploadedByName;
 
   factory InterventionAttachment.fromJson(JsonMap json) =>
       InterventionAttachment(
@@ -63,6 +201,11 @@ class InterventionAttachment {
         mime: asStringOrNull(json['mime']),
         size: asIntOrNull(json['size']),
         visibility: asStringOrNull(json['visibility']),
+        messageId: asIntOrNull(json['message_id']),
+        isPreviewable: asBool(json['is_previewable']),
+        downloadUrl: asStringOrNull(json['download_url']),
+        previewUrl: asStringOrNull(json['preview_url']),
+        uploadedByName: asStringOrNull(json['uploaded_by_name']),
       );
 }
 
@@ -87,6 +230,7 @@ class Intervention {
     this.customerResolution,
     this.scheduledAt,
     this.closedAt,
+    this.canReplyFlag,
     this.messages = const [],
     this.attachments = const [],
     this.createdAt,
@@ -112,6 +256,9 @@ class Intervention {
   final String? customerResolution;
   final DateTime? scheduledAt;
   final DateTime? closedAt;
+
+  /// `can_reply` as sent by the server; null when an older API omits it.
+  final bool? canReplyFlag;
   final List<InterventionMessage> messages;
   final List<InterventionAttachment> attachments;
   final DateTime? createdAt;
@@ -119,6 +266,10 @@ class Intervention {
 
   bool get isFromCustomer => source == 'customer';
   bool get isClosed => status?.isClosed ?? closedAt != null;
+
+  /// Replies are only possible while the intervention is open: a closed one
+  /// shows a banner and no composer until an employee reopens it.
+  bool get canReply => canReplyFlag ?? !isClosed;
 
   /// Employee-originated work items can be published as release notes.
   bool get canPublish => source == 'employee' || customers.isNotEmpty;
@@ -142,6 +293,7 @@ class Intervention {
         customerResolution: customerResolution,
         scheduledAt: scheduledAt,
         closedAt: closedAt,
+        canReplyFlag: canReplyFlag,
         messages: value,
         attachments: attachments,
         createdAt: createdAt,
@@ -174,6 +326,7 @@ class Intervention {
       customerResolution: asStringOrNull(json['customer_resolution']),
       scheduledAt: asDateTimeOrNull(json['scheduled_at']),
       closedAt: asDateTimeOrNull(json['closed_at']),
+      canReplyFlag: json['can_reply'] == null ? null : asBool(json['can_reply']),
       messages: asList(json['messages'], InterventionMessage.fromJson),
       attachments: asList(json['attachments'], InterventionAttachment.fromJson),
       createdAt: asDateTimeOrNull(json['created_at']),

@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
+
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/api_response.dart';
+import '../../../../core/utils/file_access.dart';
 import '../models/intervention.dart';
 
 class InterventionsRemoteDataSource {
@@ -38,6 +43,53 @@ class InterventionsRemoteDataSource {
         await _api.get(ApiEndpoints.interventionAction(id, 'transitions')),
         AllowedTransition.fromJson,
       );
+
+  /// Reply with attachments: multipart, `files[]` as Laravel expects.
+  Future<Intervention> postMessageWithFiles(
+    int id, {
+    required String visibility,
+    required String body,
+    required List<PickedFile> files,
+  }) async {
+    final form = FormData();
+    form.fields.add(MapEntry('visibility', visibility));
+    if (body.isNotEmpty) form.fields.add(MapEntry('body', body));
+    for (final file in files) {
+      form.files.add(
+        MapEntry(
+          'files[]',
+          await MultipartFile.fromFile(file.path, filename: file.name),
+        ),
+      );
+    }
+    return Intervention.fromJson(
+      ApiResponse.object(
+        await _api.postForm(
+          ApiEndpoints.interventionAction(id, 'messages'),
+          data: form,
+          // 5 files up to 100 MB each.
+          timeout: const Duration(minutes: 30),
+        ),
+      ),
+    );
+  }
+
+  Future<Uint8List> preview(int id, int attachmentId) => _api.getBytes(
+    ApiEndpoints.interventionAttachmentPreview(id, attachmentId),
+    timeout: const Duration(minutes: 5),
+  );
+
+  Future<void> download(
+    int id,
+    int attachmentId,
+    String savePath, {
+    void Function(int received, int total)? onProgress,
+  }) => _api.downloadTo(
+    ApiEndpoints.interventionAttachment(id, attachmentId),
+    savePath,
+    onProgress: onProgress,
+    timeout: const Duration(minutes: 30),
+  );
 
   Future<Intervention> post(
     int id,

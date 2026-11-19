@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +10,7 @@ import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/network/api_response.dart';
 import '../../../../core/state/action_result.dart';
 import '../../../../core/state/load_state.dart';
+import '../../../../core/utils/file_access.dart';
 import '../../../workflow_settings/data/models/config_models.dart';
 import '../../data/models/intervention.dart';
 import '../../domain/interventions_repository.dart';
@@ -82,6 +85,43 @@ class InterventionDetailController extends GetxController {
   final message = TextEditingController();
   final customerVisible = false.obs;
 
+  /// Files waiting to be sent with the next reply (max [maxFiles]).
+  final pendingFiles = <PickedFile>[].obs;
+  static const maxFiles = 5;
+
+  /// Replies are possible only while the intervention is open (`can_reply`).
+  bool get canReply => intervention.value?.canReply ?? true;
+
+  /// Employees reopen closed interventions from the options menu.
+  bool get canReopen => intervention.value?.canReply == false;
+
+  /// Adds [picked] to the composer, skipping duplicates and anything beyond
+  /// [maxFiles]. Returns how many files were left out.
+  int addFiles(List<PickedFile> picked) {
+    var skipped = 0;
+    for (final file in picked) {
+      if (pendingFiles.any((f) => f.path == file.path)) continue;
+      if (pendingFiles.length >= maxFiles) {
+        skipped++;
+        continue;
+      }
+      pendingFiles.add(file);
+    }
+    return skipped;
+  }
+
+  void removeFile(PickedFile file) =>
+      pendingFiles.removeWhere((f) => f.path == file.path);
+
+  /// Opens the native dialog and queues the chosen files. Returns the number
+  /// of files that did not fit in the limit.
+  Future<int> pickFiles() async {
+    final picked = await FileAccess.pick(
+      extensions: FileAccess.attachmentExtensions,
+    );
+    return addFiles(picked);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -149,22 +189,85 @@ class InterventionDetailController extends GetxController {
     ),
   );
 
-  /// Sends the composer text as an internal note or a customer reply.
+  /// Sends the composer text (and attachments) as an internal note or a
+  /// customer reply.
   Future<ActionResult<Intervention>> sendMessage() async {
+    if (!canReply) {
+      return ActionResult.failure(
+        ValidationException(tr.ivClosedBanner, errorCode: closedCode),
+      );
+    }
     final body = message.text.trim();
-    if (body.isEmpty) {
+    if (body.isEmpty && pendingFiles.isEmpty) {
       return ActionResult.failure(ValidationException(tr.wfMessageRequired));
     }
+    final files = pendingFiles.toList();
     final result = await _run(
       () => _repository.addMessage(
         interventionId,
         customerVisible: customerVisible.value,
         body: body,
+        files: files,
       ),
     );
-    if (result.isSuccess) message.clear();
+    if (result.isSuccess) {
+      message.clear();
+      pendingFiles.clear();
+    }
     return result;
   }
+
+  /// Server error code when the intervention was closed in the meantime.
+  static const closedCode = 'INTERVENTION_CLOSED';
+
+  /// Reopens a closed intervention (employees only): replies are enabled
+  /// again and the timeline records who did it.
+  Future<ActionResult<Intervention>> reopen({String? note}) =>
+      _run(() => _repository.reopen(interventionId, note: note));
+
+  /// Saves an attachment to the Downloads folder; resolves with its path.
+  Future<ActionResult<String>> saveAttachment(
+    InterventionAttachment attachment,
+  ) => ActionResult.guard(() async {
+    final path = FileAccess.freePath(
+      FileAccess.downloadsDirectory(),
+      attachment.name,
+    );
+    await _repository.downloadAttachment(
+      interventionId,
+      attachment.id,
+      path,
+    );
+    return path;
+  });
+
+  /// Downloads a PDF to the temp folder and opens it with the system viewer.
+  Future<ActionResult<String>> openAttachment(
+    InterventionAttachment attachment,
+  ) => ActionResult.guard(() async {
+    final path = FileAccess.freePath(
+      FileAccess.tempDirectory(),
+      attachment.name,
+    );
+    await _repository.downloadAttachment(interventionId, attachment.id, path);
+    await FileAccess.open(path);
+    return path;
+  });
+
+  final _previews = <int, Future<Uint8List>>{};
+
+  /// Bytes of an image attachment for the thumbnail and full-screen viewer,
+  /// fetched once per attachment (a failed fetch is retried next time).
+  Future<Uint8List> previewOf(InterventionAttachment attachment) =>
+      _previews.putIfAbsent(
+        attachment.id,
+        () => _repository
+            .previewAttachment(interventionId, attachment.id)
+            .catchError((Object e) {
+              _previews.remove(attachment.id);
+              throw e;
+            }),
+      );
 
   Future<ActionResult<Intervention>> publish(String resolution) {
     if (resolution.trim().isEmpty) {
@@ -190,6 +293,22 @@ class InterventionDetailController extends GetxController {
       if (result.isSuccess) {
         intervention.value = result.value;
         await _loadTransitions();
+        return result;
+      }
+      if (result.error?.errorCode == closedCode) {
+        // Closed by someone else meanwhile: refresh so the composer locks,
+        // and say so in the user's language.
+        try {
+          intervention.value = await _repository.getIntervention(
+            interventionId,
+          );
+          await _loadTransitions();
+        } catch (_) {
+          // The banner will appear on the next refresh.
+        }
+        return ActionResult.failure(
+          ValidationException(tr.ivClosedBanner, errorCode: closedCode),
+        );
       }
       return result;
     } finally {

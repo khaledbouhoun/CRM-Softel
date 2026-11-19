@@ -164,6 +164,9 @@ class _FormDialog extends StatelessWidget {
                       final picked = await showProspectSearchDialog(
                         title: tr.wfAddCustomer,
                         excludeStageIds: const [],
+                        // Product chosen first: only the customers who own
+                        // it or are interested in it are offered.
+                        productId: c.productId.value,
                       );
                       if (picked != null) {
                         c.addCustomer(
@@ -229,6 +232,57 @@ Future<String?> showStatusChangeDialog({
                   FilledButton(
                     onPressed: () => Get.back(result: text.text),
                     child: Text(tr.actionConfirm),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// Optional note recorded in the timeline when an intervention is reopened.
+/// Resolves with the note ('' for none) or null when cancelled.
+Future<String?> showReopenDialog() {
+  final text = TextEditingController();
+  return Get.dialog<String>(
+    Dialog(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(tr.ivReopen, style: Get.textTheme.titleLarge),
+              const SizedBox(height: 6),
+              Text(tr.ivReopenBody),
+              const SizedBox(height: 12),
+              TextField(
+                controller: text,
+                minLines: 2,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: tr.ivReopenNote,
+                  alignLabelWithHint: true,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text(tr.actionCancel),
+                  ),
+                  const SizedBox(width: 8),
+                  FilledButton.icon(
+                    onPressed: () => Get.back(result: text.text),
+                    icon: const Icon(Icons.lock_open_outlined, size: 18),
+                    label: Text(tr.ivReopen),
                   ),
                 ],
               ),

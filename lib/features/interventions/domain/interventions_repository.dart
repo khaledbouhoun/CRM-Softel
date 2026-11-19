@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import '../../../core/network/api_response.dart';
+import '../../../core/utils/file_access.dart';
 import '../data/models/intervention.dart';
 
 /// After-sales triage. Internal notes and customer-visible replies share the
@@ -32,11 +35,30 @@ abstract interface class InterventionsRepository {
   });
 
   /// [customerVisible] false = internal staff note; true = reply the customer
-  /// will see in the portal.
+  /// will see in the portal. [files] (max 5) turn the request into a
+  /// multipart upload (`files[]`); [body] may then be empty.
+  ///
+  /// `422 INTERVENTION_CLOSED` when the intervention was closed meanwhile.
   Future<Intervention> addMessage(
     int id, {
     required bool customerVisible,
     required String body,
+    List<PickedFile> files = const [],
+  });
+
+  /// Reopens a closed intervention (replies are enabled again).
+  /// [statusId] defaults to the initial status on the server.
+  Future<Intervention> reopen(int id, {int? statusId, String? note});
+
+  /// Inline preview bytes of an image/PDF attachment.
+  Future<Uint8List> previewAttachment(int id, int attachmentId);
+
+  /// Streams an attachment to [savePath] (any type, any size).
+  Future<void> downloadAttachment(
+    int id,
+    int attachmentId,
+    String savePath, {
+    void Function(int received, int total)? onProgress,
   });
 
   /// Publishes release/update notes to the affected customers.
