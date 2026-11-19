@@ -25,6 +25,9 @@ Future<ProspectRef?> showProspectSearchDialog({
   int? excludeProspectId,
   List<int>? excludeStageIds,
   String? confirmHint,
+
+  /// Only prospects/customers linked to this product (owned or interested).
+  int? productId,
 }) => Get.dialog<ProspectRef>(
   _ProspectSearchDialog(
     title: title ?? tr.searchProspectTitle,
@@ -32,6 +35,7 @@ Future<ProspectRef?> showProspectSearchDialog({
     excludeProspectId: excludeProspectId,
     excludeStageIds: excludeStageIds,
     hint: confirmHint,
+    productId: productId,
   ),
 );
 
@@ -42,6 +46,7 @@ class _ProspectSearchDialog extends StatefulWidget {
     this.excludeProspectId,
     this.excludeStageIds,
     this.hint,
+    this.productId,
   });
 
   final String title;
@@ -49,6 +54,7 @@ class _ProspectSearchDialog extends StatefulWidget {
   final int? excludeProspectId;
   final List<int>? excludeStageIds;
   final String? hint;
+  final int? productId;
 
   @override
   State<_ProspectSearchDialog> createState() => _ProspectSearchDialogState();
@@ -104,7 +110,13 @@ class _ProspectSearchDialogState extends State<_ProspectSearchDialog> {
     });
     try {
       final page = await Get.find<ProspectsRepository>().getProspects(
-        ProspectFilter(search: query, perPage: _pageSize, sort: ProspectSort.companyName, ascending: true),
+        ProspectFilter(
+          search: query,
+          productId: widget.productId,
+          perPage: _pageSize,
+          sort: ProspectSort.companyName,
+          ascending: true,
+        ),
       );
       if (!mounted || id != _requestId) return;
       setState(() {
@@ -144,6 +156,13 @@ class _ProspectSearchDialogState extends State<_ProspectSearchDialog> {
                 IconButton(tooltip: tr.actionClose, icon: const Icon(Icons.close), onPressed: () => Get.back()),
               ],
             ),
+            if (widget.productId != null) ...[
+              Text(
+                tr.prCustomersFilteredByProduct,
+                style: context.text.bodySmall?.copyWith(color: context.colors.primary),
+              ),
+              const SizedBox(height: 6),
+            ],
             if (widget.hint != null) ...[
               Text(widget.hint!, style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant)),
               const SizedBox(height: 8),

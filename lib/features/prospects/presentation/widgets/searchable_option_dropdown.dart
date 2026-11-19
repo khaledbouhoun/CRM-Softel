@@ -523,6 +523,7 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
             );
           },
           onChanged: (text) {
+            widget.onChanged(text.trim().isEmpty ? null : text.trim());
             if (!_isOpen) _openOverlay();
             _overlayEntry?.markNeedsBuild();
           },

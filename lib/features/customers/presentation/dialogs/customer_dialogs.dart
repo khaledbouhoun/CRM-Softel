@@ -5,8 +5,10 @@ import '../../../../app/l10n/l10n.dart';
 import '../../../../app/services/lookup_service.dart';
 import '../../../../app/services/workflow_lookup_service.dart';
 import '../../../../app/theme/app_theme.dart';
+import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../products/domain/products_repository.dart';
 import '../../../prospects/data/models/prospect.dart';
 import '../../data/models/customer_models.dart';
 import '../controllers/customers_controllers.dart';
@@ -18,6 +20,8 @@ Future<Prospect?> showConvertProspectDialog(Prospect prospect) =>
       controller: ConvertProspectController(
         repository: Get.find(),
         prospect: prospect,
+        // Lets the checklist enforce "one product per pack".
+        catalog: Get.find<LookupService>().products.toList(),
       ),
       builder: (c) => _ConvertDialog(c),
     );
@@ -74,7 +78,23 @@ class _ConvertDialog extends StatelessWidget {
                   controlAffinity: ListTileControlAffinity.leading,
                   title: Text(p.name),
                   value: c.selectedProductIds.contains(p.id),
-                  onChanged: (v) => c.toggleProduct(p.id, v ?? false),
+                  secondary: p.packName == null
+                      ? null
+                      : Tooltip(
+                          message: tr.prPackHint,
+                          child: Chip(
+                            visualDensity: VisualDensity.compact,
+                            label: Text(p.packName!),
+                          ),
+                        ),
+                  onChanged: (v) {
+                    final dropped = c.toggleProduct(p.id, v ?? false);
+                    if (dropped.isNotEmpty) {
+                      AppFeedback.warning(
+                        tr.prPackReplaced(dropped.map((e) => e.name).join(', ')),
+                      );
+                    }
+                  },
                 ),
             const SizedBox(height: 10),
             TextField(
@@ -107,6 +127,7 @@ Future<Trial?> showTrialDialog({required int prospectId}) async {
     controller: TrialFormController(
       repository: Get.find(),
       prospectId: prospectId,
+      productsRepository: Get.find<ProductsRepository>(),
       defaultDays: scheduling?.trialDefaultDays,
     ),
     builder: (c) => _TrialDialog(c),
@@ -125,9 +146,10 @@ class _TrialDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lookups = Get.find<LookupService>();
-    return Obx(
-      () => FormDialog(
+    return Obx(() {
+      final products = c.products.toList();
+      final selected = c.selectedProduct;
+      return FormDialog(
         title: tr.wfNewTrial,
         icon: Icons.science_outlined,
         busy: c.isSubmitting.value,
@@ -138,26 +160,46 @@ class _TrialDialog extends StatelessWidget {
           key: c.formKey,
           child: Column(
             children: [
+              if (c.productsError.value != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    c.productsError.value!,
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.error,
+                    ),
+                  ),
+                ),
               DropdownButtonFormField<int>(
+                key: ValueKey('trial-product-${products.length}'),
                 initialValue: c.productId.value,
                 isExpanded: true,
-                decoration: InputDecoration(labelText: tr.fieldProduct),
+                decoration: InputDecoration(
+                  labelText: tr.fieldProduct,
+                  helperText: products.isEmpty && !c.isLoadingProducts.value
+                      ? tr.prNoDemoProducts
+                      : tr.prFilteredByCustomer,
+                ),
                 items: [
-                  for (final p in lookups.activeProducts)
+                  for (final p in products)
                     DropdownMenuItem(value: p.id, child: Text(p.name)),
                 ],
                 onChanged: (v) => c.productId.value = v,
               ),
               const SizedBox(height: 14),
-              TextFormField(
-                controller: c.url,
-                keyboardType: TextInputType.url,
+              // The demo link is configured on the product: read-only here.
+              InputDecorator(
                 decoration: InputDecoration(
-                  labelText: tr.wfTrialUrl,
-                  helperText: tr.wfTrialUrlHint,
+                  labelText: tr.prDemoLink,
+                  helperText: selected == null
+                      ? null
+                      : (selected.hasDemo ? tr.prDemoLinkHint : tr.prNoDemoLink),
+                  prefixIcon: const Icon(Icons.link, size: 20),
                 ),
-                validator: c.validateUrl,
-                onChanged: (_) => c.serverErrors.remove('url'),
+                child: SelectableText(
+                  selected?.demoUrl ?? '—',
+                  style: context.text.bodyMedium,
+                ),
               ),
               const SizedBox(height: 14),
               FormRow(
@@ -189,7 +231,7 @@ class _TrialDialog extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

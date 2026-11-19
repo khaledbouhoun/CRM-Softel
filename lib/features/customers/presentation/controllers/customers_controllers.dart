@@ -6,6 +6,9 @@ import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/network/api_response.dart';
 import '../../../../core/state/action_result.dart';
 import '../../../../core/state/load_state.dart';
+import '../../../products/data/models/product.dart';
+import '../../../products/domain/pack_rules.dart';
+import '../../../products/domain/products_repository.dart';
 import '../../../prospects/data/models/prospect.dart';
 import '../../data/models/customer_models.dart';
 import '../../domain/customers_repository.dart';
@@ -107,12 +110,18 @@ class ConvertProspectController extends GetxController {
   ConvertProspectController({
     required CustomersRepository repository,
     required this.prospect,
+    this.catalog = const [],
   }) : _repository = repository {
     selectedProductIds.addAll(prospect.products.map((p) => p.id));
   }
 
   final CustomersRepository _repository;
   final Prospect prospect;
+
+  /// Every product (with its pack) so "one product per pack" can be applied
+  /// while ticking. Empty = no pack rule on the client (the server still
+  /// enforces it).
+  final List<Product> catalog;
 
   final note = TextEditingController();
   final selectedProductIds = <int>{}.obs;
@@ -123,12 +132,22 @@ class ConvertProspectController extends GetxController {
   final alreadyCustomer = false.obs;
   final serverErrors = <String, String>{}.obs;
 
-  void toggleProduct(int id, bool selected) {
-    if (selected) {
-      selectedProductIds.add(id);
-    } else {
-      selectedProductIds.remove(id);
-    }
+  /// Checks/unchecks a product. Checking a tier of a pack unchecks the other
+  /// tiers of that pack; the dropped products are returned so the UI can say
+  /// so.
+  List<Product> toggleProduct(int id, bool selected) {
+    final dropped = <Product>[];
+    final next = PackRules.toggle(
+      catalog: catalog,
+      selected: selectedProductIds.toSet(),
+      productId: id,
+      checked: selected,
+      onReplaced: dropped.addAll,
+    );
+    selectedProductIds
+      ..clear()
+      ..addAll(next);
+    return dropped;
   }
 
   ConvertPayload buildPayload() => ConvertPayload(
@@ -178,9 +197,11 @@ class TrialFormController extends GetxController {
   TrialFormController({
     required CustomersRepository repository,
     required this.prospectId,
+    ProductsRepository? productsRepository,
     this.defaultDays,
     DateTime Function()? clock,
   }) : _repository = repository,
+       _products = productsRepository,
        _clock = clock ?? DateTime.now {
     final now = _clock();
     startsAt.value = DateTime(
@@ -196,14 +217,20 @@ class TrialFormController extends GetxController {
   }
 
   final CustomersRepository _repository;
+  final ProductsRepository? _products;
   final int prospectId;
+
+  /// Products this customer/prospect is linked to AND that have a fixed demo
+  /// link (`GET /products?prospect_id=..&has_demo=1`).
+  final products = <Product>[].obs;
+  final isLoadingProducts = false.obs;
+  final productsError = RxnString();
 
   /// `trial_default_days` from the scheduling settings (null = unknown).
   final int? defaultDays;
   final DateTime Function() _clock;
 
   final formKey = GlobalKey<FormState>();
-  final url = TextEditingController();
   final notes = TextEditingController();
   final productId = RxnInt();
   final startsAt = Rxn<DateTime>();
@@ -212,16 +239,36 @@ class TrialFormController extends GetxController {
   final errorMessage = RxnString();
   final serverErrors = <String, String>{}.obs;
 
-  String? validateUrl(String? v) {
-    final text = v?.trim() ?? '';
-    if (text.isEmpty) return serverErrors['url'] ?? tr.wfUrlRequired;
-    final uri = Uri.tryParse(text);
-    final ok =
-        uri != null &&
-        (uri.scheme == 'http' || uri.scheme == 'https') &&
-        uri.host.isNotEmpty;
-    return ok ? serverErrors['url'] : tr.wfUrlInvalid;
+  @override
+  void onInit() {
+    super.onInit();
+    loadProducts();
   }
+
+  /// Only products linked to this customer that have a demo link are offered.
+  Future<void> loadProducts() async {
+    final repository = _products;
+    if (repository == null) return;
+    isLoadingProducts.value = true;
+    productsError.value = null;
+    try {
+      products.assignAll(
+        await repository.getProducts(prospectId: prospectId, hasDemo: true),
+      );
+      if (productId.value != null &&
+          !products.any((p) => p.id == productId.value)) {
+        productId.value = null;
+      }
+    } catch (e) {
+      productsError.value = ApiException.from(e).message;
+    } finally {
+      isLoadingProducts.value = false;
+    }
+  }
+
+  /// The demo link of the selected product: fixed, never typed by hand.
+  Product? get selectedProduct =>
+      products.firstWhereOrNull((p) => p.id == productId.value);
 
   String? get endError {
     final s = startsAt.value;
@@ -246,7 +293,6 @@ class TrialFormController extends GetxController {
         prospectId,
         TrialPayload(
           productId: productId.value!,
-          url: url.text,
           startsAt: startsAt.value,
           endsAt: endsAt.value,
           internalNotes: notes.text,
@@ -256,11 +302,7 @@ class TrialFormController extends GetxController {
       e.fieldErrors.forEach((k, m) {
         if (m.isNotEmpty) serverErrors[k.split('.').first] = m.first;
       });
-      errorMessage.value = e.describeFor(const {
-        'url',
-        'ends_at',
-        'product_id',
-      });
+      errorMessage.value = e.describeFor(const {'ends_at', 'product_id'});
       formKey.currentState?.validate();
       return null;
     } on ConflictException catch (e) {
@@ -279,7 +321,6 @@ class TrialFormController extends GetxController {
 
   @override
   void onClose() {
-    url.dispose();
     notes.dispose();
     super.onClose();
   }

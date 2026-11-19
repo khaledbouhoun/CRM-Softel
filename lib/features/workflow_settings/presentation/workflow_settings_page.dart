@@ -18,6 +18,9 @@ import '../../../core/widgets/layout_widgets.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../core/widgets/workflow_widgets.dart';
 import '../data/models/config_models.dart';
+import '../domain/workflow_config_repository.dart';
+import '../data/models/settings_help.dart';
+import 'settings_help_button.dart';
 import 'config_schema.dart';
 import 'workflow_settings_controllers.dart';
 
@@ -63,6 +66,12 @@ class _WorkflowSettingsPageState extends State<WorkflowSettingsPage> {
                     selected: _section == i,
                     onSelected: (_) => setState(() => _section = i),
                   ),
+                SettingsHelpButton(
+                  key: ValueKey('help-$_section'),
+                  section: _section == -1
+                      ? 'scheduling'
+                      : SettingsHelp.sectionKey(schemas[_section].entity),
+                ),
               ],
             ),
           ),
@@ -409,6 +418,9 @@ class _ConfigListViewState extends State<_ConfigListView> {
   @override
   Widget build(BuildContext context) {
     final schema = widget.schema;
+    // The four appointment types (Demo, Meeting, Training, Accompaniment) are
+    // fixed: no creation and no deactivation, only duration/colour/booking.
+    final fixed = schema.entity == ConfigEntities.appointmentTypes;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -416,7 +428,7 @@ class _ConfigListViewState extends State<_ConfigListView> {
           children: [
             Expanded(
               child: Text(
-                schema.hint(),
+                fixed ? '${schema.hint()}\n${tr.wfFixedTypesNote}' : schema.hint(),
                 style: context.text.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
@@ -430,11 +442,12 @@ class _ConfigListViewState extends State<_ConfigListView> {
               ),
             ),
             const SizedBox(width: 8),
-            FilledButton.icon(
-              onPressed: _edit,
-              icon: const Icon(Icons.add, size: 18),
-              label: Text(tr.actionAdd),
-            ),
+            if (!fixed)
+              FilledButton.icon(
+                onPressed: _edit,
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(tr.actionAdd),
+              ),
           ],
         ),
         const SizedBox(height: 12),
@@ -510,14 +523,15 @@ class _ConfigListViewState extends State<_ConfigListView> {
                             cell: (r) => Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Obx(
-                                  () => Switch(
-                                    value: r.isActive,
-                                    onChanged: c.busyIds.contains(r.id)
-                                        ? null
-                                        : (_) => _toggle(r),
+                                if (!fixed)
+                                  Obx(
+                                    () => Switch(
+                                      value: r.isActive,
+                                      onChanged: c.busyIds.contains(r.id)
+                                          ? null
+                                          : (_) => _toggle(r),
+                                    ),
                                   ),
-                                ),
                                 IconButton(
                                   tooltip: tr.actionEdit,
                                   icon: const Icon(

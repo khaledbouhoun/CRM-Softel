@@ -166,23 +166,27 @@ class ConvertPayload {
 class TrialPayload {
   const TrialPayload({
     required this.productId,
-    required this.url,
+    this.url,
     this.startsAt,
     this.endsAt,
     this.internalNotes,
   });
 
   final int productId;
-  final String url;
+
+  /// Deprecated: the demo link is the product's fixed `demo_url`; the server
+  /// ignores manual links. Only sent when a caller still provides one.
+  final String? url;
   final DateTime? startsAt;
   final DateTime? endsAt;
   final String? internalNotes;
 
   JsonMap toJson() {
     final notes = internalNotes?.trim();
+    final manualUrl = url?.trim();
     return {
       'product_id': productId,
-      'url': url.trim(),
+      if (manualUrl != null && manualUrl.isNotEmpty) 'url': manualUrl,
       if (startsAt != null) 'starts_at': toApiDateTime(startsAt!),
       if (endsAt != null) 'ends_at': toApiDateTime(endsAt!),
       if (notes != null && notes.isNotEmpty) 'internal_notes': notes,

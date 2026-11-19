@@ -107,6 +107,7 @@ abstract final class ConfigSchemas {
         () => tr.fieldNameRequired,
         ConfigFieldKind.text,
         required: true,
+        immutable: true,
         maxLength: 120,
       ),
       ConfigField(
@@ -123,6 +124,7 @@ abstract final class ConfigSchemas {
         () => tr.wfGroup,
         ConfigFieldKind.choice,
         required: true,
+        immutable: true,
         options: _groups(),
         initial: 'meeting',
       ),
