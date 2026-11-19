@@ -7,6 +7,9 @@ class Product {
     this.description,
     this.isActive = true,
     this.prospectsCount,
+    this.packId,
+    this.packName,
+    this.demoUrl,
   });
 
   final int id;
@@ -15,13 +18,30 @@ class Product {
   final bool isActive;
   final int? prospectsCount;
 
-  factory Product.fromJson(JsonMap json) => Product(
-    id: asInt(json['id']),
-    name: asString(json['name']),
-    description: asStringOrNull(json['description']),
-    isActive: asBool(json['is_active'], fallback: true),
-    prospectsCount: asIntOrNull(json['prospects_count']),
-  );
+  /// Pack (suite of tiers, e.g. GestCom Basic / Ultra) the product belongs
+  /// to. A customer may pick only one product per pack.
+  final int? packId;
+  final String? packName;
+
+  /// Fixed demo link configured on the product. Demos are generated from it;
+  /// products without one cannot be offered as a demo.
+  final String? demoUrl;
+
+  bool get hasDemo => demoUrl != null && demoUrl!.trim().isNotEmpty;
+
+  factory Product.fromJson(JsonMap json) {
+    final pack = asMapOrNull(json['pack']);
+    return Product(
+      id: asInt(json['id']),
+      name: asString(json['name']),
+      description: asStringOrNull(json['description']),
+      isActive: asBool(json['is_active'], fallback: true),
+      prospectsCount: asIntOrNull(json['prospects_count']),
+      packId: asIntOrNull(json['pack_id']) ?? asIntOrNull(pack?['id']),
+      packName: asStringOrNull(pack?['name']),
+      demoUrl: asStringOrNull(json['demo_url']),
+    );
+  }
 
   JsonMap toJson() => {
     'id': id,
@@ -29,6 +49,8 @@ class Product {
     'description': description,
     'is_active': isActive,
     if (prospectsCount != null) 'prospects_count': prospectsCount,
+    'pack_id': ?packId,
+    'demo_url': ?demoUrl,
   };
 
   @override

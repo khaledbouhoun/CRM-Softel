@@ -11,6 +11,9 @@ class ProductsRemoteDataSource {
   Future<List<Product>> fetchAll({
     bool includeInactive = false,
     String? search,
+    int? prospectId,
+    String relation = 'linked',
+    bool hasDemo = false,
   }) async {
     final body = await _api.get(
       ApiEndpoints.products,
@@ -18,6 +21,9 @@ class ProductsRemoteDataSource {
         // The API lists every product unless filtered on is_active.
         'is_active': includeInactive ? null : 1,
         'search': search,
+        if (prospectId != null) 'prospect_id': prospectId,
+        if (prospectId != null) 'relation': relation,
+        if (hasDemo) 'has_demo': 1,
       },
     );
     return ApiResponse.list(body, Product.fromJson);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_theme.dart';
+import '../../../../core/widgets/app_feedback.dart';
 import '../../data/models/product.dart';
+import '../../domain/pack_rules.dart';
 import '../../../../app/l10n/l10n.dart';
 
 /// Multi-select of products shown as filter chips.
@@ -53,6 +55,25 @@ class ProductSelector extends StatelessWidget {
                         ? null
                         : (selected) {
                             if (selected && !product.isActive) return;
+                            if (selected) {
+                              // One product per pack: checking a tier
+                              // unchecks its siblings.
+                              final replaced = PackRules.siblingsToClear(
+                                catalog: products,
+                                selected: selectedIds,
+                                productId: product.id,
+                              );
+                              for (final sibling in replaced) {
+                                onToggle(sibling.id, false);
+                              }
+                              if (replaced.isNotEmpty) {
+                                AppFeedback.warning(
+                                  tr.prPackReplaced(
+                                    replaced.map((p) => p.name).join(', '),
+                                  ),
+                                );
+                              }
+                            }
                             onToggle(product.id, selected);
                           },
                   ),

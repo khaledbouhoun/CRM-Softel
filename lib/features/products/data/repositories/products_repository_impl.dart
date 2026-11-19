@@ -11,10 +11,16 @@ class ProductsRepositoryImpl implements ProductsRepository {
   Future<List<Product>> getProducts({
     bool includeInactive = false,
     String? search,
+    int? prospectId,
+    String relation = 'linked',
+    bool hasDemo = false,
   }) async {
     final products = await _remote.fetchAll(
       includeInactive: includeInactive,
       search: search,
+      prospectId: prospectId,
+      relation: relation,
+      hasDemo: hasDemo,
     );
     return [...products]
       ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
