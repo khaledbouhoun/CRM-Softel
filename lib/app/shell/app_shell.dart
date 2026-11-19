@@ -86,6 +86,12 @@ List<_NavGroup> get _mainGroups => [
       Icons.inventory_2,
     ),
     _NavItem(
+      Routes.releases,
+      tr.navReleases,
+      Icons.system_update_alt_outlined,
+      Icons.system_update_alt,
+    ),
+    _NavItem(
       Routes.training,
       tr.navTraining,
       Icons.school_outlined,

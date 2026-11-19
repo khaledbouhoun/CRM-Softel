@@ -14,6 +14,7 @@ abstract final class Routes {
   static const afterSales = '/after-sales';
   static const afterSalesDetails = '/after-sales/:id';
   static const employees = '/employees';
+  static const releases = '/releases';
   static const workflowSettings = '/settings/workflow';
   static const settings = '/settings';
   static const stagesSettings = '/settings/stages';

@@ -30,6 +30,8 @@ import '../../features/scheduling/presentation/pages/calendar_page.dart';
 import '../../features/scheduling/presentation/pages/pending_requests_page.dart';
 import '../../features/scheduling/presentation/pages/training_page.dart';
 import '../../features/workflow_settings/presentation/workflow_settings_page.dart';
+import '../../features/releases/presentation/bindings/releases_binding.dart';
+import '../../features/releases/presentation/pages/releases_page.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
@@ -131,6 +133,13 @@ abstract final class AppPages {
       page: () => const InterventionDetailPage(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: const Duration(milliseconds: 180),
+    ),
+    GetPage(
+      name: Routes.releases,
+      page: () => const ReleasesPage(),
+      binding: ReleasesBinding(),
+      transition: _transition,
+      transitionDuration: _duration,
     ),
     GetPage(
       name: Routes.employees,
