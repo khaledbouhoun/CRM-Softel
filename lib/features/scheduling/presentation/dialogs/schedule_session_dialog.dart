@@ -9,6 +9,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../../../core/widgets/workflow_widgets.dart';
+import '../../../products/domain/products_repository.dart';
 import '../../../prospects/data/models/prospect_ref.dart';
 import '../../../prospects/presentation/widgets/prospect_picker_field.dart';
 import '../../data/models/appointment.dart';
@@ -35,6 +36,7 @@ Future<ScheduleResult?> showScheduleSessionDialog({
       workflow: workflow,
       // Explicit type: the parameter is nullable.
       configRepository: Get.find<WorkflowConfigRepository>(),
+      productsRepository: Get.find<ProductsRepository>(),
       mode: mode,
       customer: customer,
     ),
@@ -94,7 +96,7 @@ class _SessionDialog extends StatelessWidget {
               value: c.customer.value,
               excludeStageIds: const [],
               errorText: c.customerError,
-              onChanged: (v) => c.customer.value = v,
+              onChanged: c.onCustomerChanged,
             ),
             const SizedBox(height: 14),
             if (types.isEmpty)
@@ -123,15 +125,25 @@ class _SessionDialog extends StatelessWidget {
                     },
                   ),
                   DropdownButtonFormField<int?>(
+                    key: ValueKey(
+                      'session-product-${c.customer.value?.id}-${c.linkedProducts.value?.length}',
+                    ),
                     initialValue: c.productId.value,
                     isExpanded: true,
-                    decoration: InputDecoration(labelText: tr.fieldProduct),
+                    decoration: InputDecoration(
+                      labelText: tr.fieldProduct,
+                      helperText: c.linkedProducts.value == null
+                          ? null
+                          : (c.linkedProducts.value!.isEmpty
+                                ? tr.prNoLinkedProducts
+                                : tr.prFilteredByCustomer),
+                    ),
                     items: [
                       DropdownMenuItem<int?>(
                         value: null,
                         child: Text(tr.wfNoProduct),
                       ),
-                      for (final p in lookups.activeProducts)
+                      for (final p in c.productChoices(lookups.activeProducts))
                         DropdownMenuItem<int?>(
                           value: p.id,
                           child: Text(p.name),

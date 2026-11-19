@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../../app/l10n/l10n.dart';
 import '../../../../app/services/workflow_lookup_service.dart';
 import '../../../../core/network/api_exceptions.dart';
+import '../../../products/data/models/product.dart';
+import '../../../products/domain/products_repository.dart';
 import '../../../prospects/data/models/prospect_ref.dart';
 import '../../../workflow_settings/data/models/config_models.dart';
 import '../../../workflow_settings/domain/workflow_config_repository.dart';
@@ -33,13 +35,16 @@ class ScheduleSessionController extends GetxController {
     required WorkflowLookupService workflow,
     required this.mode,
     WorkflowConfigRepository? configRepository,
+    ProductsRepository? productsRepository,
     ProspectRef? customer,
     DateTime Function()? clock,
   }) : _repository = repository,
        _workflow = workflow,
        _config = configRepository,
+       _products = productsRepository,
        _clock = clock ?? DateTime.now {
     this.customer.value = customer;
+    if (customer != null) loadProductsFor(customer);
     final settings = workflow.scheduling.value;
     occurrences.text = '${settings?.accompanimentOccurrences ?? 1}';
     interval.text = '${settings?.accompanimentIntervalDays ?? 7}';
@@ -57,8 +62,15 @@ class ScheduleSessionController extends GetxController {
   final SchedulingRepository _repository;
   final WorkflowLookupService _workflow;
   final WorkflowConfigRepository? _config;
+  final ProductsRepository? _products;
   final DateTime Function() _clock;
   final SessionMode mode;
+
+  /// Products linked to the chosen customer (`GET /products?prospect_id=..`).
+  /// `null` until a customer is chosen (the form then offers every product).
+  final linkedProducts = Rxn<List<Product>>();
+  final isLoadingProducts = false.obs;
+  int _productsRequest = 0;
 
   final customer = Rxn<ProspectRef>();
   final type = Rxn<AppointmentType>();
@@ -116,6 +128,43 @@ class ScheduleSessionController extends GetxController {
     startTime.value = value;
     _applyDefaultEnd();
   }
+
+  /// A customer was chosen: the product list narrows to the products linked
+  /// to that customer. A product chosen earlier that no longer fits is
+  /// cleared.
+  Future<void> onCustomerChanged(ProspectRef? value) async {
+    customer.value = value;
+    if (value == null) {
+      linkedProducts.value = null;
+      return;
+    }
+    await loadProductsFor(value);
+  }
+
+  Future<void> loadProductsFor(ProspectRef value) async {
+    final repository = _products;
+    if (repository == null) return;
+    final request = ++_productsRequest;
+    isLoadingProducts.value = true;
+    try {
+      final rows = await repository.getProducts(prospectId: value.id);
+      if (request != _productsRequest) return;
+      linkedProducts.value = rows;
+      if (productId.value != null && !rows.any((p) => p.id == productId.value)) {
+        await selectProduct(null);
+      }
+    } catch (_) {
+      // Optional narrowing: on failure the full product list stays usable.
+      if (request == _productsRequest) linkedProducts.value = null;
+    } finally {
+      if (request == _productsRequest) isLoadingProducts.value = false;
+    }
+  }
+
+  /// Products offered in the picker: those linked to the customer when one
+  /// is chosen, otherwise [all].
+  List<Product> productChoices(List<Product> all) =>
+      linkedProducts.value ?? all;
 
   Future<void> selectProduct(int? id) async {
     productId.value = id;

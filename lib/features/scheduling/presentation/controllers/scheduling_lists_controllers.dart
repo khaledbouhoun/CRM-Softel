@@ -10,8 +10,7 @@ import '../../domain/scheduling_repository.dart';
 /// "Pending requests / holds": slots held for visitors who asked for a demo
 /// (waiting for an employee decision) and the other website requests.
 class PendingRequestsController extends GetxController {
-  PendingRequestsController({required SchedulingRepository repository})
-    : _repository = repository;
+  PendingRequestsController({required SchedulingRepository repository}) : _repository = repository;
 
   final SchedulingRepository _repository;
 
@@ -43,15 +42,8 @@ class PendingRequestsController extends GetxController {
   /// customer) appointments, soonest expiry first.
   Future<void> loadHolds() => holdsState.run(() async {
     final results = await Future.wait([
-      _repository.getAppointments(
-        const AppointmentFilter(status: AppointmentStatus.held, perPage: 100),
-      ),
-      _repository.getAppointments(
-        const AppointmentFilter(
-          status: AppointmentStatus.proposed,
-          perPage: 100,
-        ),
-      ),
+      _repository.getAppointments(const AppointmentFilter(status: AppointmentStatus.held, perPage: 100)),
+      _repository.getAppointments(const AppointmentFilter(status: AppointmentStatus.proposed, perPage: 100)),
     ]);
     final merged = [for (final page in results) ...page.items]
       ..sort((a, b) {
@@ -106,11 +98,7 @@ class PendingRequestsController extends GetxController {
     busyRequestIds.add(request.id);
     try {
       final result = await ActionResult.guard(
-        () => _repository.updatePortalRequest(
-          request.id,
-          status,
-          customerMessage: customerMessage,
-        ),
+        () => _repository.updatePortalRequest(request.id, status, customerMessage: customerMessage),
       );
       if (result.isSuccess) await loadRequests();
       return result;
@@ -122,11 +110,9 @@ class PendingRequestsController extends GetxController {
 
 /// Training sessions and accompaniment series.
 class TrainingController extends GetxController {
-  TrainingController({
-    required SchedulingRepository repository,
-    DateTime Function()? clock,
-  }) : _repository = repository,
-       _clock = clock ?? DateTime.now;
+  TrainingController({required SchedulingRepository repository, DateTime Function()? clock})
+    : _repository = repository,
+      _clock = clock ?? DateTime.now;
 
   final SchedulingRepository _repository;
   final DateTime Function() _clock;
@@ -148,29 +134,14 @@ class TrainingController extends GetxController {
   Future<void> load() => state.run(() async {
     final now = _clock();
     final today = DateTime(now.year, now.month, now.day);
-    final from = showPast.value
-        ? today.subtract(const Duration(days: 90))
-        : today;
-    final groups = group.value == null
-        ? const ['training', 'accompaniment']
-        : [group.value!];
+    final from = showPast.value ? today.subtract(const Duration(days: 90)) : today;
+    final groups = group.value == null ? const ['training', 'accompaniment'] : [group.value!];
     final pages = await Future.wait([
       for (final g in groups)
-        _repository.getAppointments(
-          AppointmentFilter(
-            group: g,
-            status: status.value,
-            from: from,
-            perPage: 100,
-          ),
-        ),
+        _repository.getAppointments(AppointmentFilter(group: g, status: status.value, from: from, perPage: 100)),
     ]);
     final merged = [for (final p in pages) ...p.items]
-      ..sort(
-        (a, b) => (a.startsAt ?? DateTime(9999)).compareTo(
-          b.startsAt ?? DateTime(9999),
-        ),
-      );
+      ..sort((a, b) => (a.startsAt ?? DateTime(9999)).compareTo(b.startsAt ?? DateTime(9999)));
     sessions.assignAll(merged);
   });
 
@@ -190,17 +161,12 @@ class TrainingController extends GetxController {
   }
 
   /// Cancels one future session; the rest of the series is untouched.
-  Future<ActionResult<Appointment>> cancelSession(
-    Appointment a, {
-    String? reason,
-  }) => _guard(a.id, () => _repository.cancel(a.id, reason: reason));
+  Future<ActionResult<Appointment>> cancelSession(Appointment a, {String? reason}) =>
+      _guard(a.id, () => _repository.cancel(a.id, reason: reason));
 
   /// Cancels this session and every later one of its series (completed
   /// history is never touched by the server).
-  Future<ActionResult<int>> cancelRemainingSeries(
-    Appointment a, {
-    String? reason,
-  }) async {
+  Future<ActionResult<int>> cancelRemainingSeries(Appointment a, {String? reason}) async {
     final seriesId = a.seriesId;
     if (seriesId == null) {
       return ActionResult.success(0);
@@ -209,11 +175,7 @@ class TrainingController extends GetxController {
     busyIds.add(a.id);
     try {
       final result = await ActionResult.guard(
-        () => _repository.cancelSeries(
-          seriesId,
-          fromAppointmentId: a.id,
-          reason: reason,
-        ),
+        () => _repository.cancelSeries(seriesId, fromAppointmentId: a.id, reason: reason),
       );
       if (result.isSuccess) await load();
       return result;
@@ -222,13 +184,9 @@ class TrainingController extends GetxController {
     }
   }
 
-  Future<ActionResult<Appointment>> markNoShow(Appointment a) =>
-      _guard(a.id, () => _repository.markNoShow(a.id));
+  Future<ActionResult<Appointment>> markNoShow(Appointment a) => _guard(a.id, () => _repository.markNoShow(a.id));
 
-  Future<ActionResult<Appointment>> _guard(
-    int id,
-    Future<Appointment> Function() task,
-  ) async {
+  Future<ActionResult<Appointment>> _guard(int id, Future<Appointment> Function() task) async {
     if (busyIds.contains(id)) return const ActionResult.success();
     busyIds.add(id);
     try {

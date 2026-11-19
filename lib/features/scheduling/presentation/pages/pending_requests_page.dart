@@ -25,10 +25,7 @@ class PendingRequestsPage extends GetView<PendingRequestsController> {
   const PendingRequestsPage({super.key});
 
   Future<void> _decide(Appointment a, AppointmentActionKind kind) async {
-    final result = await showAppointmentActionDialog(
-      kind: kind,
-      appointment: a,
-    );
+    final result = await showAppointmentActionDialog(kind: kind, appointment: a);
     if (!result.changed) return;
     if (result.stale) AppFeedback.warning(tr.wfHoldExpired);
     await controller.loadAll();
@@ -46,9 +43,7 @@ class PendingRequestsPage extends GetView<PendingRequestsController> {
           actions: [
             Obx(
               () => OutlinedButton.icon(
-                onPressed:
-                    controller.holdsState.isLoading ||
-                        controller.requestsState.isLoading
+                onPressed: controller.holdsState.isLoading || controller.requestsState.isLoading
                     ? null
                     : controller.loadAll,
                 icon: const Icon(Icons.refresh, size: 18),
@@ -108,19 +103,13 @@ class _HoldsList extends StatelessWidget {
       final holds = controller.holds.toList();
       return Column(
         children: [
-          RefreshingBar(
-            visible: controller.holdsState.isLoading && holds.isNotEmpty,
-          ),
+          RefreshingBar(visible: controller.holdsState.isLoading && holds.isNotEmpty),
           Expanded(
             child: LoadStateView(
               state: controller.holdsState,
               isEmpty: holds.isEmpty,
               onRetry: controller.loadHolds,
-              empty: EmptyView(
-                icon: Icons.event_available_outlined,
-                title: tr.wfNoHolds,
-                message: tr.wfNoHoldsHint,
-              ),
+              empty: EmptyView(icon: Icons.event_available_outlined, title: tr.wfNoHolds, message: tr.wfNoHoldsHint),
               builder: (_) => ListView.separated(
                 itemCount: holds.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
@@ -142,9 +131,7 @@ class _HoldCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expired =
-        a.isHoldExpired ||
-        (a.holdExpiresAt != null && a.holdExpiresAt!.isBefore(DateTime.now()));
+    final expired = a.isHoldExpired || (a.holdExpiresAt != null && a.holdExpiresAt!.isBefore(DateTime.now()));
     final waitingForCustomer = a.status == AppointmentStatus.proposed;
     return Card(
       child: Padding(
@@ -172,24 +159,13 @@ class _HoldCard extends StatelessWidget {
                     children: [
                       Text(a.prospect.name, style: context.text.titleMedium),
                       AppointmentStatusBadge(status: a.status),
-                      if (!a.prospect.isCustomer)
-                        StatusBadge(
-                          label: tr.wfNewProspect,
-                          color: context.crm.info,
-                        ),
+                      if (!a.prospect.isCustomer) StatusBadge(label: tr.wfNewProspect, color: context.crm.info),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    joinNonEmpty([
-                      a.type.name,
-                      a.product?.name,
-                      a.prospect.contactPerson,
-                      a.prospect.phone,
-                    ]),
-                    style: context.text.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
+                    joinNonEmpty([a.type.name, a.product?.name, a.prospect.contactPerson, a.prospect.phone]),
+                    style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -198,9 +174,7 @@ class _HoldCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Text(
                         '${Formatters.dateTime(a.startsAt)} – ${Formatters.time(a.endsAt)}',
-                        style: context.text.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(width: 16),
                       HoldCountdown(expiresAt: a.holdExpiresAt),
@@ -209,20 +183,12 @@ class _HoldCard extends StatelessWidget {
                   if (waitingForCustomer)
                     Padding(
                       padding: const EdgeInsets.only(top: 6),
-                      child: Text(
-                        tr.wfWaitingForCustomer,
-                        style: context.text.bodySmall,
-                      ),
+                      child: Text(tr.wfWaitingForCustomer, style: context.text.bodySmall),
                     ),
                   if (expired && !waitingForCustomer)
                     Padding(
                       padding: const EdgeInsets.only(top: 6),
-                      child: Text(
-                        tr.wfHoldExpired,
-                        style: context.text.bodySmall?.copyWith(
-                          color: context.crm.danger,
-                        ),
-                      ),
+                      child: Text(tr.wfHoldExpired, style: context.text.bodySmall?.copyWith(color: context.crm.danger)),
                     ),
                 ],
               ),
@@ -246,16 +212,10 @@ class _HoldCard extends StatelessWidget {
                     label: Text(tr.wfProposeOther),
                   ),
                 OutlinedButton.icon(
-                  onPressed: () => onDecide(
-                    a,
-                    waitingForCustomer
-                        ? AppointmentActionKind.cancel
-                        : AppointmentActionKind.reject,
-                  ),
+                  onPressed: () =>
+                      onDecide(a, waitingForCustomer ? AppointmentActionKind.cancel : AppointmentActionKind.reject),
                   icon: const Icon(Icons.block, size: 18),
-                  label: Text(
-                    waitingForCustomer ? tr.wfCancelProposal : tr.wfReject,
-                  ),
+                  label: Text(waitingForCustomer ? tr.wfCancelProposal : tr.wfReject),
                 ),
                 if (a.prospect.id != 0)
                   IconButton(
@@ -278,18 +238,10 @@ class _RequestsList extends StatelessWidget {
   final PendingRequestsController controller;
 
   Future<void> _close(PortalRequest r, String status) async {
-    final message = await _askMessage(
-      status == 'handled' ? tr.wfMarkHandled : tr.wfReject,
-    );
+    final message = await _askMessage(status == 'handled' ? tr.wfMarkHandled : tr.wfReject);
     if (message == null) return;
-    final result = await controller.updateRequest(
-      r,
-      status,
-      customerMessage: message,
-    );
-    result.isSuccess
-        ? AppFeedback.success(tr.wfRequestUpdated)
-        : AppFeedback.error(result.error!);
+    final result = await controller.updateRequest(r, status, customerMessage: message);
+    result.isSuccess ? AppFeedback.success(tr.wfRequestUpdated) : AppFeedback.error(result.error!);
   }
 
   /// Asks for an optional customer-visible message. Null = cancelled.
@@ -321,10 +273,7 @@ class _RequestsList extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(
-                      onPressed: () => Get.back(),
-                      child: Text(tr.actionCancel),
-                    ),
+                    TextButton(onPressed: () => Get.back(), child: Text(tr.actionCancel)),
                     const SizedBox(width: 8),
                     FilledButton(
                       onPressed: () => Get.back(result: text.text),
@@ -367,21 +316,8 @@ class _RequestsList extends StatelessWidget {
                 label: tr.colStatus,
                 width: 190,
                 value: controller.requestStatus.value,
-                items: const [
-                  'pending',
-                  'scheduled',
-                  'handled',
-                  'rejected',
-                  'cancelled',
-                  'expired',
-                ],
-                itemLabel: (s) => PortalRequest(
-                  id: 0,
-                  type: '',
-                  status: s,
-                  company: '',
-                  contactName: '',
-                ).statusLabel,
+                items: const ['pending', 'scheduled', 'handled', 'rejected', 'cancelled', 'expired'],
+                itemLabel: (s) => PortalRequest(id: 0, type: '', status: s, company: '', contactName: '').statusLabel,
                 onChanged: controller.setRequestStatus,
               ),
             ],
@@ -395,20 +331,13 @@ class _RequestsList extends StatelessWidget {
               final page = controller.requests.value;
               return Column(
                 children: [
-                  RefreshingBar(
-                    visible:
-                        controller.requestsState.isLoading &&
-                        page.items.isNotEmpty,
-                  ),
+                  RefreshingBar(visible: controller.requestsState.isLoading && page.items.isNotEmpty),
                   Expanded(
                     child: LoadStateView(
                       state: controller.requestsState,
                       isEmpty: page.items.isEmpty,
                       onRetry: controller.loadRequests,
-                      empty: EmptyView(
-                        icon: Icons.inbox_outlined,
-                        title: tr.wfNoRequests,
-                      ),
+                      empty: EmptyView(icon: Icons.inbox_outlined, title: tr.wfNoRequests),
                       builder: (_) => CrmDataTable<PortalRequest>(
                         rows: page.items,
                         rowHeight: 60,
@@ -416,45 +345,30 @@ class _RequestsList extends StatelessWidget {
                           CrmColumn(
                             label: tr.wfReceived,
                             width: 150,
-                            cell: (r) =>
-                                CellText(Formatters.dateTime(r.createdAt)),
+                            cell: (r) => CellText(Formatters.dateTime(r.createdAt)),
                           ),
                           CrmColumn(
                             label: tr.colType,
                             width: 130,
-                            cell: (r) => StatusBadge(
-                              label: r.typeLabel,
-                              color: context.colors.primary,
-                            ),
+                            cell: (r) => StatusBadge(label: r.typeLabel, color: context.colors.primary),
                           ),
                           CrmColumn(
                             label: tr.fieldCompany,
                             flex: 3,
-                            cell: (r) => CellText(
-                              r.company,
-                              bold: true,
-                              secondary: r.contactName,
-                            ),
+                            cell: (r) => CellText(r.company, bold: true, secondary: r.contactName),
                           ),
                           CrmColumn(
                             label: tr.fieldPhone,
                             flex: 2,
-                            cell: (r) =>
-                                CellText(r.phone ?? '', secondary: r.email),
+                            cell: (r) => CellText(r.phone ?? '', secondary: r.email),
                           ),
-                          CrmColumn(
-                            label: tr.fieldProduct,
-                            flex: 2,
-                            cell: (r) => CellText(r.product?.name ?? ''),
-                          ),
+                          CrmColumn(label: tr.fieldProduct, flex: 2, cell: (r) => CellText(r.product?.name ?? '')),
                           CrmColumn(
                             label: tr.colStatus,
                             width: 120,
                             cell: (r) => StatusBadge(
                               label: r.statusLabel,
-                              color: r.status == 'pending'
-                                  ? context.crm.warning
-                                  : context.colors.outline,
+                              color: r.status == 'pending' ? context.crm.warning : context.colors.outline,
                             ),
                           ),
                           CrmColumn(
@@ -468,25 +382,15 @@ class _RequestsList extends StatelessWidget {
                                       children: [
                                         IconButton(
                                           tooltip: tr.wfMarkHandled,
-                                          icon: const Icon(
-                                            Icons.done_all,
-                                            size: 20,
-                                          ),
-                                          onPressed:
-                                              controller.busyRequestIds
-                                                  .contains(r.id)
+                                          icon: const Icon(Icons.done_all, size: 20),
+                                          onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null
                                               : () => _close(r, 'handled'),
                                         ),
                                         IconButton(
                                           tooltip: tr.wfReject,
-                                          icon: const Icon(
-                                            Icons.block,
-                                            size: 20,
-                                          ),
-                                          onPressed:
-                                              controller.busyRequestIds
-                                                  .contains(r.id)
+                                          icon: const Icon(Icons.block, size: 20),
+                                          onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null
                                               : () => _close(r, 'rejected'),
                                         ),

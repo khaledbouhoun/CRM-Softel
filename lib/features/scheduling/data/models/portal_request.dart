@@ -55,8 +55,7 @@ class PortalRequest {
 
   /// Quotation and trial requests are closed by the employee; demos change
   /// status through their appointment.
-  bool get isActionable =>
-      !isDemo && (status == 'pending' || status == 'scheduled');
+  bool get isActionable => !isDemo && (status == 'pending' || status == 'scheduled');
 
   String get typeLabel => switch (type) {
     'demo' => tr.wfRequestDemo,
