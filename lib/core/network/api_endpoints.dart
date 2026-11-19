@@ -78,8 +78,21 @@ class ApiEndpoints {
   static String intervention(int id) => '/interventions/$id';
   static String interventionAction(int id, String action) =>
       '/interventions/$id/$action';
+  static String interventionAttachment(int id, int attachmentId) =>
+      '/interventions/$id/attachments/$attachmentId';
+  static String interventionAttachmentPreview(int id, int attachmentId) =>
+      '/interventions/$id/attachments/$attachmentId/preview';
+
+  // Product releases / updates (staff management)
+  static const productReleases = '/product-releases';
+  static String productRelease(int id) => '/product-releases/$id';
+  static String productReleaseInstaller(int id) =>
+      '/product-releases/$id/installer';
+  static String productReleaseDownload(int id) =>
+      '/product-releases/$id/download';
 
   // Settings
+  static String settingsHelp(String section) => '/settings/help/$section';
   static const schedulingSettings = '/settings/scheduling';
   static String config(String entity) => '/config/$entity';
   static String configRow(String entity, int id) => '/config/$entity/$id';

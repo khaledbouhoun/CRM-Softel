@@ -1354,7 +1354,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String countActivities(int count) {
+  String countActivities(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1366,7 +1366,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String activitiesCountSubtitle(int count) {
+  String activitiesCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1377,7 +1377,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String pipelineCountSubtitle(int count) {
+  String pipelineCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1405,7 +1405,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'L\'étape ne pourra plus être choisie pour de nouveaux changements.';
 
   @override
-  String deactivateStageProspects(int count) {
+  String deactivateStageProspects(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -2803,4 +2803,205 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wfCountryCodeInvalid => '1 à 4 chiffres.';
+
+  @override
+  String get ivSupport => 'Support';
+
+  @override
+  String get ivSystem => 'Système';
+
+  @override
+  String ivEventStatusFull(Object actor, Object from, Object time, Object to) {
+    return 'Statut modifié de $from à $to par $actor à $time';
+  }
+
+  @override
+  String ivEventStatusTo(Object actor, Object time, Object to) {
+    return 'Statut modifié en $to par $actor à $time';
+  }
+
+  @override
+  String ivEventReopened(Object actor, Object time) {
+    return 'Intervention rouverte par $actor à $time';
+  }
+
+  @override
+  String get ivAttachFiles => 'Joindre des fichiers';
+
+  @override
+  String ivAttachLimit(Object max) {
+    return '$max fichiers maximum par message.';
+  }
+
+  @override
+  String get ivRemoveFile => 'Retirer ce fichier';
+
+  @override
+  String get ivDownload => 'Télécharger';
+
+  @override
+  String get ivPreview => 'Aperçu';
+
+  @override
+  String get ivViewPdf => 'Ouvrir le PDF';
+
+  @override
+  String ivFileSaved(Object path) {
+    return 'Fichier enregistré : $path';
+  }
+
+  @override
+  String get ivImageError => 'Impossible d\'afficher l\'image.';
+
+  @override
+  String get ivClosedBanner =>
+      'Cette intervention est clôturée. Les nouvelles réponses sont désactivées.';
+
+  @override
+  String get ivReopen => 'Rouvrir l\'intervention';
+
+  @override
+  String get ivReopenBody =>
+      'Les réponses seront de nouveau possibles pour vous et pour le client.';
+
+  @override
+  String get ivReopenNote => 'Note (facultative)';
+
+  @override
+  String get ivReopened => 'Intervention rouverte.';
+
+  @override
+  String get prDemoLink => 'Lien de la démo';
+
+  @override
+  String get prDemoLinkHint => 'Lien fixe défini sur le produit.';
+
+  @override
+  String get prNoDemoLink => 'Ce produit n\'a pas de lien de démo.';
+
+  @override
+  String get prNoDemoProducts => 'Aucun produit avec démo pour ce client.';
+
+  @override
+  String get prNoLinkedProducts => 'Aucun produit associé à ce client.';
+
+  @override
+  String get prFilteredByCustomer =>
+      'Produits associés à ce client uniquement.';
+
+  @override
+  String get prCustomersFilteredByProduct =>
+      'Clients liés à ce produit uniquement.';
+
+  @override
+  String prPackReplaced(Object name) {
+    return '« $name » a été désélectionné : un seul produit par pack.';
+  }
+
+  @override
+  String get prPackHint => 'Un seul produit par pack.';
+
+  @override
+  String get navReleases => 'Mises à jour produits';
+
+  @override
+  String get rlSubtitle =>
+      'Versions publiées de vos produits, fichiers d\'installation et audience.';
+
+  @override
+  String get rlNew => 'Nouvelle version';
+
+  @override
+  String get rlEdit => 'Modifier la version';
+
+  @override
+  String get rlVersion => 'Numéro de version';
+
+  @override
+  String get rlVersionRequired => 'Numéro de version obligatoire.';
+
+  @override
+  String get rlDate => 'Date de sortie';
+
+  @override
+  String get rlChangelog => 'Notes de version';
+
+  @override
+  String get rlAudience => 'Audience';
+
+  @override
+  String get rlAudienceAll => 'Tous les clients';
+
+  @override
+  String get rlAudienceOwned => 'Clients propriétaires du produit';
+
+  @override
+  String get rlAudienceSpecific => 'Clients précis';
+
+  @override
+  String get rlCustomers => 'Clients concernés';
+
+  @override
+  String get rlCustomersRequired => 'Choisissez au moins un client.';
+
+  @override
+  String get rlInstaller => 'Fichier d\'installation';
+
+  @override
+  String get rlInstallerHint => '.exe, .zip ou .rar';
+
+  @override
+  String get rlPickInstaller => 'Choisir un fichier';
+
+  @override
+  String get rlRemoveInstaller => 'Retirer l\'installateur';
+
+  @override
+  String get rlExternalUrl => 'Lien de téléchargement externe';
+
+  @override
+  String get rlPublished => 'Publiée';
+
+  @override
+  String get rlDraft => 'Brouillon';
+
+  @override
+  String get rlNoReleases => 'Aucune version';
+
+  @override
+  String get rlNoReleasesHint => 'Créez la première version d\'un produit.';
+
+  @override
+  String get rlDeleteTitle => 'Supprimer cette version ?';
+
+  @override
+  String get rlDeleteBody => 'Les clients ne la verront plus.';
+
+  @override
+  String get rlSaved => 'Version enregistrée.';
+
+  @override
+  String get rlDeleted => 'Version supprimée.';
+
+  @override
+  String get rlUploading => 'Envoi du fichier…';
+
+  @override
+  String get rlAllProducts => 'Tous les produits';
+
+  @override
+  String get helpTooltip => 'Aide';
+
+  @override
+  String get helpExample => 'Exemple';
+
+  @override
+  String get helpFields => 'Champs';
+
+  @override
+  String get helpUnavailable => 'Aide indisponible pour cette section.';
+
+  @override
+  String get wfFixedTypesNote =>
+      'Les 4 types (Démo, Réunion, Formation, Accompagnement) sont fixes. Vous pouvez seulement ajuster la durée, la couleur et la réservation en ligne.';
 }

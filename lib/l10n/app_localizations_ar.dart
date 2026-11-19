@@ -1346,7 +1346,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String countActivities(int count) {
+  String countActivities(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1361,7 +1361,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String activitiesCountSubtitle(int count) {
+  String activitiesCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1375,7 +1375,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String pipelineCountSubtitle(int count) {
+  String pipelineCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1405,7 +1405,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deactivateStageIntro => 'لن يمكن اختيار المرحلة لتغييرات جديدة.';
 
   @override
-  String deactivateStageProspects(int count) {
+  String deactivateStageProspects(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -2782,4 +2782,201 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get wfCountryCodeInvalid => 'من 1 إلى 4 أرقام.';
+
+  @override
+  String get ivSupport => 'الدعم';
+
+  @override
+  String get ivSystem => 'النظام';
+
+  @override
+  String ivEventStatusFull(Object actor, Object from, Object time, Object to) {
+    return 'غيّر $actor الحالة من $from إلى $to في $time';
+  }
+
+  @override
+  String ivEventStatusTo(Object actor, Object time, Object to) {
+    return 'غيّر $actor الحالة إلى $to في $time';
+  }
+
+  @override
+  String ivEventReopened(Object actor, Object time) {
+    return 'أعاد $actor فتح التدخل في $time';
+  }
+
+  @override
+  String get ivAttachFiles => 'إرفاق ملفات';
+
+  @override
+  String ivAttachLimit(Object max) {
+    return '$max ملفات كحد أقصى في الرسالة.';
+  }
+
+  @override
+  String get ivRemoveFile => 'إزالة هذا الملف';
+
+  @override
+  String get ivDownload => 'تنزيل';
+
+  @override
+  String get ivPreview => 'معاينة';
+
+  @override
+  String get ivViewPdf => 'فتح ملف PDF';
+
+  @override
+  String ivFileSaved(Object path) {
+    return 'تم حفظ الملف: $path';
+  }
+
+  @override
+  String get ivImageError => 'تعذر عرض الصورة.';
+
+  @override
+  String get ivClosedBanner => 'تم إغلاق هذا التدخل. الردود الجديدة معطلة.';
+
+  @override
+  String get ivReopen => 'إعادة فتح التدخل';
+
+  @override
+  String get ivReopenBody => 'ستُفعَّل الردود من جديد لك وللعميل.';
+
+  @override
+  String get ivReopenNote => 'ملاحظة (اختياري)';
+
+  @override
+  String get ivReopened => 'تمت إعادة فتح التدخل.';
+
+  @override
+  String get prDemoLink => 'رابط العرض التجريبي';
+
+  @override
+  String get prDemoLinkHint => 'رابط ثابت محدد في المنتج.';
+
+  @override
+  String get prNoDemoLink => 'لا يملك هذا المنتج رابط عرض تجريبي.';
+
+  @override
+  String get prNoDemoProducts => 'لا يوجد منتج بعرض تجريبي لهذا العميل.';
+
+  @override
+  String get prNoLinkedProducts => 'لا توجد منتجات مرتبطة بهذا العميل.';
+
+  @override
+  String get prFilteredByCustomer => 'تُعرض المنتجات المرتبطة بهذا العميل فقط.';
+
+  @override
+  String get prCustomersFilteredByProduct =>
+      'تُعرض العملاء المرتبطون بهذا المنتج فقط.';
+
+  @override
+  String prPackReplaced(Object name) {
+    return 'تم إلغاء تحديد «$name»: منتج واحد فقط لكل حزمة.';
+  }
+
+  @override
+  String get prPackHint => 'منتج واحد لكل حزمة.';
+
+  @override
+  String get navReleases => 'إصدارات المنتجات';
+
+  @override
+  String get rlSubtitle => 'إصدارات المنتجات المنشورة وملفات التثبيت والجمهور.';
+
+  @override
+  String get rlNew => 'إصدار جديد';
+
+  @override
+  String get rlEdit => 'تعديل الإصدار';
+
+  @override
+  String get rlVersion => 'رقم الإصدار';
+
+  @override
+  String get rlVersionRequired => 'رقم الإصدار مطلوب.';
+
+  @override
+  String get rlDate => 'تاريخ الإصدار';
+
+  @override
+  String get rlChangelog => 'ملاحظات الإصدار';
+
+  @override
+  String get rlAudience => 'الجمهور';
+
+  @override
+  String get rlAudienceAll => 'جميع العملاء';
+
+  @override
+  String get rlAudienceOwned => 'العملاء الذين يملكون المنتج';
+
+  @override
+  String get rlAudienceSpecific => 'عملاء محددون';
+
+  @override
+  String get rlCustomers => 'العملاء المحددون';
+
+  @override
+  String get rlCustomersRequired => 'اختر عميلاً واحداً على الأقل.';
+
+  @override
+  String get rlInstaller => 'ملف التثبيت';
+
+  @override
+  String get rlInstallerHint => '.exe أو .zip أو .rar';
+
+  @override
+  String get rlPickInstaller => 'اختيار ملف';
+
+  @override
+  String get rlRemoveInstaller => 'إزالة ملف التثبيت';
+
+  @override
+  String get rlExternalUrl => 'رابط تنزيل خارجي';
+
+  @override
+  String get rlPublished => 'منشور';
+
+  @override
+  String get rlDraft => 'مسودة';
+
+  @override
+  String get rlNoReleases => 'لا توجد إصدارات';
+
+  @override
+  String get rlNoReleasesHint => 'أنشئ أول إصدار لمنتج.';
+
+  @override
+  String get rlDeleteTitle => 'حذف هذا الإصدار؟';
+
+  @override
+  String get rlDeleteBody => 'لن يراه العملاء بعد الآن.';
+
+  @override
+  String get rlSaved => 'تم حفظ الإصدار.';
+
+  @override
+  String get rlDeleted => 'تم حذف الإصدار.';
+
+  @override
+  String get rlUploading => 'جارٍ رفع الملف…';
+
+  @override
+  String get rlAllProducts => 'كل المنتجات';
+
+  @override
+  String get helpTooltip => 'مساعدة';
+
+  @override
+  String get helpExample => 'مثال';
+
+  @override
+  String get helpFields => 'الحقول';
+
+  @override
+  String get helpUnavailable => 'المساعدة غير متوفرة لهذا القسم.';
+
+  @override
+  String get wfFixedTypesNote =>
+      'الأنواع الأربعة (عرض تجريبي، اجتماع، تدريب، مرافقة) ثابتة. يمكنك فقط تعديل المدة واللون والحجز عبر الإنترنت.';
 }

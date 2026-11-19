@@ -39,6 +39,20 @@ class Formatters {
 
   static String number(num value) => _number.format(value);
 
+  /// Human-readable file size: `532 B`, `1.4 MB`, `120 MB`.
+  static String fileSize(int? bytes) {
+    if (bytes == null || bytes < 0) return '—';
+    if (bytes < 1024) return '$bytes B';
+    const units = ['KB', 'MB', 'GB', 'TB'];
+    var value = bytes / 1024.0;
+    var unit = 0;
+    while (value >= 1024 && unit < units.length - 1) {
+      value /= 1024;
+      unit++;
+    }
+    return '${value.toStringAsFixed(value < 10 ? 1 : 0)} ${units[unit]}';
+  }
+
   static String percent(num part, num total) {
     if (total == 0) return '0 %';
     return '${(part * 100 / total).toStringAsFixed(0)} %';

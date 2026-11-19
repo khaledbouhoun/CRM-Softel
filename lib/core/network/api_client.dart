@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 import 'api_exceptions.dart';
@@ -67,6 +70,89 @@ class ApiClient {
   Future<dynamic> post(String path, {Object? data, Duration? timeout}) => _send(
     () => _dio.post<dynamic>(path, data: data, options: _options(timeout)),
   );
+
+  /// Multipart upload (reply attachments, release installers). Uploads can
+  /// be large, so callers pass a generous [timeout].
+  Future<dynamic> postForm(
+    String path, {
+    required FormData data,
+    Duration? timeout,
+    void Function(int sent, int total)? onProgress,
+  }) => _send(
+    () => _dio.post<dynamic>(
+      path,
+      data: data,
+      options: Options(
+        contentType: Headers.multipartFormDataContentType,
+        sendTimeout: timeout,
+        receiveTimeout: timeout,
+      ),
+      onSendProgress: onProgress,
+    ),
+  );
+
+  /// Downloads a (small) file into memory: images and PDFs shown in a
+  /// preview. Errors keep the API envelope (`message`, `error_code`).
+  Future<Uint8List> getBytes(String path, {Duration? timeout}) async {
+    try {
+      final response = await _dio.get<List<int>>(
+        path,
+        options: Options(
+          responseType: ResponseType.bytes,
+          receiveTimeout: timeout,
+        ),
+      );
+      return Uint8List.fromList(response.data ?? const <int>[]);
+    } catch (error) {
+      throw ApiException.from(_decodeBytesError(error), baseUrl: baseUrl);
+    }
+  }
+
+  /// Streams a (possibly large) file straight to [savePath] without holding
+  /// it in memory: installers can weigh hundreds of megabytes.
+  Future<void> downloadTo(
+    String path,
+    String savePath, {
+    void Function(int received, int total)? onProgress,
+    Duration? timeout,
+  }) async {
+    try {
+      await _dio.download(
+        path,
+        savePath,
+        onReceiveProgress: onProgress,
+        options: Options(receiveTimeout: timeout),
+      );
+    } catch (error) {
+      throw ApiException.from(error, baseUrl: baseUrl);
+    }
+  }
+
+  /// With `ResponseType.bytes` a JSON error body arrives as bytes; decode it
+  /// so the usual envelope handling (422 field errors, error codes) works.
+  static Object _decodeBytesError(Object error) {
+    if (error is! DioException) return error;
+    final response = error.response;
+    final body = response?.data;
+    if (response == null || body is! List<int>) return error;
+    try {
+      final decoded = jsonDecode(utf8.decode(body));
+      return DioException(
+        requestOptions: error.requestOptions,
+        response: Response<dynamic>(
+          requestOptions: response.requestOptions,
+          statusCode: response.statusCode,
+          headers: response.headers,
+          data: decoded,
+        ),
+        type: error.type,
+        error: error.error,
+        message: error.message,
+      );
+    } catch (_) {
+      return error;
+    }
+  }
 
   Future<dynamic> put(String path, {Object? data}) =>
       _send(() => _dio.put<dynamic>(path, data: data));

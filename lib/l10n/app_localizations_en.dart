@@ -1347,7 +1347,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String countActivities(int count) {
+  String countActivities(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1359,7 +1359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String activitiesCountSubtitle(int count) {
+  String activitiesCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1370,7 +1370,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String pipelineCountSubtitle(int count) {
+  String pipelineCountSubtitle(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -1398,7 +1398,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The stage can no longer be chosen for new changes.';
 
   @override
-  String deactivateStageProspects(int count) {
+  String deactivateStageProspects(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
@@ -2793,4 +2793,205 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wfCountryCodeInvalid => '1 to 4 digits.';
+
+  @override
+  String get ivSupport => 'Support';
+
+  @override
+  String get ivSystem => 'System';
+
+  @override
+  String ivEventStatusFull(Object actor, Object from, Object time, Object to) {
+    return 'Status changed from $from to $to by $actor at $time';
+  }
+
+  @override
+  String ivEventStatusTo(Object actor, Object time, Object to) {
+    return 'Status changed to $to by $actor at $time';
+  }
+
+  @override
+  String ivEventReopened(Object actor, Object time) {
+    return 'Intervention reopened by $actor at $time';
+  }
+
+  @override
+  String get ivAttachFiles => 'Attach files';
+
+  @override
+  String ivAttachLimit(Object max) {
+    return 'At most $max files per message.';
+  }
+
+  @override
+  String get ivRemoveFile => 'Remove this file';
+
+  @override
+  String get ivDownload => 'Download';
+
+  @override
+  String get ivPreview => 'Preview';
+
+  @override
+  String get ivViewPdf => 'Open PDF';
+
+  @override
+  String ivFileSaved(Object path) {
+    return 'File saved: $path';
+  }
+
+  @override
+  String get ivImageError => 'Could not display the image.';
+
+  @override
+  String get ivClosedBanner =>
+      'This intervention is closed. New replies are disabled.';
+
+  @override
+  String get ivReopen => 'Reopen intervention';
+
+  @override
+  String get ivReopenBody =>
+      'Replies will be enabled again for you and the customer.';
+
+  @override
+  String get ivReopenNote => 'Note (optional)';
+
+  @override
+  String get ivReopened => 'Intervention reopened.';
+
+  @override
+  String get prDemoLink => 'Demo link';
+
+  @override
+  String get prDemoLinkHint => 'Fixed link set on the product.';
+
+  @override
+  String get prNoDemoLink => 'This product has no demo link.';
+
+  @override
+  String get prNoDemoProducts => 'No demo-enabled product for this customer.';
+
+  @override
+  String get prNoLinkedProducts => 'No product linked to this customer.';
+
+  @override
+  String get prFilteredByCustomer =>
+      'Showing only the products linked to this customer.';
+
+  @override
+  String get prCustomersFilteredByProduct =>
+      'Showing only customers linked to this product.';
+
+  @override
+  String prPackReplaced(Object name) {
+    return '“$name” was unchecked: only one product per pack.';
+  }
+
+  @override
+  String get prPackHint => 'One product per pack.';
+
+  @override
+  String get navReleases => 'Product releases';
+
+  @override
+  String get rlSubtitle =>
+      'Published product versions, installers and audience.';
+
+  @override
+  String get rlNew => 'New release';
+
+  @override
+  String get rlEdit => 'Edit release';
+
+  @override
+  String get rlVersion => 'Version number';
+
+  @override
+  String get rlVersionRequired => 'Version number is required.';
+
+  @override
+  String get rlDate => 'Release date';
+
+  @override
+  String get rlChangelog => 'Changelog';
+
+  @override
+  String get rlAudience => 'Audience';
+
+  @override
+  String get rlAudienceAll => 'All customers';
+
+  @override
+  String get rlAudienceOwned => 'Customers who own the product';
+
+  @override
+  String get rlAudienceSpecific => 'Specific customers';
+
+  @override
+  String get rlCustomers => 'Selected customers';
+
+  @override
+  String get rlCustomersRequired => 'Choose at least one customer.';
+
+  @override
+  String get rlInstaller => 'Installer file';
+
+  @override
+  String get rlInstallerHint => '.exe, .zip or .rar';
+
+  @override
+  String get rlPickInstaller => 'Choose a file';
+
+  @override
+  String get rlRemoveInstaller => 'Remove installer';
+
+  @override
+  String get rlExternalUrl => 'External download link';
+
+  @override
+  String get rlPublished => 'Published';
+
+  @override
+  String get rlDraft => 'Draft';
+
+  @override
+  String get rlNoReleases => 'No releases yet';
+
+  @override
+  String get rlNoReleasesHint => 'Create the first release of a product.';
+
+  @override
+  String get rlDeleteTitle => 'Delete this release?';
+
+  @override
+  String get rlDeleteBody => 'Customers will no longer see it.';
+
+  @override
+  String get rlSaved => 'Release saved.';
+
+  @override
+  String get rlDeleted => 'Release deleted.';
+
+  @override
+  String get rlUploading => 'Uploading file…';
+
+  @override
+  String get rlAllProducts => 'All products';
+
+  @override
+  String get helpTooltip => 'Help';
+
+  @override
+  String get helpExample => 'Example';
+
+  @override
+  String get helpFields => 'Fields';
+
+  @override
+  String get helpUnavailable => 'Help is not available for this section.';
+
+  @override
+  String get wfFixedTypesNote =>
+      'The 4 types (Demo, Meeting, Training, Accompaniment) are fixed. You can only adjust duration, color and online booking.';
 }

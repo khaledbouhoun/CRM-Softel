@@ -809,7 +809,7 @@
   "@countActivities": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "num"
       }
     }
   },
@@ -817,7 +817,7 @@
   "@activitiesCountSubtitle": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "num"
       }
     }
   },
@@ -825,7 +825,7 @@
   "@pipelineCountSubtitle": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "num"
       }
     }
   },
@@ -851,7 +851,7 @@
   "@deactivateStageProspects": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "num"
       }
     }
   },
@@ -1513,5 +1513,66 @@
   "wfAccompanimentInterval": "Intervalle d'accompagnement (jours, défaut)",
   "wfWhatsappCountryCode": "Indicatif pays WhatsApp",
   "wfWhatsappCountryCodeHint": "Chiffres seulement, ex. 213. Sert à compléter les numéros commençant par 0.",
-  "wfCountryCodeInvalid": "1 à 4 chiffres."
+  "wfCountryCodeInvalid": "1 à 4 chiffres.",
+  "ivSupport": "Support",
+  "ivSystem": "Système",
+  "ivEventStatusFull": "Statut modifié de {from} à {to} par {actor} à {time}",
+  "ivEventStatusTo": "Statut modifié en {to} par {actor} à {time}",
+  "ivEventReopened": "Intervention rouverte par {actor} à {time}",
+  "ivAttachFiles": "Joindre des fichiers",
+  "ivAttachLimit": "{max} fichiers maximum par message.",
+  "ivRemoveFile": "Retirer ce fichier",
+  "ivDownload": "Télécharger",
+  "ivPreview": "Aperçu",
+  "ivViewPdf": "Ouvrir le PDF",
+  "ivFileSaved": "Fichier enregistré : {path}",
+  "ivImageError": "Impossible d'afficher l'image.",
+  "ivClosedBanner": "Cette intervention est clôturée. Les nouvelles réponses sont désactivées.",
+  "ivReopen": "Rouvrir l'intervention",
+  "ivReopenBody": "Les réponses seront de nouveau possibles pour vous et pour le client.",
+  "ivReopenNote": "Note (facultative)",
+  "ivReopened": "Intervention rouverte.",
+  "prDemoLink": "Lien de la démo",
+  "prDemoLinkHint": "Lien fixe défini sur le produit.",
+  "prNoDemoLink": "Ce produit n'a pas de lien de démo.",
+  "prNoDemoProducts": "Aucun produit avec démo pour ce client.",
+  "prNoLinkedProducts": "Aucun produit associé à ce client.",
+  "prFilteredByCustomer": "Produits associés à ce client uniquement.",
+  "prCustomersFilteredByProduct": "Clients liés à ce produit uniquement.",
+  "prPackReplaced": "« {name} » a été désélectionné : un seul produit par pack.",
+  "prPackHint": "Un seul produit par pack.",
+  "navReleases": "Mises à jour produits",
+  "rlSubtitle": "Versions publiées de vos produits, fichiers d'installation et audience.",
+  "rlNew": "Nouvelle version",
+  "rlEdit": "Modifier la version",
+  "rlVersion": "Numéro de version",
+  "rlVersionRequired": "Numéro de version obligatoire.",
+  "rlDate": "Date de sortie",
+  "rlChangelog": "Notes de version",
+  "rlAudience": "Audience",
+  "rlAudienceAll": "Tous les clients",
+  "rlAudienceOwned": "Clients propriétaires du produit",
+  "rlAudienceSpecific": "Clients précis",
+  "rlCustomers": "Clients concernés",
+  "rlCustomersRequired": "Choisissez au moins un client.",
+  "rlInstaller": "Fichier d'installation",
+  "rlInstallerHint": ".exe, .zip ou .rar",
+  "rlPickInstaller": "Choisir un fichier",
+  "rlRemoveInstaller": "Retirer l'installateur",
+  "rlExternalUrl": "Lien de téléchargement externe",
+  "rlPublished": "Publiée",
+  "rlDraft": "Brouillon",
+  "rlNoReleases": "Aucune version",
+  "rlNoReleasesHint": "Créez la première version d'un produit.",
+  "rlDeleteTitle": "Supprimer cette version ?",
+  "rlDeleteBody": "Les clients ne la verront plus.",
+  "rlSaved": "Version enregistrée.",
+  "rlDeleted": "Version supprimée.",
+  "rlUploading": "Envoi du fichier…",
+  "rlAllProducts": "Tous les produits",
+  "helpTooltip": "Aide",
+  "helpExample": "Exemple",
+  "helpFields": "Champs",
+  "helpUnavailable": "Aide indisponible pour cette section.",
+  "wfFixedTypesNote": "Les 4 types (Démo, Réunion, Formation, Accompagnement) sont fixes. Vous pouvez seulement ajuster la durée, la couleur et la réservation en ligne."
 }

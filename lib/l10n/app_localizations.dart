@@ -2456,19 +2456,19 @@ abstract class AppLocalizations {
   ///
   /// In fr, this message translates to:
   /// **'{count, plural, =0{Aucune activité} one{1 activité} other{{count} activités}}'**
-  String countActivities(int count);
+  String countActivities(num count);
 
   /// No description provided for @activitiesCountSubtitle.
   ///
   /// In fr, this message translates to:
   /// **'{count, plural, one{{count} activité} other{{count} activités}} — appels, rendez-vous, messages et notes'**
-  String activitiesCountSubtitle(int count);
+  String activitiesCountSubtitle(num count);
 
   /// No description provided for @pipelineCountSubtitle.
   ///
   /// In fr, this message translates to:
   /// **'{count, plural, one{{count} prospect} other{{count} prospects}} · glissez une carte vers une autre étape pour la déplacer'**
-  String pipelineCountSubtitle(int count);
+  String pipelineCountSubtitle(num count);
 
   /// No description provided for @donutProspects.
   ///
@@ -2498,7 +2498,7 @@ abstract class AppLocalizations {
   ///
   /// In fr, this message translates to:
   /// **'{count, plural, one{1 prospect y est actuellement et y restera.} other{{count} prospects y sont actuellement et y resteront.}}'**
-  String deactivateStageProspects(int count);
+  String deactivateStageProspects(num count);
 
   /// No description provided for @deactivateStageOutro.
   ///
@@ -5037,6 +5037,372 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'1 à 4 chiffres.'**
   String get wfCountryCodeInvalid;
+
+  /// No description provided for @ivSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support'**
+  String get ivSupport;
+
+  /// No description provided for @ivSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Système'**
+  String get ivSystem;
+
+  /// No description provided for @ivEventStatusFull.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut modifié de {from} à {to} par {actor} à {time}'**
+  String ivEventStatusFull(Object actor, Object from, Object time, Object to);
+
+  /// No description provided for @ivEventStatusTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut modifié en {to} par {actor} à {time}'**
+  String ivEventStatusTo(Object actor, Object time, Object to);
+
+  /// No description provided for @ivEventReopened.
+  ///
+  /// In fr, this message translates to:
+  /// **'Intervention rouverte par {actor} à {time}'**
+  String ivEventReopened(Object actor, Object time);
+
+  /// No description provided for @ivAttachFiles.
+  ///
+  /// In fr, this message translates to:
+  /// **'Joindre des fichiers'**
+  String get ivAttachFiles;
+
+  /// No description provided for @ivAttachLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'{max} fichiers maximum par message.'**
+  String ivAttachLimit(Object max);
+
+  /// No description provided for @ivRemoveFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer ce fichier'**
+  String get ivRemoveFile;
+
+  /// No description provided for @ivDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger'**
+  String get ivDownload;
+
+  /// No description provided for @ivPreview.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu'**
+  String get ivPreview;
+
+  /// No description provided for @ivViewPdf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir le PDF'**
+  String get ivViewPdf;
+
+  /// No description provided for @ivFileSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier enregistré : {path}'**
+  String ivFileSaved(Object path);
+
+  /// No description provided for @ivImageError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d\'afficher l\'image.'**
+  String get ivImageError;
+
+  /// No description provided for @ivClosedBanner.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette intervention est clôturée. Les nouvelles réponses sont désactivées.'**
+  String get ivClosedBanner;
+
+  /// No description provided for @ivReopen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rouvrir l\'intervention'**
+  String get ivReopen;
+
+  /// No description provided for @ivReopenBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les réponses seront de nouveau possibles pour vous et pour le client.'**
+  String get ivReopenBody;
+
+  /// No description provided for @ivReopenNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note (facultative)'**
+  String get ivReopenNote;
+
+  /// No description provided for @ivReopened.
+  ///
+  /// In fr, this message translates to:
+  /// **'Intervention rouverte.'**
+  String get ivReopened;
+
+  /// No description provided for @prDemoLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de la démo'**
+  String get prDemoLink;
+
+  /// No description provided for @prDemoLinkHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien fixe défini sur le produit.'**
+  String get prDemoLinkHint;
+
+  /// No description provided for @prNoDemoLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit n\'a pas de lien de démo.'**
+  String get prNoDemoLink;
+
+  /// No description provided for @prNoDemoProducts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun produit avec démo pour ce client.'**
+  String get prNoDemoProducts;
+
+  /// No description provided for @prNoLinkedProducts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun produit associé à ce client.'**
+  String get prNoLinkedProducts;
+
+  /// No description provided for @prFilteredByCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits associés à ce client uniquement.'**
+  String get prFilteredByCustomer;
+
+  /// No description provided for @prCustomersFilteredByProduct.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients liés à ce produit uniquement.'**
+  String get prCustomersFilteredByProduct;
+
+  /// No description provided for @prPackReplaced.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » a été désélectionné : un seul produit par pack.'**
+  String prPackReplaced(Object name);
+
+  /// No description provided for @prPackHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un seul produit par pack.'**
+  String get prPackHint;
+
+  /// No description provided for @navReleases.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mises à jour produits'**
+  String get navReleases;
+
+  /// No description provided for @rlSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versions publiées de vos produits, fichiers d\'installation et audience.'**
+  String get rlSubtitle;
+
+  /// No description provided for @rlNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle version'**
+  String get rlNew;
+
+  /// No description provided for @rlEdit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la version'**
+  String get rlEdit;
+
+  /// No description provided for @rlVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de version'**
+  String get rlVersion;
+
+  /// No description provided for @rlVersionRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de version obligatoire.'**
+  String get rlVersionRequired;
+
+  /// No description provided for @rlDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de sortie'**
+  String get rlDate;
+
+  /// No description provided for @rlChangelog.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notes de version'**
+  String get rlChangelog;
+
+  /// No description provided for @rlAudience.
+  ///
+  /// In fr, this message translates to:
+  /// **'Audience'**
+  String get rlAudience;
+
+  /// No description provided for @rlAudienceAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les clients'**
+  String get rlAudienceAll;
+
+  /// No description provided for @rlAudienceOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients propriétaires du produit'**
+  String get rlAudienceOwned;
+
+  /// No description provided for @rlAudienceSpecific.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients précis'**
+  String get rlAudienceSpecific;
+
+  /// No description provided for @rlCustomers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients concernés'**
+  String get rlCustomers;
+
+  /// No description provided for @rlCustomersRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez au moins un client.'**
+  String get rlCustomersRequired;
+
+  /// No description provided for @rlInstaller.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier d\'installation'**
+  String get rlInstaller;
+
+  /// No description provided for @rlInstallerHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'.exe, .zip ou .rar'**
+  String get rlInstallerHint;
+
+  /// No description provided for @rlPickInstaller.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir un fichier'**
+  String get rlPickInstaller;
+
+  /// No description provided for @rlRemoveInstaller.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer l\'installateur'**
+  String get rlRemoveInstaller;
+
+  /// No description provided for @rlExternalUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de téléchargement externe'**
+  String get rlExternalUrl;
+
+  /// No description provided for @rlPublished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publiée'**
+  String get rlPublished;
+
+  /// No description provided for @rlDraft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillon'**
+  String get rlDraft;
+
+  /// No description provided for @rlNoReleases.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune version'**
+  String get rlNoReleases;
+
+  /// No description provided for @rlNoReleasesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créez la première version d\'un produit.'**
+  String get rlNoReleasesHint;
+
+  /// No description provided for @rlDeleteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer cette version ?'**
+  String get rlDeleteTitle;
+
+  /// No description provided for @rlDeleteBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clients ne la verront plus.'**
+  String get rlDeleteBody;
+
+  /// No description provided for @rlSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version enregistrée.'**
+  String get rlSaved;
+
+  /// No description provided for @rlDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version supprimée.'**
+  String get rlDeleted;
+
+  /// No description provided for @rlUploading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoi du fichier…'**
+  String get rlUploading;
+
+  /// No description provided for @rlAllProducts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les produits'**
+  String get rlAllProducts;
+
+  /// No description provided for @helpTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aide'**
+  String get helpTooltip;
+
+  /// No description provided for @helpExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemple'**
+  String get helpExample;
+
+  /// No description provided for @helpFields.
+  ///
+  /// In fr, this message translates to:
+  /// **'Champs'**
+  String get helpFields;
+
+  /// No description provided for @helpUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aide indisponible pour cette section.'**
+  String get helpUnavailable;
+
+  /// No description provided for @wfFixedTypesNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les 4 types (Démo, Réunion, Formation, Accompagnement) sont fixes. Vous pouvez seulement ajuster la durée, la couleur et la réservation en ligne.'**
+  String get wfFixedTypesNote;
 }
 
 class _AppLocalizationsDelegate

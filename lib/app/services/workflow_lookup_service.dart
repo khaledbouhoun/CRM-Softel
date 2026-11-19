@@ -49,9 +49,20 @@ class WorkflowLookupService extends GetxService {
   List<InterventionType> get activeInterventionTypes =>
       interventionTypes.where((t) => t.isActive).toList(growable: false);
 
-  /// Types an employee may create (`source` employee or both).
+  /// Types retired from the pickers: product updates and release notes now
+  /// live in the Product Releases module. Old records keep their type, so
+  /// filters and detail screens still show them.
+  static const retiredInterventionTypeCodes = {'update', 'release'};
+
+  /// Types an employee may create (`source` employee or both), without the
+  /// retired `update` / `release` types.
   List<InterventionType> get employeeInterventionTypes => interventionTypes
-      .where((t) => t.isActive && t.allowsEmployee)
+      .where(
+        (t) =>
+            t.isActive &&
+            t.allowsEmployee &&
+            !retiredInterventionTypeCodes.contains(t.code),
+      )
       .toList(growable: false);
 
   List<InterventionPriority> get activePriorities =>

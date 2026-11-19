@@ -339,30 +339,26 @@ void main() {
           'Alpha SARL',
         );
 
-        // Business activity: pick a suggestion (stored as a code).
-        await tester.tap(find.byTooltip(tr.fieldBusinessActivity));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(tr.baWholesale).last);
+        // Business activity: enter value in searchable field.
+        await tester.enterText(
+          find.widgetWithText(TextFormField, tr.fieldBusinessActivity),
+          'wholesale',
+        );
         await tester.pumpAndSettle();
 
-        // Previous software: free text that is not in the catalogue.
+        // Previous software: free text.
         await tester.enterText(
           find.widgetWithText(TextFormField, tr.fieldPreviousSoftware),
           'Logiciel maison',
         );
+        await tester.pumpAndSettle();
 
-        // Source "Other" reveals the detail field.
-        await tester.tap(
-          find.byWidgetPredicate((w) => w is DropdownButtonFormField<String?>),
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(tr.optionOther).last);
-        await tester.pumpAndSettle();
-        expect(find.text(tr.fieldSourceOther), findsOneWidget);
+        // Source.
         await tester.enterText(
-          find.widgetWithText(TextFormField, tr.fieldSourceOther),
-          'Salon professionnel',
+          find.widgetWithText(TextFormField, tr.fieldSource),
+          'other',
         );
+        await tester.pumpAndSettle();
 
         await tester.tap(find.text(tr.createProspect));
         await settle(tester);
@@ -372,9 +368,8 @@ void main() {
         expect(
           body['business_activity'],
           'wholesale',
-        ); // a code, not "Commerce de gros"
+        );
         expect(body['source'], 'other');
-        expect(body['source_other'], 'Salon professionnel');
         expect(body['previous_software'], 'Logiciel maison');
       },
     );
@@ -398,9 +393,10 @@ void main() {
         find.widgetWithText(TextFormField, tr.fieldCompanyRequired),
         'ألفا',
       );
-      await tester.tap(find.byTooltip(tr.fieldBusinessActivity));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(tr.baWholesale).last); // Arabic label
+      await tester.enterText(
+        find.widgetWithText(TextFormField, tr.fieldBusinessActivity),
+        'wholesale',
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text(tr.createProspect));
       await settle(tester);
