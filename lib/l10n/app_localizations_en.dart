@@ -1094,6 +1094,48 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only active products can be linked to prospects.';
 
   @override
+  String get productPack => 'Pack (tier suite)';
+
+  @override
+  String get productNoPack => 'Standalone product (no pack)';
+
+  @override
+  String get productNewPack => 'New pack';
+
+  @override
+  String get productPackName => 'Pack name';
+
+  @override
+  String get productPackCode => 'Pack code';
+
+  @override
+  String get productDemoUrl => 'Demo version URL';
+
+  @override
+  String get productDemoUrlHint =>
+      'Fixed demo link for this product (e.g. https://...)';
+
+  @override
+  String get productUploadDemo => 'Upload demo installer to server';
+
+  @override
+  String get productDemoUploaded =>
+      'Demo installer uploaded successfully and URL updated.';
+
+  @override
+  String get productUploadingDemo => 'Uploading demo file to server…';
+
+  @override
+  String get productActiveOnWeb => 'Show on website & portal';
+
+  @override
+  String get productActiveOnWebHint =>
+      'Makes this product visible and selectable by online clients.';
+
+  @override
+  String get productPacksTitle => 'Manage packs';
+
+  @override
   String selectedCount(Object count) {
     return '$count selected';
   }

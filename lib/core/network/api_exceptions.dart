@@ -60,7 +60,7 @@ sealed class ApiException implements Exception {
       case DioExceptionType.unknown:
         if (e.error is FormatException) {
           return UnexpectedResponseException(
-            (e.error as FormatException).message,
+            tr.errUnexpectedResponse((e.error as FormatException).message),
           );
         }
         // On Windows a refused socket often surfaces as `unknown` with a

@@ -1099,6 +1099,49 @@ class AppLocalizationsFr extends AppLocalizations {
       'Seuls les produits actifs peuvent être associés aux prospects.';
 
   @override
+  String get productPack => 'Pack (suite de variantes)';
+
+  @override
+  String get productNoPack => 'Produit indépendant (aucun pack)';
+
+  @override
+  String get productNewPack => 'Nouveau pack';
+
+  @override
+  String get productPackName => 'Nom du pack';
+
+  @override
+  String get productPackCode => 'Code du pack';
+
+  @override
+  String get productDemoUrl => 'Lien version démo';
+
+  @override
+  String get productDemoUrlHint =>
+      'Lien fixe de démo pour ce produit (ex: https://...)';
+
+  @override
+  String get productUploadDemo => 'Téléverser le fichier démo sur le serveur';
+
+  @override
+  String get productDemoUploaded =>
+      'Fichier démo téléversé avec succès et lien mis à jour.';
+
+  @override
+  String get productUploadingDemo =>
+      'Téléversement du fichier démo vers le serveur…';
+
+  @override
+  String get productActiveOnWeb => 'Afficher sur le site web & portail';
+
+  @override
+  String get productActiveOnWebHint =>
+      'Rend ce produit visible et sélectionnable par les clients en ligne.';
+
+  @override
+  String get productPacksTitle => 'Gestion des packs';
+
+  @override
   String selectedCount(Object count) {
     return '$count sélectionné(s)';
   }

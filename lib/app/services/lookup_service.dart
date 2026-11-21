@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../core/network/api_exceptions.dart';
+import '../../features/products/data/models/pack.dart';
 import '../../features/products/data/models/product.dart';
 import '../../features/products/domain/products_repository.dart';
 import '../../features/settings/data/models/loss_reason.dart';
@@ -34,6 +35,7 @@ class LookupService extends GetxService {
   final products = <Product>[].obs;
   final lossReasons = <LossReason>[].obs;
   final prospectFormOptions = <ProspectFormOption>[].obs;
+  final packs = <Pack>[].obs;
   final isLoaded = false.obs;
   final lastError = Rxn<ApiException>();
 
@@ -99,11 +101,13 @@ class LookupService extends GetxService {
         _productsRepo.getProducts(includeInactive: true),
         _reasonsRepo.getLossReasons(includeInactive: true),
         _optionsRepo.getOptions(includeInactive: true),
+        _productsRepo.getPacks(),
       ]);
       stages.assignAll(results[0] as List<SalesStage>);
       products.assignAll(results[1] as List<Product>);
       lossReasons.assignAll(results[2] as List<LossReason>);
       prospectFormOptions.assignAll(results[3] as List<ProspectFormOption>);
+      packs.assignAll(results[4] as List<Pack>);
       isLoaded.value = true;
       lastError.value = null;
     } catch (e) {
@@ -162,5 +166,23 @@ class LookupService extends GetxService {
     prospectFormOptions.removeWhere((o) => o.id == created.id);
     prospectFormOptions.add(created);
     return created;
+  }
+
+  /// Creates a pack and caches it locally.
+  Future<Pack> addPack(PackPayload payload) async {
+    final created = await _productsRepo.createPack(payload);
+    packs.removeWhere((p) => p.id == created.id);
+    packs.add(created);
+    return created;
+  }
+
+  /// Reloads only the packs list from the server.
+  Future<void> reloadPacks() async {
+    try {
+      final list = await _productsRepo.getPacks();
+      packs.assignAll(list);
+    } catch (e) {
+      debugPrint('[Lookups] reload packs failed: $e');
+    }
   }
 }

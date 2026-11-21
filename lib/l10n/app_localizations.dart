@@ -2032,6 +2032,84 @@ abstract class AppLocalizations {
   /// **'Seuls les produits actifs peuvent être associés aux prospects.'**
   String get productActiveHint;
 
+  /// No description provided for @productPack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pack (suite de variantes)'**
+  String get productPack;
+
+  /// No description provided for @productNoPack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit indépendant (aucun pack)'**
+  String get productNoPack;
+
+  /// No description provided for @productNewPack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau pack'**
+  String get productNewPack;
+
+  /// No description provided for @productPackName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du pack'**
+  String get productPackName;
+
+  /// No description provided for @productPackCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code du pack'**
+  String get productPackCode;
+
+  /// No description provided for @productDemoUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien version démo'**
+  String get productDemoUrl;
+
+  /// No description provided for @productDemoUrlHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien fixe de démo pour ce produit (ex: https://...)'**
+  String get productDemoUrlHint;
+
+  /// No description provided for @productUploadDemo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléverser le fichier démo sur le serveur'**
+  String get productUploadDemo;
+
+  /// No description provided for @productDemoUploaded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier démo téléversé avec succès et lien mis à jour.'**
+  String get productDemoUploaded;
+
+  /// No description provided for @productUploadingDemo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléversement du fichier démo vers le serveur…'**
+  String get productUploadingDemo;
+
+  /// No description provided for @productActiveOnWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher sur le site web & portail'**
+  String get productActiveOnWeb;
+
+  /// No description provided for @productActiveOnWebHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rend ce produit visible et sélectionnable par les clients en ligne.'**
+  String get productActiveOnWebHint;
+
+  /// No description provided for @productPacksTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gestion des packs'**
+  String get productPacksTitle;
+
   /// No description provided for @selectedCount.
   ///
   /// In fr, this message translates to:

@@ -66,6 +66,7 @@ class TestEnv {
       )
       ..reply('GET', '/loss-reasons', wrap([competitor, tooExpensive]))
       ..reply('GET', '/prospect-form-options', wrap(<Map<String, dynamic>>[]))
+      ..reply('GET', '/packs', wrap(<Map<String, dynamic>>[]))
       ..reply(
         'GET',
         '/products',

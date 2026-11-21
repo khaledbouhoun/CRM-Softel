@@ -1091,6 +1091,48 @@ class AppLocalizationsAr extends AppLocalizations {
       'يمكن ربط المنتجات النشطة فقط بالعملاء المحتملين.';
 
   @override
+  String get productPack => 'الحزمة / الباقة';
+
+  @override
+  String get productNoPack => 'منتج مستقل (بدون حزمة)';
+
+  @override
+  String get productNewPack => 'حزمة جديدة';
+
+  @override
+  String get productPackName => 'اسم الحزمة';
+
+  @override
+  String get productPackCode => 'رمز الحزمة (Code)';
+
+  @override
+  String get productDemoUrl => 'رابط النسخة التجريبية (Demo)';
+
+  @override
+  String get productDemoUrlHint =>
+      'الرابط الثابت للنسخة التجريبية (مثال: https://...)';
+
+  @override
+  String get productUploadDemo => 'رفع ملف النسخة التجريبية إلى السيرفر';
+
+  @override
+  String get productDemoUploaded =>
+      'تم رفع ملف النسخة التجريبية بنجاح وتحديث الرابط.';
+
+  @override
+  String get productUploadingDemo => 'جارٍ رفع الملف إلى السيرفر…';
+
+  @override
+  String get productActiveOnWeb => 'عرض في موقع الويب وبوابة الطلبات';
+
+  @override
+  String get productActiveOnWebHint =>
+      'إتاحة هذا المنتج لطلبات العملاء عبر موقع الويب.';
+
+  @override
+  String get productPacksTitle => 'إدارة الحزم والباقات';
+
+  @override
   String selectedCount(Object count) {
     return '$count محدد';
   }
