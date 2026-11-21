@@ -1,6 +1,7 @@
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/api_response.dart';
+import '../../../../core/utils/json_utils.dart';
 import '../../../prospects/data/models/prospect.dart';
 import '../models/customer_models.dart';
 
@@ -38,15 +39,18 @@ class CustomersRemoteDataSource {
     Trial.fromJson,
   );
 
-  Future<Trial> activateTrial(int prospectId, TrialPayload payload) async =>
-      Trial.fromJson(
-        ApiResponse.object(
-          await _api.post(
-            ApiEndpoints.prospectTrials(prospectId),
-            data: payload.toJson(),
-          ),
-        ),
-      );
+  Future<Trial> activateTrial(int prospectId, TrialPayload payload) async {
+    final body = await _api.post(
+      ApiEndpoints.prospectTrials(prospectId),
+      data: payload.toJson(),
+    );
+    final map = asMapOrNull(body);
+    if (map != null && map['data'] is List) {
+      final list = asList(map['data'], Trial.fromJson);
+      return list.first;
+    }
+    return Trial.fromJson(ApiResponse.object(body));
+  }
 
   Future<Trial> revokeTrial(int trialId) async => Trial.fromJson(
     ApiResponse.object(

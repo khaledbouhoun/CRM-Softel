@@ -192,17 +192,33 @@ class ConvertProspectController extends GetxController {
   }
 }
 
-/// Activates trial access for a customer and one product.
+/// Activates trial access for a customer and one or more products.
 class TrialFormController extends GetxController {
   TrialFormController({
     required CustomersRepository repository,
     required this.prospectId,
     ProductsRepository? productsRepository,
+    this.initialProductId,
+    this.initialProductIds,
+    this.initialNotes,
     this.defaultDays,
     DateTime Function()? clock,
   }) : _repository = repository,
        _products = productsRepository,
        _clock = clock ?? DateTime.now {
+    if (initialProductId != null) {
+      productId.value = initialProductId;
+      selectedProductIds.add(initialProductId!);
+    }
+    if (initialProductIds != null) {
+      selectedProductIds.addAll(initialProductIds!);
+      if (productId.value == null && selectedProductIds.isNotEmpty) {
+        productId.value = selectedProductIds.first;
+      }
+    }
+    if (initialNotes != null && initialNotes!.trim().isNotEmpty) {
+      notes.text = initialNotes!.trim();
+    }
     final now = _clock();
     startsAt.value = DateTime(
       now.year,
@@ -219,10 +235,14 @@ class TrialFormController extends GetxController {
   final CustomersRepository _repository;
   final ProductsRepository? _products;
   final int prospectId;
+  final int? initialProductId;
+  final List<int>? initialProductIds;
+  final String? initialNotes;
 
   /// Products this customer/prospect is linked to AND that have a fixed demo
   /// link (`GET /products?prospect_id=..&has_demo=1`).
   final products = <Product>[].obs;
+  final selectedProductIds = <int>{}.obs;
   final isLoadingProducts = false.obs;
   final productsError = RxnString();
 
@@ -245,6 +265,24 @@ class TrialFormController extends GetxController {
     loadProducts();
   }
 
+  void toggleProduct(int id, bool selected) {
+    if (selected) {
+      selectedProductIds.add(id);
+      productId.value ??= id;
+    } else {
+      selectedProductIds.remove(id);
+      if (productId.value == id) {
+        productId.value = selectedProductIds.firstOrNull;
+      }
+    }
+  }
+
+  void setDurationDays(int days) {
+    final s = startsAt.value ?? _clock();
+    startsAt.value = s;
+    endsAt.value = s.add(Duration(days: days));
+  }
+
   /// Only products linked to this customer that have a demo link are offered.
   Future<void> loadProducts() async {
     final repository = _products;
@@ -252,11 +290,27 @@ class TrialFormController extends GetxController {
     isLoadingProducts.value = true;
     productsError.value = null;
     try {
-      products.assignAll(
-        await repository.getProducts(prospectId: prospectId, hasDemo: true),
-      );
-      if (productId.value != null &&
-          !products.any((p) => p.id == productId.value)) {
+      final loaded = await repository.getProducts(prospectId: prospectId, hasDemo: true);
+      products.assignAll(loaded);
+
+      if (selectedProductIds.isEmpty) {
+        if (initialProductId != null && products.any((p) => p.id == initialProductId)) {
+          selectedProductIds.add(initialProductId!);
+        } else if (initialProductIds != null && initialProductIds!.isNotEmpty) {
+          final matches = products.where((p) => initialProductIds!.contains(p.id)).map((p) => p.id);
+          selectedProductIds.addAll(matches);
+        } else if (products.isNotEmpty) {
+          selectedProductIds.addAll(products.map((p) => p.id));
+        }
+      } else {
+        selectedProductIds.removeWhere((id) => !products.any((p) => p.id == id));
+      }
+
+      if (selectedProductIds.isNotEmpty) {
+        productId.value = selectedProductIds.first;
+      } else if (products.any((p) => p.id == productId.value)) {
+        selectedProductIds.add(productId.value!);
+      } else {
         productId.value = null;
       }
     } catch (e) {
@@ -268,7 +322,7 @@ class TrialFormController extends GetxController {
 
   /// The demo link of the selected product: fixed, never typed by hand.
   Product? get selectedProduct =>
-      products.firstWhereOrNull((p) => p.id == productId.value);
+      products.firstWhereOrNull((p) => p.id == (productId.value ?? selectedProductIds.firstOrNull));
 
   String? get endError {
     final s = startsAt.value;
@@ -282,27 +336,35 @@ class TrialFormController extends GetxController {
     serverErrors.clear();
     errorMessage.value = null;
     final valid = formKey.currentState?.validate() ?? true;
-    if (productId.value == null) {
+    final ids = selectedProductIds.isNotEmpty
+        ? selectedProductIds.toList()
+        : (productId.value != null ? [productId.value!] : <int>[]);
+    if (ids.isEmpty) {
       errorMessage.value = tr.wfSelectProduct;
       return null;
     }
     if (!valid || endError != null) return null;
     isSubmitting.value = true;
     try {
-      return await _repository.activateTrial(
-        prospectId,
-        TrialPayload(
-          productId: productId.value!,
-          startsAt: startsAt.value,
-          endsAt: endsAt.value,
-          internalNotes: notes.text,
-        ),
-      );
+      final payload = ids.length > 1
+          ? TrialPayload(
+              productIds: ids,
+              startsAt: startsAt.value,
+              endsAt: endsAt.value,
+              internalNotes: notes.text,
+            )
+          : TrialPayload(
+              productId: ids.first,
+              startsAt: startsAt.value,
+              endsAt: endsAt.value,
+              internalNotes: notes.text,
+            );
+      return await _repository.activateTrial(prospectId, payload);
     } on ValidationException catch (e) {
       e.fieldErrors.forEach((k, m) {
         if (m.isNotEmpty) serverErrors[k.split('.').first] = m.first;
       });
-      errorMessage.value = e.describeFor(const {'ends_at', 'product_id'});
+      errorMessage.value = e.describeFor(const {'ends_at', 'product_id', 'product_ids'});
       formKey.currentState?.validate();
       return null;
     } on ConflictException catch (e) {

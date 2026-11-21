@@ -115,7 +115,12 @@ class _ConvertDialog extends StatelessWidget {
 }
 
 /// Activates trial access for [prospectId]. Resolves with the new trial.
-Future<Trial?> showTrialDialog({required int prospectId}) async {
+Future<Trial?> showTrialDialog({
+  required int prospectId,
+  int? productId,
+  List<int>? productIds,
+  String? notes,
+}) async {
   final workflow = Get.find<WorkflowLookupService>();
   try {
     await workflow.ensureLoaded();
@@ -127,6 +132,9 @@ Future<Trial?> showTrialDialog({required int prospectId}) async {
     controller: TrialFormController(
       repository: Get.find(),
       prospectId: prospectId,
+      initialProductId: productId,
+      initialProductIds: productIds,
+      initialNotes: notes,
       productsRepository: Get.find<ProductsRepository>(),
       defaultDays: scheduling?.trialDefaultDays,
     ),
@@ -149,16 +157,20 @@ class _TrialDialog extends StatelessWidget {
     return Obx(() {
       final products = c.products.toList();
       final selected = c.selectedProduct;
+      final showMultiCheck = products.length > 1;
+
       return FormDialog(
         title: tr.wfNewTrial,
         icon: Icons.science_outlined,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
+        submitLabel: tr.actionConfirm,
         onCancel: () => Get.back(),
         onSubmit: _submit,
         child: Form(
           key: c.formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (c.productsError.value != null)
                 Padding(
@@ -170,38 +182,122 @@ class _TrialDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-              DropdownButtonFormField<int>(
-                key: ValueKey('trial-product-${products.length}'),
-                initialValue: c.productId.value,
-                isExpanded: true,
-                decoration: InputDecoration(
-                  labelText: tr.fieldProduct,
-                  helperText: products.isEmpty && !c.isLoadingProducts.value
-                      ? tr.prNoDemoProducts
-                      : tr.prFilteredByCustomer,
+              if (showMultiCheck) ...[
+                Text(
+                  tr.interestedProducts,
+                  style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                items: [
-                  for (final p in products)
-                    DropdownMenuItem(value: p.id, child: Text(p.name)),
+                const SizedBox(height: 6),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: context.colors.outlineVariant),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < products.length; i++) ...[
+                        if (i > 0)
+                          Divider(height: 1, color: context.colors.outlineVariant),
+                        CheckboxListTile(
+                          value: c.selectedProductIds.contains(products[i].id),
+                          onChanged: (v) => c.toggleProduct(products[i].id, v ?? false),
+                          title: Text(
+                            products[i].name,
+                            style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: products[i].hasDemo &&
+                                  products[i].demoUrl != null &&
+                                  products[i].demoUrl!.isNotEmpty
+                              ? Text(
+                                  products[i].demoUrl!,
+                                  style: context.text.bodySmall?.copyWith(color: context.colors.primary),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : null,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          dense: true,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (c.selectedProductIds.isEmpty)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(top: 6, start: 4),
+                    child: Text(
+                      tr.wfSelectProduct,
+                      style: context.text.bodySmall?.copyWith(color: context.colors.error),
+                    ),
+                  ),
+                const SizedBox(height: 14),
+              ] else ...[
+                DropdownButtonFormField<int>(
+                  key: ValueKey('trial-product-${products.length}'),
+                  initialValue: c.productId.value,
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: tr.fieldProduct,
+                    helperText: products.isEmpty && !c.isLoadingProducts.value
+                        ? tr.prNoDemoProducts
+                        : tr.prFilteredByCustomer,
+                  ),
+                  items: [
+                    for (final p in products)
+                      DropdownMenuItem(value: p.id, child: Text(p.name)),
+                  ],
+                  onChanged: (v) {
+                    c.productId.value = v;
+                    c.selectedProductIds.clear();
+                    if (v != null) c.selectedProductIds.add(v);
+                  },
+                ),
+                const SizedBox(height: 14),
+                InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: tr.prDemoLink,
+                    helperText: selected == null
+                        ? null
+                        : (selected.hasDemo ? tr.prDemoLinkHint : tr.prNoDemoLink),
+                    prefixIcon: const Icon(Icons.link, size: 20),
+                  ),
+                  child: SelectableText(
+                    selected?.demoUrl ?? '—',
+                    style: context.text.bodyMedium,
+                  ),
+                ),
+                const SizedBox(height: 14),
+              ],
+              Row(
+                children: [
+                  Text(
+                    tr.wfTrialStarts,
+                    style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
+                  ),
+                  const Spacer(),
+                  Wrap(
+                    spacing: 6,
+                    children: [
+                      ActionChip(
+                        visualDensity: VisualDensity.compact,
+                        label: const Text('7d'),
+                        onPressed: () => c.setDurationDays(7),
+                      ),
+                      ActionChip(
+                        visualDensity: VisualDensity.compact,
+                        label: const Text('14d'),
+                        onPressed: () => c.setDurationDays(14),
+                      ),
+                      ActionChip(
+                        visualDensity: VisualDensity.compact,
+                        label: const Text('30d'),
+                        onPressed: () => c.setDurationDays(30),
+                      ),
+                    ],
+                  ),
                 ],
-                onChanged: (v) => c.productId.value = v,
               ),
-              const SizedBox(height: 14),
-              // The demo link is configured on the product: read-only here.
-              InputDecorator(
-                decoration: InputDecoration(
-                  labelText: tr.prDemoLink,
-                  helperText: selected == null
-                      ? null
-                      : (selected.hasDemo ? tr.prDemoLinkHint : tr.prNoDemoLink),
-                  prefixIcon: const Icon(Icons.link, size: 20),
-                ),
-                child: SelectableText(
-                  selected?.demoUrl ?? '—',
-                  style: context.text.bodyMedium,
-                ),
-              ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               FormRow(
                 children: [
                   DateTimeField(

@@ -165,14 +165,16 @@ class ConvertPayload {
 /// Body of `POST /prospects/{id}/trials`.
 class TrialPayload {
   const TrialPayload({
-    required this.productId,
+    this.productId,
+    this.productIds,
     this.url,
     this.startsAt,
     this.endsAt,
     this.internalNotes,
   });
 
-  final int productId;
+  final int? productId;
+  final List<int>? productIds;
 
   /// Deprecated: the demo link is the product's fixed `demo_url`; the server
   /// ignores manual links. Only sent when a caller still provides one.
@@ -185,7 +187,10 @@ class TrialPayload {
     final notes = internalNotes?.trim();
     final manualUrl = url?.trim();
     return {
-      'product_id': productId,
+      if (productIds != null && productIds!.isNotEmpty)
+        'product_ids': productIds
+      else if (productId != null)
+        'product_id': productId,
       if (manualUrl != null && manualUrl.isNotEmpty) 'url': manualUrl,
       if (startsAt != null) 'starts_at': toApiDateTime(startsAt!),
       if (endsAt != null) 'ends_at': toApiDateTime(endsAt!),
