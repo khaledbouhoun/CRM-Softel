@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../app/routes/app_routes.dart';
+import '../../../../app/services/lookup_service.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/widgets/app_feedback.dart';
@@ -14,6 +15,7 @@ import '../../../../core/widgets/state_views.dart';
 import '../../../workflow_settings/presentation/product_resources_dialog.dart';
 import '../../data/models/product.dart';
 import '../controllers/products_controllers.dart';
+import '../dialogs/pack_form_dialog.dart';
 import '../../../../app/l10n/l10n.dart';
 
 class ProductsPage extends GetView<ProductsController> {
@@ -70,6 +72,16 @@ class ProductsPage extends GetView<ProductsController> {
                 icon: const Icon(Icons.refresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
+            ),
+            OutlinedButton.icon(
+              onPressed: () async {
+                final pack = await showPackFormDialog(context: context);
+                if (pack != null) {
+                  await controller.afterMutation();
+                }
+              },
+              icon: const Icon(Icons.layers_outlined, size: 18),
+              label: Text(tr.productPacksTitle),
             ),
             FilledButton.icon(
               onPressed: _openForm,
@@ -146,18 +158,84 @@ class ProductsPage extends GetView<ProductsController> {
                             CrmColumn(
                               label: tr.fieldProduct,
                               flex: 3,
-                              cell: (p) => CellText(
-                                p.name,
-                                bold: true,
-                                color: p.isActive
-                                    ? null
-                                    : context.colors.outline,
+                              cell: (p) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CellText(
+                                    p.name,
+                                    bold: true,
+                                    color: p.isActive
+                                        ? null
+                                        : context.colors.outline,
+                                  ),
+                                  if (p.packName != null &&
+                                      p.packName!.isNotEmpty) ...[
+                                    const SizedBox(height: 2),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.layers_outlined,
+                                          size: 13,
+                                          color: context.colors.primary,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Flexible(
+                                          child: Text(
+                                            p.packName!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: context.text.bodySmall?.copyWith(
+                                              color: context.colors.primary,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
                             CrmColumn(
                               label: tr.fieldDescription,
-                              flex: 5,
+                              flex: 4,
                               cell: (p) => CellText(p.description ?? ''),
+                            ),
+                            CrmColumn(
+                              label: tr.productActiveOnWeb,
+                              width: 140,
+                              cell: (p) => Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (p.isActiveOnWeb)
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.only(end: 6),
+                                      child: StatusPill(
+                                        label: 'Web',
+                                        icon: Icons.public,
+                                        color: context.crm.info,
+                                      ),
+                                    ),
+                                  if (p.hasDemo)
+                                    Tooltip(
+                                      message: p.demoUrl ?? '',
+                                      child: StatusPill(
+                                        label: 'Démo',
+                                        icon: Icons.play_circle_outline,
+                                        color: context.crm.warning,
+                                      ),
+                                    ),
+                                  if (!p.isActiveOnWeb && !p.hasDemo)
+                                    Text(
+                                      '—',
+                                      style: context.text.bodySmall?.copyWith(
+                                        color: context.colors.outline,
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                             CrmColumn(
                               label: tr.navProspects,
@@ -241,47 +319,174 @@ class _ProductFormDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Obx(
-    () => FormDialog(
-      title: c.isEdit ? tr.editProduct : tr.newProduct,
-      icon: Icons.inventory_2_outlined,
-      busy: c.isSubmitting.value,
-      errorMessage: c.errorMessage.value,
-      onCancel: () => Get.back(),
-      onSubmit: _submit,
-      child: Form(
-        key: c.formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: c.name,
-              autofocus: true,
-              decoration: InputDecoration(labelText: tr.fieldNameRequired),
-              validator: c.validateName,
-              onChanged: (_) => c.serverErrors.remove('name'),
+  Widget build(BuildContext context) {
+    final lookups = Get.find<LookupService>();
+
+    return Obx(
+      () {
+        final availablePacks = lookups.packs;
+        final selectedPackId = c.packId.value;
+        final validPackValue = (selectedPackId != null &&
+                availablePacks.any((p) => p.id == selectedPackId))
+            ? selectedPackId
+            : null;
+
+        return FormDialog(
+          title: c.isEdit ? tr.editProduct : tr.newProduct,
+          icon: Icons.inventory_2_outlined,
+          busy: c.isSubmitting.value,
+          errorMessage: c.errorMessage.value,
+          onCancel: () => Get.back(),
+          onSubmit: _submit,
+          child: Form(
+            key: c.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: c.name,
+                  autofocus: true,
+                  decoration: InputDecoration(labelText: tr.fieldNameRequired),
+                  validator: c.validateName,
+                  onChanged: (_) => c.serverErrors.remove('name'),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<int?>(
+                        key: ValueKey(validPackValue),
+                        initialValue: validPackValue,
+                        decoration: InputDecoration(
+                          labelText: tr.productPack,
+                          prefixIcon: const Icon(Icons.layers_outlined, size: 20),
+                        ),
+                        items: [
+                          DropdownMenuItem<int?>(
+                            value: null,
+                            child: Text(tr.productNoPack),
+                          ),
+                          for (final p in availablePacks)
+                            DropdownMenuItem<int?>(
+                              value: p.id,
+                              child: Text(p.name),
+                            ),
+                        ],
+                        onChanged: (v) => c.packId.value = v,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: IconButton.outlined(
+                        tooltip: tr.productNewPack,
+                        icon: const Icon(Icons.add, size: 20),
+                        onPressed: () async {
+                          final created =
+                              await showPackFormDialog(context: context);
+                          if (created != null) {
+                            c.packId.value = created.id;
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                TextFormField(
+                  controller: c.description,
+                  minLines: 2,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    labelText: tr.fieldDescription,
+                    alignLabelWithHint: true,
+                  ),
+                  validator: c.validateDescription,
+                ),
+                const SizedBox(height: 14),
+                TextFormField(
+                  controller: c.demoUrl,
+                  decoration: InputDecoration(
+                    labelText: tr.productDemoUrl,
+                    hintText: tr.productDemoUrlHint,
+                    prefixIcon: const Icon(Icons.link, size: 20),
+                    helperText: tr.productDemoUrlHint,
+                  ),
+                  validator: c.validateDemoUrl,
+                  onChanged: (_) => c.serverErrors.remove('demo_url'),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: OutlinedButton.icon(
+                    onPressed: (c.isUploadingDemo.value || c.isSubmitting.value)
+                        ? null
+                        : c.pickAndUploadDemoFile,
+                    icon: c.isUploadingDemo.value
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.upload_file, size: 18),
+                    label: Text(
+                      c.isUploadingDemo.value
+                          ? tr.productUploadingDemo
+                          : tr.productUploadDemo,
+                    ),
+                  ),
+                ),
+                if (c.isUploadingDemo.value) ...[
+                  const SizedBox(height: 6),
+                  LinearProgressIndicator(
+                    value: c.demoUploadProgress.value > 0
+                        ? c.demoUploadProgress.value
+                        : null,
+                  ),
+                ],
+                if (c.uploadedDemoName.value != null &&
+                    !c.isUploadingDemo.value) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.check_circle_outline,
+                          size: 14, color: context.crm.success),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          c.uploadedDemoName.value!,
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.crm.success,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 12),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(tr.productActiveOnWeb),
+                  subtitle: Text(tr.productActiveOnWebHint),
+                  value: c.isActiveOnWeb.value,
+                  onChanged: (v) => c.isActiveOnWeb.value = v,
+                ),
+                const SizedBox(height: 4),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(tr.productActive),
+                  subtitle: Text(tr.productActiveHint),
+                  value: c.isActive.value,
+                  onChanged: (v) => c.isActive.value = v,
+                ),
+              ],
             ),
-            const SizedBox(height: 14),
-            TextFormField(
-              controller: c.description,
-              minLines: 2,
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: tr.fieldDescription,
-                alignLabelWithHint: true,
-              ),
-              validator: c.validateDescription,
-            ),
-            const SizedBox(height: 8),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(tr.productActive),
-              subtitle: Text(tr.productActiveHint),
-              value: c.isActive.value,
-              onChanged: (v) => c.isActive.value = v,
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
+          ),
+        );
+      },
+    );
+  }
 }

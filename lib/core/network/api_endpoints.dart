@@ -35,6 +35,11 @@ class ApiEndpoints {
   // Products
   static const products = '/products';
   static String product(int id) => '/products/$id';
+  static const uploadProductDemo = '/products/upload-demo';
+
+  // Packs
+  static const packs = '/packs';
+  static String pack(int id) => '/packs/$id';
 
   // Sales stages
   static const salesStages = '/sales-stages';

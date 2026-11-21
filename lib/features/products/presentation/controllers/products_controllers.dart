@@ -5,7 +5,9 @@ import '../../../../app/services/lookup_service.dart';
 import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/state/action_result.dart';
 import '../../../../core/state/load_state.dart';
+import '../../../../core/utils/file_access.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/widgets/app_feedback.dart';
 import '../../data/models/product.dart';
 import '../../domain/products_repository.dart';
 import '../../../../app/l10n/l10n.dart';
@@ -86,10 +88,49 @@ class ProductFormController extends GetxController {
   late final name = TextEditingController(text: initial?.name);
   late final description = TextEditingController(text: initial?.description);
   late final isActive = (initial?.isActive ?? true).obs;
+  late final packId = RxnInt(initial?.packId);
+  late final demoUrl = TextEditingController(text: initial?.demoUrl);
+  late final isActiveOnWeb = (initial?.isActiveOnWeb ?? false).obs;
 
   final isSubmitting = false.obs;
+  final isUploadingDemo = false.obs;
+  final demoUploadProgress = 0.0.obs;
+  final uploadedDemoName = RxnString();
   final errorMessage = RxnString();
   final serverErrors = <String, String>{}.obs;
+
+  Future<void> pickAndUploadDemoFile() async {
+    if (isUploadingDemo.value || isSubmitting.value) return;
+    try {
+      final picked = await FileAccess.pick(
+        extensions: FileAccess.installerExtensions,
+        multiple: false,
+      );
+      if (picked.isEmpty) return;
+      final file = picked.first;
+      isUploadingDemo.value = true;
+      demoUploadProgress.value = 0.0;
+      uploadedDemoName.value = file.name;
+
+      final url = await _repository.uploadDemoFile(
+        file,
+        productId: initial?.id,
+        onProgress: (sent, total) {
+          if (total > 0) {
+            demoUploadProgress.value = sent / total;
+          }
+        },
+      );
+
+      demoUrl.text = url;
+      serverErrors.remove('demo_url');
+      AppFeedback.success(tr.productDemoUploaded);
+    } catch (e) {
+      AppFeedback.error(ApiException.from(e).message);
+    } finally {
+      isUploadingDemo.value = false;
+    }
+  }
 
   String? validateName(String? v) =>
       serverErrors['name'] ??
@@ -101,12 +142,25 @@ class ProductFormController extends GetxController {
   String? validateDescription(String? v) =>
       serverErrors['description'] ?? Validators.maxLength(v, 1000);
 
+  String? validateDemoUrl(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return serverErrors['demo_url'];
+    final uri = Uri.tryParse(text);
+    final ok =
+        uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
+    return ok ? serverErrors['demo_url'] : tr.wfUrlInvalid;
+  }
+
   Map<String, String> validateAll() {
     final errors = <String, String>{};
     final n = validateName(name.text);
     if (n != null) errors['name'] = n;
     final d = validateDescription(description.text);
     if (d != null) errors['description'] = d;
+    final u = validateDemoUrl(demoUrl.text);
+    if (u != null) errors['demo_url'] = u;
     return errors;
   }
 
@@ -122,6 +176,9 @@ class ProductFormController extends GetxController {
         name: name.text,
         description: description.text,
         isActive: isActive.value,
+        packId: packId.value,
+        demoUrl: demoUrl.text,
+        isActiveOnWeb: isActiveOnWeb.value,
       );
       return isEdit
           ? await _repository.updateProduct(initial!.id, payload)
@@ -130,7 +187,13 @@ class ProductFormController extends GetxController {
       e.fieldErrors.forEach((k, m) {
         if (m.isNotEmpty) serverErrors[k] = m.first;
       });
-      errorMessage.value = e.describeFor(const {'name', 'description'});
+      errorMessage.value = e.describeFor(const {
+        'name',
+        'description',
+        'pack_id',
+        'demo_url',
+        'is_active_on_web',
+      });
       formKey.currentState?.validate();
       return null;
     } catch (e) {
@@ -145,6 +208,7 @@ class ProductFormController extends GetxController {
   void onClose() {
     name.dispose();
     description.dispose();
+    demoUrl.dispose();
     super.onClose();
   }
 }

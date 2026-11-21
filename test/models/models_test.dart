@@ -80,7 +80,14 @@ void main() {
       expect(product.prospectsCount, 4);
       expect(
         const ProductPayload(name: ' GestCom ', description: '  ').toJson(),
-        {'name': 'GestCom', 'description': null, 'is_active': true},
+        {
+          'name': 'GestCom',
+          'description': null,
+          'is_active': true,
+          'pack_id': null,
+          'demo_url': null,
+          'is_active_on_web': false,
+        },
       );
     });
   });

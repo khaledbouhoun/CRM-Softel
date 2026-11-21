@@ -1,11 +1,20 @@
+import '../../../../core/utils/file_access.dart';
 import '../../domain/products_repository.dart';
 import '../datasources/products_remote_data_source.dart';
+import '../models/pack.dart';
 import '../models/product.dart';
 
 class ProductsRepositoryImpl implements ProductsRepository {
   const ProductsRepositoryImpl(this._remote);
 
   final ProductsRemoteDataSource _remote;
+
+  @override
+  Future<String> uploadDemoFile(
+    PickedFile file, {
+    int? productId,
+    void Function(int sent, int total)? onProgress,
+  }) => _remote.uploadDemoFile(file, productId: productId, onProgress: onProgress);
 
   @override
   Future<List<Product>> getProducts({
@@ -37,4 +46,17 @@ class ProductsRepositoryImpl implements ProductsRepository {
   @override
   Future<Product> setProductActive(int id, bool isActive) =>
       _remote.setActive(id, isActive);
+
+  @override
+  Future<List<Pack>> getPacks() => _remote.fetchPacks();
+
+  @override
+  Future<Pack> createPack(PackPayload payload) => _remote.createPack(payload);
+
+  @override
+  Future<Pack> updatePack(int id, PackPayload payload) =>
+      _remote.updatePack(id, payload);
+
+  @override
+  Future<void> deletePack(int id) => _remote.deletePack(id);
 }
