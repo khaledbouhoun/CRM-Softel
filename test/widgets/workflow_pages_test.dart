@@ -377,6 +377,80 @@ void main() {
     },
   );
 
+  testWidgets(
+    'website requests: actionable trial request renders confirm and reject buttons, and confirm opens trial dialog',
+    (tester) async {
+      base.adapter
+        ..reply('GET', '/appointments', paginated(<Map<String, dynamic>>[]))
+        ..reply(
+          'GET',
+          '/portal-requests',
+          paginated([
+            {
+              'id': 10,
+              'type': 'trial',
+              'status': 'pending',
+              'company': 'Tech Corp',
+              'contact_name': 'Amine',
+              'prospect_id': 42,
+              'product': {'id': 1, 'name': 'GestCom'},
+              'notes': 'Requested trial',
+            },
+          ]),
+        )
+        ..reply(
+          'GET',
+          '/products',
+          wrap([
+            {'id': 1, 'name': 'GestCom', 'has_demo': true, 'demo_url': 'https://demo.gestcom.dz'},
+            {'id': 2, 'name': 'SoftPharm', 'has_demo': true, 'demo_url': 'https://demo.softpharm.dz'},
+          ]),
+        )
+        ..reply(
+          'POST',
+          '/prospects/42/trials',
+          wrap([
+            {
+              'id': 1,
+              'prospect_id': 42,
+              'product': {'id': 1, 'name': 'GestCom'},
+              'url': 'https://demo.gestcom.dz',
+              'starts_at': '2026-11-21 10:00:00',
+              'ends_at': '2026-12-05 10:00:00',
+            },
+          ]),
+          status: 201,
+        );
+      await pumpRoute(tester, Routes.requests);
+      await tester.tap(find.text(tr.wfWebsiteRequestsTab));
+      await settle(tester);
+
+      expect(find.text('Tech Corp'), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, tr.actionConfirm), findsOneWidget);
+      expect(find.widgetWithText(OutlinedButton, tr.wfReject), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(FilledButton, tr.actionConfirm));
+      await settle(tester);
+
+      expect(find.text(tr.wfNewTrial), findsOneWidget);
+      expect(find.text('GestCom'), findsWidgets);
+      expect(find.text('SoftPharm'), findsOneWidget);
+      expect(find.text('14d'), findsOneWidget);
+
+      await tester.tap(find.text('14d'));
+      await settle(tester);
+
+      await tester.tap(
+        find.descendant(
+          of: find.byType(Dialog),
+          matching: find.widgetWithText(FilledButton, tr.actionConfirm),
+        ),
+      );
+      await settle(tester);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('after-sales list is sorted by priority and opens the detail', (
     tester,
   ) async {

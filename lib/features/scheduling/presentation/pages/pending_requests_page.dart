@@ -14,6 +14,7 @@ import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/pagination_bar.dart';
 import '../../../../core/widgets/state_views.dart';
 import '../../../../core/widgets/workflow_widgets.dart';
+import '../../../customers/presentation/dialogs/customer_dialogs.dart';
 import '../../data/models/appointment.dart';
 import '../../data/models/portal_request.dart';
 import '../controllers/appointment_action_controller.dart';
@@ -237,6 +238,22 @@ class _RequestsList extends StatelessWidget {
 
   final PendingRequestsController controller;
 
+  Future<void> _confirm(PortalRequest r) async {
+    if (r.type == 'trial' && r.prospectId != null) {
+      final trial = await showTrialDialog(
+        prospectId: r.prospectId!,
+        productId: r.product?.id,
+        notes: r.notes,
+      );
+      if (trial != null) {
+        AppFeedback.success(tr.wfTrialActivated);
+        await controller.loadRequests();
+      }
+    } else {
+      await _close(r, 'handled');
+    }
+  }
+
   Future<void> _close(PortalRequest r, String status) async {
     final message = await _askMessage(status == 'handled' ? tr.wfMarkHandled : tr.wfReject);
     if (message == null) return;
@@ -373,23 +390,33 @@ class _RequestsList extends StatelessWidget {
                           ),
                           CrmColumn(
                             label: '',
-                            width: 150,
+                            width: 200,
                             alignment: AlignmentDirectional.centerEnd,
                             cell: (r) => r.isActionable
                                 ? Obx(
                                     () => Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        IconButton(
-                                          tooltip: tr.wfMarkHandled,
-                                          icon: const Icon(Icons.done_all, size: 20),
+                                        FilledButton.tonalIcon(
+                                          style: FilledButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                            visualDensity: VisualDensity.compact,
+                                          ),
+                                          icon: const Icon(Icons.check, size: 16),
+                                          label: Text(tr.actionConfirm),
                                           onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null
-                                              : () => _close(r, 'handled'),
+                                              : () => _confirm(r),
                                         ),
-                                        IconButton(
-                                          tooltip: tr.wfReject,
-                                          icon: const Icon(Icons.block, size: 20),
+                                        const SizedBox(width: 8),
+                                        OutlinedButton.icon(
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                            visualDensity: VisualDensity.compact,
+                                            foregroundColor: context.crm.danger,
+                                          ),
+                                          icon: const Icon(Icons.close, size: 16),
+                                          label: Text(tr.wfReject),
                                           onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null
                                               : () => _close(r, 'rejected'),
