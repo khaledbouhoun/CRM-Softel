@@ -1,295 +1,267 @@
-# 🏢 SOFTEL CRM — Enterprise Desktop Client
+<p align="center">
+  <img src="assets/branding/crm-softel-icon.png" alt="CRM - Softel logo" width="96" />
+</p>
+
+<h1 align="center">CRM - Softel</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.13+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/Dart-3.13+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" />
-  <img src="https://img.shields.io/badge/Platform-Windows%20Desktop-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Platform" />
-  <img src="https://img.shields.io/badge/Architecture-Clean%20Architecture-4CAF50?style=for-the-badge" alt="Clean Architecture" />
-  <img src="https://img.shields.io/badge/State%20Management-GetX-8A2BE2?style=for-the-badge" alt="GetX" />
-  <img src="https://img.shields.io/badge/Languages-AR%20%7C%20FR%20%7C%20EN-FF6F00?style=for-the-badge" alt="i18n" />
-  <img src="https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge" alt="License" />
+  <b>Windows desktop CRM client for SOFTEL's sales, customer-success and after-sales teams.</b><br/>
+  Built with Flutter, talking to the SOFTEL Laravel REST API over the company LAN.
 </p>
 
 <p align="center">
-  <b>A modern, high-performance desktop CRM client built with Flutter and Dart, engineered for enterprise sales teams and seamlessly integrated with a powerful Laravel REST API.</b>
+  <img src="https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white" alt="Flutter 3.47" />
+  <img src="https://img.shields.io/badge/Dart-3.13-0175C2?logo=dart&logoColor=white" alt="Dart 3.13" />
+  <img src="https://img.shields.io/badge/platform-Windows%20x64-0078D6?logo=windows&logoColor=white" alt="Windows x64" />
+  <img src="https://img.shields.io/badge/state-GetX-8A2BE2" alt="GetX" />
+  <img src="https://img.shields.io/badge/i18n-FR%20%7C%20EN%20%7C%20AR%20(RTL)-FF6F00" alt="FR, EN, AR" />
 </p>
 
 ---
 
-## 📖 Table of Contents
+## Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-  - [📊 Dashboard & Analytics](#-dashboard--analytics)
-  - [👥 360° Prospect Management](#-360-prospect-management)
-  - [📌 Visual Kanban Pipeline](#-visual-kanban-pipeline)
-  - [⏰ Follow-Ups & Task Scheduling](#-follow-ups--task-scheduling)
-  - [📝 Activity & Interaction Logging](#-activity--interaction-logging)
-  - [📦 Product Catalog Integration](#-product-catalog-integration)
-  - [⚙️ Configurable Sales Stages & Loss Reasons](#️-configurable-sales-stages--loss-reasons)
-  - [🌐 LAN Connectivity & Real-Time Health Checks](#-lan-connectivity--real-time-health-checks)
-  - [🌍 Trilingual & Bi-Directional (RTL / LTR)](#-trilingual--bi-directional-rtl--ltr)
-  - [🌓 Light & Dark Modes](#-light--dark-modes)
-- [System Architecture](#-system-architecture)
-- [Directory Structure](#-directory-structure)
-- [Tech Stack & Dependencies](#-tech-stack--dependencies)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation & Setup](#installation--setup)
-  - [Running the App](#running-the-app)
-  - [Building for Production](#building-for-production)
-- [Configuration & API Setup](#-configuration--api-setup)
-- [Localization (i18n)](#-localization-i18n)
-- [Contributing & Code Quality](#-contributing--code-quality)
-- [Author & Credits](#-author--credits)
+- [Overview](#overview)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+- [Testing and code quality](#testing-and-code-quality)
+- [Building and distributing](#building-and-distributing)
+- [Localization](#localization)
+- [Security notes](#security-notes)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Author](#author)
 
----
+## Overview
 
-## 🌟 Overview
+**CRM - Softel** is the desktop workstation used by SOFTEL employees to follow a
+customer through its whole life cycle: from the first contact as a prospect,
+through the sales pipeline, trial and conversion, to billing, maintenance
+renewals, after-sales interventions and product releases.
 
-**SOFTEL CRM** is an enterprise desktop workstation designed to streamline lead acquisition, sales pipeline tracking, and customer engagement for modern businesses. Designed natively for **Windows Desktop** with cross-platform scalability, the app combines responsive fluid UI animations with a decoupled **Clean Architecture** powered by **GetX** and **Dio**.
+The app is a **thin, typed client**: all data and business rules live in the
+SOFTEL Laravel backend (a separate project). The client runs on each
+employee's Windows PC and connects to the central server's LAN address, which
+is configured inside the app. There is no local database; only user
+preferences (server address, timeout, theme, language) are stored locally.
 
-Whether deployed over an on-premise local area network (LAN) or a remote cloud infrastructure, SOFTEL CRM provides sales teams with low latency, offline resilience, and a distraction-free user experience.
+## Features
 
----
+Every module below is backed by a data source, repository, controller and page
+in [`lib/features/`](lib/features/).
 
-## 🚀 Key Features
+| Area | What it does |
+|---|---|
+| **Dashboard** | KPIs (total / open / won / lost prospects), breakdown by sales stage and by loss reason, today's and overdue follow-ups. |
+| **Analytics** | Charts hub (built with `fl_chart`) fed by the `/analytics` endpoint. |
+| **Prospects** | Paginated, filterable, sortable list with debounced search; detail page with stage history, activities, follow-ups and linked products; create / edit forms with configurable option lists. |
+| **Pipeline** | Kanban board with drag-and-drop between sales stages, loss reason and note required when moving to *Lost*. |
+| **Follow-ups** | Tabs for overdue / today / upcoming / completed / cancelled; complete with a result (optionally logged as an activity) or cancel with a reason. |
+| **Activities** | Calls, meetings, messages and notes, linkable to a prospect or follow-up; "log activity and schedule next follow-up" flow. |
+| **Customers** | Prospect-to-customer conversion, lifetime customer profile, product trials (activate / revoke), maintenance and support statistics. |
+| **Scheduling** | Calendar, appointment booking and actions (including recurring series), training sessions and customer-portal requests. |
+| **After-sales** | Intervention tickets with a chat-style timeline, attachments (upload, preview, download) and closure dialogs. |
+| **Billing** | Cash-based subscriptions, per-customer invoices, maintenance renewal quotes, mark-as-paid and scanned receipts. |
+| **Products** | Catalog with multilingual content, images and demo uploads; product packs with composition rules. |
+| **Releases** | Product release versions with installer upload and download. |
+| **Workstation** | Team presence (available / busy / …), heartbeat, and the employee identity used for auditing. |
+| **Settings** | Server connection (URL, timeout, connection test), sales stages, loss reasons, prospect form options (drag-to-reorder), and server-driven workflow configuration with contextual help. |
+| **UX** | French, English and Arabic with full right-to-left layout; light / dark / system theme; WhatsApp deep links from phone numbers; live server-status indicator in the top bar. |
 
-### 📊 Dashboard & Analytics
-- **Live Sales Velocity**: Real-time KPI summaries (Total prospects, Active/Open opportunities, Won deals, and Lost leads).
-- **Pipeline Breakdown**: Visual distribution of prospects across each configured sales stage.
-- **Lost Deal Intelligence**: Categorized breakdown of lost prospects by root cause/reason to identify process bottlenecks.
-- **Actionable Timeline**: Instant view of today's reminders, overdue alerts, and upcoming follow-ups.
+## Screenshots
 
-### 👥 360° Prospect Management
-- **Centralized Directory**: Comprehensive prospect profiles with company name, contact person, direct phone, email, address, and city.
-- **Custom Categorization**: Track industry sector, acquisition channels (social media, referrals, campaigns), and previous software solutions.
-- **Timeline & Audit Trail**: Complete stage progression history with timestamps, duration, and transition notes.
-- **Advanced Filtering & Search**: Instant debounce search, sorting by creation/update date or name, and multi-criteria filters.
+> No screenshots are committed yet. See [Recommended screenshots](#recommended-screenshots) below.
 
-### 📌 Visual Kanban Pipeline
-- **Interactive Drag-and-Drop Columns**: Manage prospects visually across customized sales stages.
-- **Stage Progression Rules**: Fluid transitions from initial outreach to qualified leads and terminal Won/Lost states.
-- **Global Stage Search**: Quickly locate prospects across hidden or distant stages with a dedicated modal finder.
-- **Opportunity Counter**: Instant card count and metrics per column.
+## Tech stack
 
-### ⏰ Follow-Ups & Task Scheduling
-- **Status Tabs**: Categorized into **Overdue (En retard)**, **Today (Aujourd'hui)**, **Upcoming (À venir)**, **Completed (Terminées)**, and **Cancelled (Annulées)**.
-- **Automated Workflow**: Completing a follow-up with closing remarks automatically prompts the creation of an activity log.
-- **Cancellation Reasons**: Enforce mandatory reason tracking when follow-ups are cancelled.
-- **Smart Date Awareness**: Respects server timezone calculations to ensure accurate deadline monitoring.
+| Concern | Choice |
+|---|---|
+| UI toolkit | [Flutter](https://flutter.dev) 3.47 (stable), Material 3 |
+| Language | Dart 3.13 (`sdk: ^3.13.7`) |
+| State, routing, DI | [`get`](https://pub.dev/packages/get) (GetX) |
+| HTTP | [`dio`](https://pub.dev/packages/dio) with custom interceptors |
+| Local preferences | [`get_storage`](https://pub.dev/packages/get_storage) |
+| i18n | `flutter_localizations`, `intl`, ARB files (`flutter gen-l10n`) |
+| Charts | [`fl_chart`](https://pub.dev/packages/fl_chart) |
+| Icons and fonts | `hugeicons`, `font_awesome_flutter`, `google_fonts` (Quicksand, Alexandria) |
+| Platform integration | `url_launcher`, `file_picker` |
+| Installer | [Inno Setup](https://jrsoftware.org/isinfo.php) script in [`installer/`](installer/) |
+| Backend (separate repo) | Laravel REST API, `/api/v1` |
 
-### 📝 Activity & Interaction Logging
-- **Omnichannel Interactions**: Log phone calls, meetings/appointments, direct messages, and internal notes.
-- **Direct Prospect Linking**: Link interaction history directly to prospect files.
-- **Sequential Chaining**: Log an activity and schedule the next follow-up in a single continuous workflow.
+## Architecture
 
-### 📦 Product Catalog Integration
-- **Product Portfolio**: Manage the list of active services and products offered.
-- **Lead Association**: Assign multiple products to prospective deals to quantify interest and customize sales approaches.
-
-### ⚙️ Configurable Sales Stages & Loss Reasons
-- **Custom Stages**: Create, edit, and reorder stages dynamically using drag-and-drop lists.
-- **Color Coding**: Customize stage badges with custom hex palette colors.
-- **Business Rule Enforcement**: Stage locks prevent premature deletion of stages that have active prospects assigned.
-- **Mandatory Loss Notes**: Configure specific loss reasons that mandate detailed explanations before moving to "Lost".
-
-### 🌐 LAN Connectivity & Real-Time Health Checks
-- **Dynamic Server Address**: Configure backend LAN IP address and custom port directly within the app without rebuilding.
-- **Real-Time Heartbeat**: Top-bar connection indicator constantly monitors server availability via `GET /health`.
-- **Configurable Timeouts**: Adjust request timeouts (from 3s up to 120s) to handle slower on-premise network topologies.
-
-### 🌍 Trilingual & Bi-Directional (RTL / LTR)
-- **Native Languages**:
-  - 🇸🇦 **العربية (Arabic)** — Full Right-to-Left (RTL) mirroring and Arabic date/time formatting.
-  - 🇫🇷 **Français (French)** — Native French UI terminology.
-  - 🇬🇧 **English** — Universal international business English.
-- **Zero-Restart Switch**: Instantly switch languages from the top-bar dropdown menu.
-
-### 🌓 Light & Dark Modes
-- **Adaptive Theme System**: Support for Crisp Light Mode, High-Contrast Dark Mode, or auto-sync with Windows System Preferences.
-
----
-
-## 🏛 System Architecture
-
-The project follows **Clean Architecture** and **Feature-First** principles to guarantee maintainability, high testability, and clear separation of concerns:
+Feature-first modules, each split into **data / domain / presentation** layers,
+on top of a shared `core` (networking, state primitives, widgets) and an `app`
+layer (routing, bindings, global services, shell).
 
 ```mermaid
-graph TD
-    UI[Presentation Layer: Pages, Widgets, Dialogs] --> Controller[GetX Controllers & Reactive State]
-    Controller --> Domain[Domain Layer: Repository Contracts & Entities]
-    DataRepo[Data Repositories Implementation] --> Domain
-    DataRepo --> RemoteDS[Remote DataSources via Dio]
-    DataRepo --> LocalDS[Local Storage via GetStorage]
-    RemoteDS --> API[(Laravel REST API v1)]
+flowchart LR
+    Page["Page / Widgets<br/>(GetView, Obx)"] --> Ctrl["GetX Controller<br/>LoadState"]
+    Ctrl --> Repo["Repository<br/>(domain contract)"]
+    Repo --> Impl["Repository impl<br/>(data)"]
+    Impl --> DS["Remote data source"]
+    DS --> Api["ApiClient (Dio)<br/>+ interceptors"]
+    Api -->|"HTTP JSON over LAN"| BE[("Laravel API<br/>/api/v1")]
 ```
 
-### Architectural Highlights:
-1. **Presentation Layer**: Built with `GetView<T>` and reactive observables (`Rx`, `Obx`). Keeps UI declarative and free from business logic.
-2. **Domain Layer**: Abstract repository interfaces decoupling features from data source implementation details.
-3. **Data Layer**: Concrete repository implementations, typed DTOs with robust `fromJson`/`toJson` mapping, and unified error parsing.
-4. **Core Infrastructure**:
-   - `ApiClient`: Dio-powered HTTP client with centralized header injection and error mapping.
-   - `LoadState<T>`: Unified reactive state machine handling `initial`, `loading`, `success`, and `error` transitions.
-   - `AppFeedback`: Standardized snackbars, notifications, and alert banners.
+See **[ARCHITECTURE.md](ARCHITECTURE.md)** for the layers, data flow, error
+handling, startup sequence and design decisions.
 
----
-
-## 📁 Directory Structure
+## Project structure
 
 ```text
-lib/
-├── app/                        # Global Application Layer
-│   ├── bindings/               # Initial dependency injection bindings
-│   ├── config/                 # Static configs, app settings, key-value stores
-│   ├── l10n/                   # Localization delegates & translation keys
-│   ├── routes/                 # App routes and GetPage routing definitions
-│   ├── services/               # Background services (Connection, Lookup caches)
-│   ├── shell/                  # Desktop application shell (Sidebar, Top Bar, RTL)
-│   └── theme/                  # Light & Dark theme definitions
-│
-├── core/                       # Core Shared Utilities & Infrastructure
-│   ├── network/                # Dio client, API endpoints, interceptors, exceptions
-│   ├── state/                  # LoadState & ActionResult reactive primitives
-│   ├── utils/                  # Formatters, debouncers, validators, json helpers
-│   └── widgets/                # Reusable UI widgets (Tables, Charts, StateViews, etc.)
-│
-├── features/                   # Feature Modules (Feature-First)
-│   ├── activities/             # Interaction logging & activity timeline
-│   ├── dashboard/              # Analytics, KPIs, and pipeline summaries
-│   ├── follow_ups/             # Task scheduling, reminders, and calendar views
-│   ├── pipeline/               # Visual Kanban board & stage progression
-│   ├── products/               # Product catalog management
-│   ├── prospects/              # 360° prospect profiles, details, and filters
-│   └── settings/               # Stages, loss reasons, and server network config
-│
-├── l10n/                       # ARB Translation Files (AR, EN, FR)
-└── main.dart                   # Application entry point & service bootstrap
+.
+├── assets/branding/        App icon (PNG + SVG)
+├── docs/                   API contract notes, deployment guide
+├── installer/              Inno Setup script for the Windows installer
+├── lib/
+│   ├── app/                App layer: bindings, config, l10n helper, routes,
+│   │                       global services, desktop shell, theme
+│   ├── core/               Shared: network (Dio client, endpoints, errors),
+│   │                       state (LoadState, ActionResult), utils, widgets
+│   ├── features/<module>/  data/ (models, data sources, repo impl)
+│   │                       domain/ (repository contracts)
+│   │                       presentation/ (bindings, controllers, pages, widgets)
+│   ├── l10n/               ARB files (fr = template, en, ar) + generated code
+│   └── main.dart           Entry point
+├── test/                   Unit, repository, controller and widget tests
+├── tool/                   Python helper scripts (see tool/README.md)
+└── windows/                Flutter Windows runner (CMake, resources)
 ```
 
----
-
-## 🛠 Tech Stack & Dependencies
-
-| Technology | Purpose |
-|---|---|
-| **[Flutter](https://flutter.dev/) (SDK 3.13+)** | Cross-platform UI toolkit optimized for Windows Desktop |
-| **[Dart](https://dart.dev/)** | Fast, null-safe client language |
-| **[GetX](https://pub.dev/packages/get)** | High-performance State Management, Routing & Dependency Injection |
-| **[Dio](https://pub.dev/packages/dio)** | Advanced HTTP client with interceptors and connection pooling |
-| **[GetStorage](https://pub.dev/packages/get_storage)** | Ultra-fast, synchronous key-value persistent storage |
-| **[Intl](https://pub.dev/packages/intl)** | Internationalization, pluralization, date/currency formatting |
-| **[Flutter Localizations](https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html)** | Native localization delegates |
-
----
-
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
 
-Ensure you have the following installed on your machine:
-- **Flutter SDK** (`^3.13.7` or later): [Install Flutter](https://docs.flutter.dev/get-started/install)
-- **Dart SDK** (`^3.13.7` or later)
-- **Visual Studio 2022** (with *"Desktop development with C++"* workload for Windows Desktop compilation)
+- **Windows 10/11 x64**
+- **Flutter SDK 3.47 (stable)** or newer compatible release, which includes Dart 3.13 — [install guide](https://docs.flutter.dev/get-started/install/windows/desktop)
+- **Visual Studio 2022** with the *Desktop development with C++* workload
 - **Git**
+- A reachable instance of the **SOFTEL Laravel backend** (separate project)
 
-### Installation & Setup
+Check your toolchain with `flutter doctor`.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/khaledbouhoun/CRM-Softel.git
-   cd "CRM-Softel"
-   ```
-
-2. **Navigate to the Flutter application directory:**
-   ```bash
-   cd "Application Flutter"
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-4. **Generate localization files:**
-   ```bash
-   flutter gen-l10n
-   ```
-
-### Running the App
-
-To launch the desktop client in debug mode:
+### Install and run
 
 ```bash
+git clone https://github.com/khaledbouhoun/CRM-Softel.git
+cd CRM-Softel
+flutter pub get          # also generates the localization classes (generate: true)
 flutter run -d windows
 ```
 
-### Building for Production
+On first launch the app opens **Settings → Connection**. Enter the server
+address, press **Test connection**, then save.
 
-To create an optimized, standalone Windows release executable:
+## Configuration
+
+There are **no `.env` files or build-time secrets**. Everything is configured at
+runtime and stored per Windows user with `get_storage`:
+
+| Setting | Default | Notes |
+|---|---|---|
+| API base URL | `http://192.168.1.100:8000/api/v1` | Must be the central server's LAN address, never `localhost` on employee PCs. |
+| Request timeout | 15 s | Allowed range 3–120 s. |
+| Theme | System | Light / dark / system. |
+| Language | Arabic | Arabic, French, English. |
+
+Defaults live in [`lib/app/config/app_config.dart`](lib/app/config/app_config.dart).
+The connection test calls `GET /health`, which returns 503 when the server's
+database is down. The top bar re-checks connectivity every 60 seconds.
+
+Backend setup, database and migrations are handled by the Laravel project and
+are **out of scope for this repository**. How the client maps the API is
+documented in [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
+
+## Testing and code quality
+
+```bash
+flutter analyze          # lints from analysis_options.yaml (flutter_lints)
+dart format lib test     # formatting
+flutter test             # all tests under test/
+```
+
+The suite covers models (JSON mapping), repositories (through a mock Dio
+adapter in [`test/helpers/mock_http_adapter.dart`](test/helpers/mock_http_adapter.dart)),
+GetX controllers, bindings, localization and widgets. No network access or
+running backend is needed.
+
+## Building and distributing
 
 ```bash
 flutter build windows --release
 ```
 
-The compiled release package will be located in:
-`build/windows/runner/Release/`
+The output is in `build\windows\x64\runner\Release\`. To package it as a
+per-user installer (`CRM-Softel-Setup.exe`), compile
+[`installer/CRM-Softel.iss`](installer/CRM-Softel.iss) with Inno Setup.
+Full steps and versioning are in **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**.
+
+## Localization
+
+Strings live in [`lib/l10n/`](lib/l10n/): `app_fr.arb` (template),
+`app_en.arb` and `app_ar.arb`. After editing them, run `flutter gen-l10n`, or
+just `flutter pub get` / `flutter run`. Arabic switches the whole UI to RTL.
+The language can be changed at runtime from the top bar.
+
+## Security notes
+
+- The client has **no user login**: every workstation has the same access. The
+  Windows user name is sent as `X-Employee-Name` on write requests. It is an
+  audit label, not authentication.
+- Traffic uses plain HTTP by default and is meant for a trusted company LAN.
+- No credentials or API keys are stored in the client or in this repository.
+
+See **[SECURITY.md](SECURITY.md)** for the trust model and how to report a vulnerability.
+
+## Documentation
+
+| Document | Purpose |
+|---|---|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Layers, data flow, services, decisions |
+| [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | How the client maps the backend API |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Release build, installer, rollout to workstations |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Workflow, conventions, pull requests |
+| [SECURITY.md](SECURITY.md) | Security model and reporting |
+| [CHANGELOG.md](CHANGELOG.md) | Notable changes |
+
+## Contributing
+
+Contributions follow the workflow in [CONTRIBUTING.md](CONTRIBUTING.md):
+branches, Conventional Commits, and analyze, format and test before every pull request.
+
+## License
+
+Proprietary. All rights reserved by **SOFTEL**. No license file is included
+yet, so no permission to copy, modify or redistribute is granted.
+
+## Author
+
+Developed by **[Khaled Bouhoun](https://github.com/khaledbouhoun)** for SOFTEL.
 
 ---
 
-## ⚙️ Configuration & API Setup
+### Recommended screenshots
 
-Upon the very first launch, the application will automatically direct you to the **Connection Settings** page to configure your backend endpoint.
+Capture at 1440×900 or larger, in light mode (plus one dark and one Arabic view),
+and save them in `docs/screenshots/`:
 
-1. **API Base URL**: Enter your central backend IP and port:
-   ```text
-   http://192.168.1.100:8000/api/v1
-   ```
-2. **Connection Test**: Click **"Test Connection"** to verify that the Flutter client can communicate with the backend's `GET /health` endpoint.
-3. **Timeout Tuning**: Adjust the request timeout between `3s` and `120s` depending on your network conditions.
-
-> 💡 **Tip:** In a corporate LAN environment, ensure firewall rules on the server computer allow incoming traffic on port `8000` (or your configured port).
-
----
-
-## 🌐 Localization (i18n)
-
-Translations are managed using standard Flutter `.arb` files located in `lib/l10n/`:
-
-- `app_ar.arb` — Arabic translations (العربية)
-- `app_fr.arb` — French translations (Français)
-- `app_en.arb` — English translations
-
-To regenerate localized code after editing strings:
-```bash
-flutter gen-l10n
-```
-
----
-
-## 🧑‍💻 Contributing & Code Quality
-
-1. **Code Formatting & Linting:**
-   ```bash
-   flutter analyze
-   dart format .
-   ```
-2. **Branch Strategy:**
-   - `main`: Production-ready releases.
-   - `feature/*`: New features and modules.
-   - `fix/*`: Bug fixes and patches.
-3. Follow the repository's API contract conventions documented in [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
-
----
-
-## 📄 License
-
-This software is proprietary and confidential. All rights reserved by **SOFTEL**. Unauthorized copying, modification, or distribution is strictly prohibited.
-
----
-
-<p align="center">
-  Developed with ❤️ by <a href="https://github.com/khaledbouhoun"><b>Khaled Bouhoun</b></a> & the <b>SOFTEL Development Team</b>
-</p>
-
+| File | Screen |
+|---|---|
+| `dashboard.png` | Dashboard with KPIs and follow-ups |
+| `pipeline.png` | Kanban pipeline mid-drag |
+| `prospect-details.png` | Prospect page with stage history |
+| `follow-ups.png` | Follow-up tabs |
+| `customer-profile.png` | Customer profile |
+| `calendar.png` | Scheduling calendar |
+| `intervention.png` | After-sales ticket chat |
+| `billing.png` | Billing / subscriptions |
+| `analytics.png` | Analytics charts |
+| `dark-mode.png` | Any main screen in dark theme |
+| `arabic-rtl.png` | Any main screen in Arabic (RTL) |
