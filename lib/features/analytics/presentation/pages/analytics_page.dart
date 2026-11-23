@@ -32,30 +32,18 @@ class AnalyticsPage extends GetView<AnalyticsController> {
               title: tr.navAnalytics,
               subtitle: controller.lastUpdatedAt.value == null
                   ? tr.analyticsSubtitle
-                  : tr.dashUpdatedAt(
-                      Formatters.time(controller.lastUpdatedAt.value),
-                    ),
+                  : tr.dashUpdatedAt(Formatters.time(controller.lastUpdatedAt.value)),
               actions: [
                 _RangeSwitcher(controller),
                 OutlinedButton.icon(
-                  onPressed: controller.state.isLoading
-                      ? null
-                      : controller.load,
-                  icon: const HugeIcon(
-                    icon: HugeIcons.strokeRoundedRefresh,
-                    size: 18,
-                  ),
+                  onPressed: controller.state.isLoading ? null : controller.load,
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                   label: Text(tr.actionRefresh),
                 ),
               ],
             ),
           ),
-          Obx(
-            () => RefreshingBar(
-              visible:
-                  controller.state.isLoading && controller.data.value != null,
-            ),
-          ),
+          Obx(() => RefreshingBar(visible: controller.state.isLoading && controller.data.value != null)),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 8),
             child: Align(
@@ -114,10 +102,7 @@ class _RangeSwitcher extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => SegmentedButton<String>(
       showSelectedIcon: false,
-      segments: [
-        for (final r in AnalyticsRange.values)
-          ButtonSegment(value: r, label: Text(_label(r))),
-      ],
+      segments: [for (final r in AnalyticsRange.values) ButtonSegment(value: r, label: Text(_label(r)))],
       selected: {c.range.value},
       onSelectionChanged: (s) => c.setRange(s.first),
     ),
@@ -130,7 +115,7 @@ const _tabPadding = EdgeInsetsDirectional.fromSTEB(28, 8, 28, 28);
 
 /// Lays [children] out in a responsive grid of cards (2 columns when wide).
 class _Grid extends StatelessWidget {
-  const _Grid(this.children, {this.minWidth = 520});
+  const _Grid(this.children) : minWidth = 520;
 
   final List<Widget> children;
   final double minWidth;
@@ -208,9 +193,7 @@ class _Kpi extends StatelessWidget {
                   label,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: context.text.bodySmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
+                  style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: 2),
                 if (numeric != null)
@@ -223,17 +206,13 @@ class _Kpi extends StatelessWidget {
                           targetValue: numeric!,
                           fractionDigits: decimals,
                           suffix: numericSuffix,
-                          style: context.text.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                          style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
                         ),
                       ),
                       if (unit != null)
                         Text(
                           ' $unit',
-                          style: context.text.bodyMedium?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
+                          style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                         ),
                     ],
                   )
@@ -241,16 +220,12 @@ class _Kpi extends StatelessWidget {
                   Text.rich(
                     TextSpan(
                       text: value,
-                      style: context.text.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                      style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
                       children: [
                         if (unit != null)
                           TextSpan(
                             text: ' $unit',
-                            style: context.text.bodyMedium?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
+                            style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                           ),
                       ],
                     ),
@@ -281,11 +256,7 @@ class _KpiRow extends StatelessWidget {
           for (var i = 0; i < items.length; i++)
             SizedBox(
               width: width,
-              child: FadeSlideIn.staggered(
-                index: i,
-                step: const Duration(milliseconds: 60),
-                child: items[i],
-              ),
+              child: FadeSlideIn.staggered(index: i, step: const Duration(milliseconds: 60), child: items[i]),
             ),
         ],
       );
@@ -300,12 +271,7 @@ class _NoData extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 36),
     child: Center(
-      child: Text(
-        tr.analyticsNoData,
-        style: context.text.bodyMedium?.copyWith(
-          color: context.colors.onSurfaceVariant,
-        ),
-      ),
+      child: Text(tr.analyticsNoData, style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant)),
     ),
   );
 }
@@ -316,11 +282,7 @@ String _pct(double? v) => v == null ? '—' : '${_num1(v)}%';
 
 /// Donut + legend inside a card body; shows an empty hint when nothing to draw.
 class _DonutWithLegend extends StatelessWidget {
-  const _DonutWithLegend({
-    required this.slices,
-    this.centerValue,
-    this.centerLabel,
-  });
+  const _DonutWithLegend({required this.slices, this.centerValue, this.centerLabel});
 
   final List<SliceDatum> slices;
   final String? centerValue;
@@ -335,11 +297,7 @@ class _DonutWithLegend extends StatelessWidget {
       spacing: 24,
       runSpacing: 16,
       children: [
-        AnalyticsDonut(
-          slices: slices,
-          centerValue: centerValue,
-          centerLabel: centerLabel,
-        ),
+        AnalyticsDonut(slices: slices, centerValue: centerValue, centerLabel: centerLabel),
         ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 180, maxWidth: 300),
           child: ChartLegend(slices: slices),
@@ -385,9 +343,7 @@ class _SalesTab extends StatelessWidget {
           ),
           _Kpi(
             label: tr.analyticsLossReasons,
-            value: Formatters.number(
-              s.lossReasons.fold<int>(0, (sum, r) => sum + r.count),
-            ),
+            value: Formatters.number(s.lossReasons.fold<int>(0, (sum, r) => sum + r.count)),
             numeric: s.lossReasons.fold<int>(0, (sum, r) => sum + r.count),
             icon: HugeIcons.strokeRoundedUserGroup,
             color: context.crm.danger,
@@ -401,14 +357,7 @@ class _SalesTab extends StatelessWidget {
             child: s.funnel.isEmpty
                 ? const _NoData()
                 : AnalyticsBarChart(
-                    data: [
-                      for (final f in s.funnel)
-                        BarDatum(
-                          label: f.stage,
-                          value: f.count,
-                          caption: _pct(f.rate),
-                        ),
-                    ],
+                    data: [for (final f in s.funnel) BarDatum(label: f.stage, value: f.count, caption: _pct(f.rate))],
                   ),
           ),
           SectionCard(
@@ -432,13 +381,7 @@ class _SalesTab extends StatelessWidget {
                 ? const _NoData()
                 : AnalyticsBarChart(
                     color: context.crm.info,
-                    data: [
-                      for (final i in s.sources)
-                        BarDatum(
-                          label: label(i, tr.analyticsUnknown),
-                          value: i.count,
-                        ),
-                    ],
+                    data: [for (final i in s.sources) BarDatum(label: label(i, tr.analyticsUnknown), value: i.count)],
                   ),
           ),
           SectionCard(
@@ -520,16 +463,8 @@ class _RevenueTab extends StatelessWidget {
                     centerValue: _pct(r.retentionRate),
                     centerLabel: tr.analyticsRetentionShort,
                     slices: [
-                      SliceDatum(
-                        label: tr.analyticsActiveMaintenance,
-                        value: r.activeMaintenance,
-                        color: crm.success,
-                      ),
-                      SliceDatum(
-                        label: tr.analyticsExpiredMaintenance,
-                        value: r.expiredMaintenance,
-                        color: crm.danger,
-                      ),
+                      SliceDatum(label: tr.analyticsActiveMaintenance, value: r.activeMaintenance, color: crm.success),
+                      SliceDatum(label: tr.analyticsExpiredMaintenance, value: r.expiredMaintenance, color: crm.danger),
                     ],
                   ),
           ),
@@ -539,13 +474,7 @@ class _RevenueTab extends StatelessWidget {
             child: r.products.isEmpty
                 ? const _NoData()
                 : AnalyticsBarChart(
-                    data: [
-                      for (final p in r.products)
-                        BarDatum(
-                          label: p.label ?? tr.analyticsUnknown,
-                          value: p.count,
-                        ),
-                    ],
+                    data: [for (final p in r.products) BarDatum(label: p.label ?? tr.analyticsUnknown, value: p.count)],
                   ),
           ),
         ]),
@@ -570,36 +499,22 @@ class _ExpiringCard extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         child: Row(
           children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedCalendar03,
-              size: 30,
-              color: color,
-            ),
+            HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 30, color: color),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(tr.analyticsExpiringTitle, style: context.text.titleMedium?.copyWith(color: color)),
                   Text(
-                    tr.analyticsExpiringTitle,
-                    style: context.text.titleMedium?.copyWith(color: color),
-                  ),
-                  Text(
-                    alert
-                        ? tr.analyticsExpiringCount(count)
-                        : tr.analyticsExpiringNone,
-                    style: context.text.bodyMedium?.copyWith(
-                      color: context.colors.onSurface,
-                    ),
+                    alert ? tr.analyticsExpiringCount(count) : tr.analyticsExpiringNone,
+                    style: context.text.bodyMedium?.copyWith(color: context.colors.onSurface),
                   ),
                 ],
               ),
             ),
             if (alert)
-              FilledButton(
-                onPressed: () => Get.offAllNamed(Routes.billing),
-                child: Text(tr.analyticsExpiringAction),
-              ),
+              FilledButton(onPressed: () => Get.offAllNamed(Routes.billing), child: Text(tr.analyticsExpiringAction)),
           ],
         ),
       ),
@@ -612,8 +527,7 @@ class _SupportTab extends StatelessWidget {
 
   final SupportAnalytics s;
 
-  String _status(DemoConversionItem d) =>
-      d.isConverted ? tr.analyticsDemoConverted : tr.analyticsDemoNotConverted;
+  String _status(DemoConversionItem d) => d.isConverted ? tr.analyticsDemoConverted : tr.analyticsDemoNotConverted;
 
   @override
   Widget build(BuildContext context) {
@@ -682,11 +596,7 @@ class _SupportTab extends StatelessWidget {
                     centerLabel: tr.analyticsDemoConverted,
                     slices: [
                       for (final d in s.demoConversion)
-                        SliceDatum(
-                          label: _status(d),
-                          value: d.count,
-                          color: d.isConverted ? crm.success : crm.warning,
-                        ),
+                        SliceDatum(label: _status(d), value: d.count, color: d.isConverted ? crm.success : crm.warning),
                     ],
                   ),
           ),
@@ -707,9 +617,7 @@ class _TeamTab extends StatelessWidget {
     final members = t.leaderboard;
     final maxY = members.fold<int>(
       0,
-      (m, e) => [m, e.activities, e.interventions, e.dealsWon].reduce(
-        (a, b) => a > b ? a : b,
-      ),
+      (m, e) => [m, e.activities, e.interventions, e.dealsWon].reduce((a, b) => a > b ? a : b),
     );
     return ListView(
       padding: _tabPadding,
@@ -756,10 +664,7 @@ class _Dot extends StatelessWidget {
       Container(
         width: 10,
         height: 10,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(3),
-        ),
+        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3)),
       ),
       const SizedBox(width: 6),
       Text(label, style: context.text.bodySmall),
@@ -774,9 +679,7 @@ class _LeaderboardTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final head = context.text.labelLarge?.copyWith(
-      color: context.colors.onSurfaceVariant,
-    );
+    final head = context.text.labelLarge?.copyWith(color: context.colors.onSurfaceVariant);
     Widget cell(String text, {TextStyle? style, bool end = true}) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       child: Text(
@@ -789,9 +692,7 @@ class _LeaderboardTable extends StatelessWidget {
     return Table(
       columnWidths: const {0: FlexColumnWidth(2.2)},
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      border: TableBorder(
-        horizontalInside: BorderSide(color: context.colors.outlineVariant),
-      ),
+      border: TableBorder(horizontalInside: BorderSide(color: context.colors.outlineVariant)),
       children: [
         TableRow(
           children: [
@@ -806,9 +707,7 @@ class _LeaderboardTable extends StatelessWidget {
             children: [
               cell(
                 '${i + 1}.  ${members[i].employee}',
-                style: context.text.bodyMedium?.copyWith(
-                  fontWeight: i == 0 ? FontWeight.w700 : null,
-                ),
+                style: context.text.bodyMedium?.copyWith(fontWeight: i == 0 ? FontWeight.w700 : null),
                 end: false,
               ),
               cell(Formatters.number(members[i].activities)),
@@ -831,15 +730,9 @@ class _GroupedBars extends StatelessWidget {
   Widget build(BuildContext context) {
     final crm = context.crm;
     final maxY = maxValue <= 0 ? 4.0 : (maxValue * 1.2).ceilToDouble();
-    final labelStyle = context.text.bodySmall?.copyWith(
-      color: context.colors.onSurfaceVariant,
-    );
-    BarChartRodData rod(num v, Color color) => BarChartRodData(
-      toY: v.toDouble(),
-      width: 14,
-      color: color,
-      borderRadius: BorderRadius.circular(5),
-    );
+    final labelStyle = context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant);
+    BarChartRodData rod(num v, Color color) =>
+        BarChartRodData(toY: v.toDouble(), width: 14, color: color, borderRadius: BorderRadius.circular(5));
     return SizedBox(
       height: 260,
       child: BarChart(
@@ -851,11 +744,8 @@ class _GroupedBars extends StatelessWidget {
           borderData: FlBorderData(show: false),
           gridData: FlGridData(
             drawVerticalLine: false,
-            getDrawingHorizontalLine: (_) => FlLine(
-              color: context.colors.outlineVariant.withValues(alpha: 0.6),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
+            getDrawingHorizontalLine: (_) =>
+                FlLine(color: context.colors.outlineVariant.withValues(alpha: 0.6), strokeWidth: 1, dashArray: [4, 4]),
           ),
           titlesData: FlTitlesData(
             topTitles: const AxisTitles(),
@@ -883,11 +773,7 @@ class _GroupedBars extends StatelessWidget {
                   }
                   return SideTitleWidget(
                     meta: meta,
-                    child: Text(
-                      members[i].employee,
-                      overflow: TextOverflow.ellipsis,
-                      style: labelStyle,
-                    ),
+                    child: Text(members[i].employee, overflow: TextOverflow.ellipsis, style: labelStyle),
                   );
                 },
               ),
@@ -898,23 +784,14 @@ class _GroupedBars extends StatelessWidget {
               getTooltipColor: (_) => context.colors.surfaceContainerHighest,
               tooltipBorderRadius: BorderRadius.circular(AppRadius.md),
               getTooltipItem: (group, _, rod, rodIndex) {
-                final names = [
-                  tr.analyticsColActivities,
-                  tr.analyticsColInterventions,
-                  tr.analyticsColDeals,
-                ];
+                final names = [tr.analyticsColActivities, tr.analyticsColInterventions, tr.analyticsColDeals];
                 return BarTooltipItem(
                   '${members[group.x].employee}\n',
-                  context.text.labelMedium!.copyWith(
-                    color: context.colors.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  context.text.labelMedium!.copyWith(color: context.colors.onSurface, fontWeight: FontWeight.w700),
                   children: [
                     TextSpan(
                       text: '${names[rodIndex]}: ${Formatters.number(rod.toY)}',
-                      style: context.text.labelMedium!.copyWith(
-                        color: rod.color,
-                      ),
+                      style: context.text.labelMedium!.copyWith(color: rod.color),
                     ),
                   ],
                 );

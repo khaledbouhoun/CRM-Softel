@@ -288,15 +288,9 @@ class _RowActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final phone = p.phone?.trim();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // IconButton(
-        //   tooltip: tr.customerQuickCall,
-        //   onPressed: phone == null || phone.isEmpty ? null : () => launchUrl(Uri(scheme: 'tel', path: phone)),
-        //   icon: const HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 20),
-        // ),
         IconButton(
           tooltip: tr.wfOpenCustomerProfile,
           onPressed: () => Get.toNamed(Routes.customer(p.id)),
