@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../app/l10n/l10n.dart';
+import 'animated_entrance.dart';
 
 /// Asks for confirmation before an important action. Returns true when the
 /// user confirmed.
@@ -12,7 +13,7 @@ Future<bool> showConfirmDialog({
   String? cancelLabel,
   bool destructive = false,
 }) async {
-  final result = await Get.dialog<bool>(
+  final result = await showAppDialog<bool>(
     Builder(
       builder: (context) {
         final scheme = Theme.of(context).colorScheme;
@@ -59,7 +60,7 @@ Future<T?> showControllerDialog<C extends GetxController, T>({
   Get.put<C>(controller, tag: tag);
   var isMounted = false;
   try {
-    return await Get.dialog<T>(
+    return await showAppDialog<T>(
       _ControllerDialogScope<C>(
         tag: tag,
         onMounted: () => isMounted = true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// SOFTEL brand palette: Softel Blue + the Slate neutral scales, shared with
 /// the website. Every color in the UI is derived from these tokens.
@@ -189,11 +190,31 @@ extension CrmThemeX on BuildContext {
 class AppTheme {
   const AppTheme._();
 
-  /// Alexandria for Arabic, Readex Pro for French / English. Neither font is
-  /// bundled: when it is not installed (or added under `assets/fonts` and
-  /// declared in pubspec.yaml) the system fonts below keep the UI readable.
+  /// Alexandria for Arabic, Quicksand for French / English, loaded through
+  /// `google_fonts` (downloaded once, then cached). While a font is loading or
+  /// unavailable offline, the system fonts below keep the UI readable.
   static const arabicFont = 'Alexandria';
-  static const latinFont = 'Readex Pro';
+  static const latinFont = 'Quicksand';
+
+  /// Tests switch this off so no font is fetched from the network.
+  static bool useGoogleFonts = true;
+
+  static TextTheme _themed(String languageCode, TextTheme base) {
+    if (!useGoogleFonts) return base;
+    return languageCode == 'ar' ? GoogleFonts.alexandriaTextTheme(base) : GoogleFonts.quicksandTextTheme(base);
+  }
+
+  static TextStyle _buttonFont(String languageCode, String fontFamily, List<String> fallback) {
+    const weight = FontWeight.w600;
+    if (!useGoogleFonts) {
+      return TextStyle(fontFamily: fontFamily, fontFamilyFallback: fallback, fontWeight: weight);
+    }
+    final style = languageCode == 'ar'
+        ? GoogleFonts.alexandria(fontWeight: weight)
+        : GoogleFonts.quicksand(fontWeight: weight);
+    return style.copyWith(fontFamilyFallback: fallback);
+  }
+
   static const _systemFonts = ['Segoe UI', 'Cairo', 'Inter', 'Tahoma', 'Arial', 'Noto Sans Arabic'];
 
   static String fontFamilyFor(String languageCode) => languageCode == 'ar' ? arabicFont : latinFont;
@@ -206,11 +227,11 @@ class AppTheme {
   static const _lightScheme = ColorScheme(
     brightness: Brightness.light,
     primary: BrandColors.primary,
-    onPrimary: BrandColors.navy,
+    onPrimary: BrandColors.white,
     primaryContainer: BrandColors.primarySubtle,
     onPrimaryContainer: Color(0xFF075985),
     secondary: BrandColors.primary,
-    onSecondary: BrandColors.navy,
+    onSecondary: BrandColors.white,
     secondaryContainer: BrandColors.primarySubtle,
     onSecondaryContainer: Color(0xFF075985),
     tertiary: Color(0xFF475569),
@@ -240,11 +261,11 @@ class AppTheme {
   static const _darkScheme = ColorScheme(
     brightness: Brightness.dark,
     primary: BrandColors.primary,
-    onPrimary: BrandColors.navy,
+    onPrimary: BrandColors.white,
     primaryContainer: Color(0xFF0C3A57),
     onPrimaryContainer: Color(0xFFBAE6FD),
     secondary: BrandColors.primary,
-    onSecondary: BrandColors.navy,
+    onSecondary: BrandColors.white,
     secondaryContainer: Color(0xFF0C3A57),
     onSecondaryContainer: Color(0xFFBAE6FD),
     tertiary: Color(0xFFCBD5E1),
@@ -287,7 +308,7 @@ class AppTheme {
     final fontFallback = fontFallbackFor(languageCode);
     // A button theme replaces (not merges) the default style, so it names the
     // font family itself.
-    final buttonText = TextStyle(fontFamily: fontFamily, fontFamilyFallback: fontFallback, fontWeight: FontWeight.w600);
+    final buttonText = _buttonFont(languageCode, fontFamily, fontFallback);
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
@@ -295,6 +316,8 @@ class AppTheme {
       fontFamily: fontFamily,
       fontFamilyFallback: fontFallback,
     );
+
+    final fontTheme = _themed(languageCode, base.textTheme);
 
     OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -323,14 +346,16 @@ class AppTheme {
       focusColor: focusColor.withValues(alpha: 0.12),
       hoverColor: scheme.onSurface.withValues(alpha: 0.05),
       splashFactory: InkRipple.splashFactory,
-      textTheme: base.textTheme
+      textTheme: fontTheme
           .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface)
           .copyWith(
-            headlineMedium: base.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800, fontSize: 28),
-            headlineSmall: base.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700, fontSize: 22),
-            titleLarge: base.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
-            titleMedium: base.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
-            titleSmall: base.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            headlineMedium: fontTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700, fontSize: 28),
+            headlineSmall: fontTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700, fontSize: 22),
+            titleLarge: fontTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+            titleMedium: fontTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
+            titleSmall: fontTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            labelLarge: fontTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+            bodyMedium: fontTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -348,6 +373,9 @@ class AppTheme {
         fillColor: scheme.surfaceContainerLowest,
         hoverColor: scheme.surfaceContainerLow,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        // Natural icon proportions: 18px glyphs centred in a 40px slot.
+        prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+        suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
         border: border(scheme.outlineVariant),
         enabledBorder: border(scheme.outlineVariant),
         disabledBorder: border(scheme.outlineVariant.withValues(alpha: 0.6)),
@@ -372,7 +400,7 @@ class AppTheme {
           elevation: const WidgetStatePropertyAll(0),
           backgroundColor: WidgetStateProperty.resolveWith(accentFill),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.4) : BrandColors.navy,
+            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.4) : BrandColors.white,
           ),
           side: WidgetStateProperty.resolveWith(focusRing),
           textStyle: WidgetStatePropertyAll(buttonText),

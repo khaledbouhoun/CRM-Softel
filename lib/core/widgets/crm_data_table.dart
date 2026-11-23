@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_theme.dart';
+import 'animated_entrance.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Column definition for [CrmDataTable].
 class CrmColumn<T> {
   const CrmColumn({
@@ -77,6 +79,7 @@ class CrmDataTable<T> extends StatelessWidget {
               columns: columns,
               onTap: onRowTap,
               tint: highlight?.call(rows[index]),
+              index: index,
             ),
           ),
         ),
@@ -114,10 +117,10 @@ class CrmDataTable<T> extends StatelessWidget {
             children: [
               Flexible(child: label),
               const SizedBox(width: 4),
-              Icon(
+              HugeIcon(icon: 
                 isSorted
-                    ? (ascending ? Icons.arrow_upward : Icons.arrow_downward)
-                    : Icons.unfold_more,
+                    ? (ascending ? HugeIcons.strokeRoundedArrowUp01 : HugeIcons.strokeRoundedArrowDown01)
+                    : HugeIcons.strokeRoundedUnfoldMore,
                 size: 14,
                 color: style?.color,
               ),
@@ -142,7 +145,12 @@ class _DataRow<T> extends StatefulWidget {
     required this.columns,
     this.onTap,
     this.tint,
+    this.index = 0,
   });
+
+  /// Position in the list; only the first [_staggeredRows] rows animate in.
+  final int index;
+  static const _staggeredRows = 12;
 
   final T item;
   final List<CrmColumn<T>> columns;
@@ -162,7 +170,13 @@ class _DataRowState<T> extends State<_DataRow<T>> {
     final bg = _hover
         ? scheme.primary.withValues(alpha: 0.06)
         : (widget.tint ?? Colors.transparent);
-    return MouseRegion(
+    return FadeSlideIn.staggered(
+      index: widget.index,
+      step: const Duration(milliseconds: 30),
+      duration: const Duration(milliseconds: 260),
+      distance: 8,
+      enabled: widget.index < _DataRow._staggeredRows,
+      child: MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
       onExit: (_) => setState(() => _hover = false),
       cursor: widget.onTap != null
@@ -191,6 +205,7 @@ class _DataRowState<T> extends State<_DataRow<T>> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

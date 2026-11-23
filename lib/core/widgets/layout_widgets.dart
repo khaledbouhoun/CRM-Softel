@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_theme.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
 /// Title row at the top of each page.
 class PageHeader extends StatelessWidget {
   const PageHeader({
@@ -62,7 +64,7 @@ class SectionCard extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final IconData? icon;
+  final HugeData? icon;
   final List<Widget> actions;
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -78,7 +80,7 @@ class SectionCard extends StatelessWidget {
           child: Row(
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 19, color: context.colors.primary),
+                HugeIcon(icon: icon!, size: 19, color: context.colors.primary),
                 const SizedBox(width: 8),
               ],
               Expanded(
@@ -122,7 +124,7 @@ class InfoRow extends StatelessWidget {
 
   /// Rich content shown instead of [value].
   final Widget? child;
-  final IconData? icon;
+  final HugeData? icon;
   final double labelWidth;
 
   @override
@@ -135,7 +137,7 @@ class InfoRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 16, color: muted),
+            HugeIcon(icon: icon!, size: 16, color: muted),
             const SizedBox(width: 8),
           ],
           SizedBox(
@@ -169,7 +171,7 @@ class StatusPill extends StatelessWidget {
   final String label;
   final Color color;
   final Color? background;
-  final IconData? icon;
+  final HugeData? icon;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -182,7 +184,7 @@ class StatusPill extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (icon != null) ...[
-          Icon(icon, size: 13, color: color),
+          HugeIcon(icon: icon!, size: 14, color: color),
           const SizedBox(width: 4),
         ],
         Text(
@@ -213,7 +215,7 @@ class ToneBadge extends StatelessWidget {
 
   final String label;
   final StatusTone tone;
-  final IconData? icon;
+  final HugeData? icon;
 
   @override
   Widget build(BuildContext context) {

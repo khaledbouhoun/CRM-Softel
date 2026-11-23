@@ -6,6 +6,8 @@ import '../network/api_response.dart';
 import '../utils/formatters.dart';
 import '../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
 /// "1–25 sur 92 · 25 par page · ‹ 1 / 4 ›"
 class PaginationBar extends StatelessWidget {
   const PaginationBar({
@@ -67,14 +69,14 @@ class PaginationBar extends StatelessWidget {
           ],
           IconButton(
             tooltip: tr.pageFirst,
-            icon: const Icon(Icons.first_page),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeftDouble),
             onPressed: enabled && page.hasPrevious
                 ? () => onPageChanged(1)
                 : null,
           ),
           IconButton(
             tooltip: tr.pagePrevious,
-            icon: const Icon(Icons.chevron_left),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
             onPressed: enabled && page.hasPrevious
                 ? () => onPageChanged(page.currentPage - 1)
                 : null,
@@ -91,14 +93,14 @@ class PaginationBar extends StatelessWidget {
           ),
           IconButton(
             tooltip: tr.pageNext,
-            icon: const Icon(Icons.chevron_right),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowRight01),
             onPressed: enabled && page.hasNext
                 ? () => onPageChanged(page.currentPage + 1)
                 : null,
           ),
           IconButton(
             tooltip: tr.pageLast,
-            icon: const Icon(Icons.last_page),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
             onPressed: enabled && page.hasNext
                 ? () => onPageChanged(page.lastPage)
                 : null,

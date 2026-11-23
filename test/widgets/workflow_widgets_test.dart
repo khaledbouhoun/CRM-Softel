@@ -14,6 +14,7 @@ import '../helpers/fixtures.dart';
 import '../helpers/test_env.dart';
 import '../helpers/workflow_fixtures.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 void main() {
   setUp(() {
     Get.testMode = true;
@@ -68,7 +69,7 @@ void main() {
       expect(find.text('Formation GestCom'), findsOneWidget);
       expect(find.textContaining('SARL Exemple'), findsOneWidget);
       expect(find.text('Confirmed'), findsOneWidget);
-      expect(find.byIcon(Icons.event), findsOneWidget);
+      expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCalendar03), findsOneWidget);
       expect(
         Directionality.of(tester.element(find.byType(CalendarEventCard))),
         TextDirection.ltr,
@@ -88,7 +89,7 @@ void main() {
         final card = tester.getRect(find.byType(CalendarEventCard));
         // In RTL the kind icon sits on the right half of the card.
         expect(
-          tester.getCenter(find.byIcon(Icons.event)).dx,
+          tester.getCenter(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCalendar03)).dx,
           greaterThan(card.center.dx),
         );
       },
@@ -102,7 +103,7 @@ void main() {
       );
       final card = tester.getRect(find.byType(CalendarEventCard));
       expect(
-        tester.getCenter(find.byIcon(Icons.event)).dx,
+        tester.getCenter(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCalendar03)).dx,
         lessThan(card.center.dx),
       );
     });
@@ -123,8 +124,8 @@ void main() {
           ),
         );
         // Scheduled: kind icon. Completed: check mark + "Completed" badge.
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
-        expect(find.byIcon(Icons.event), findsOneWidget);
+        expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCheckmarkCircle02), findsOneWidget);
+        expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCalendar03), findsOneWidget);
         expect(find.text('Completed'), findsOneWidget);
         expect(find.text('Confirmed'), findsOneWidget);
       },
@@ -142,7 +143,7 @@ void main() {
           CalendarEventCard(item: activity, compact: true),
         ),
       );
-      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCheckmarkCircle02), findsOneWidget);
     });
 
     testWidgets('flags conflicts with a visible explanation', (tester) async {
@@ -161,7 +162,7 @@ void main() {
       await tester.pumpWidget(
         host(AppLocales.english, CalendarEventCard(item: clash)),
       );
-      expect(find.byIcon(Icons.warning_amber_rounded), findsWidgets);
+      expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedAlert02), findsWidgets);
       expect(find.textContaining('Employee already busy'), findsOneWidget);
     });
 

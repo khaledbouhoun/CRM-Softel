@@ -4,21 +4,23 @@ import 'package:get/get.dart';
 import '../../app/theme/app_theme.dart';
 import '../network/api_exceptions.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
 /// Toast-style feedback. Success is only shown after the API confirmed.
 class AppFeedback {
   const AppFeedback._();
 
   static void success(String message) =>
-      _show(message, icon: Icons.check_circle_outline, tone: _Tone.success);
+      _show(message, icon: HugeIcons.strokeRoundedCheckmarkCircle03, tone: _Tone.success);
 
   static void warning(String message) =>
-      _show(message, icon: Icons.warning_amber_rounded, tone: _Tone.warning);
+      _show(message, icon: HugeIcons.strokeRoundedAlert02, tone: _Tone.warning);
 
   static void error(Object error, {String? prefix}) {
     final message = error is ApiException ? _describe(error) : error.toString();
     _show(
       prefix == null ? message : '$prefix\n$message',
-      icon: Icons.error_outline,
+      icon: HugeIcons.strokeRoundedAlertCircle,
       tone: _Tone.error,
       duration: const Duration(seconds: 7),
     );
@@ -33,7 +35,7 @@ class AppFeedback {
 
   static void _show(
     String message, {
-    required IconData icon,
+    required HugeData icon,
     required _Tone tone,
     Duration duration = const Duration(seconds: 4),
   }) {
@@ -52,7 +54,7 @@ class AppFeedback {
           message,
           style: TextStyle(color: context.colors.onSurface, fontSize: 13.5),
         ),
-        icon: Icon(icon, color: fg),
+        icon: HugeIcon(icon: icon, color: fg),
         backgroundColor: bg,
         borderColor: fg.withValues(alpha: 0.35),
         borderWidth: 1,

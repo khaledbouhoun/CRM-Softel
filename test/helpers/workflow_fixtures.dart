@@ -279,7 +279,7 @@ class WorkflowTestEnv {
         'GET',
         '/system/employees',
         wrap({
-          'summary': {'active_employees': 1},
+          'summary': {'active_employees': 1, 'team_actions_today': 6},
           'employees': [
             {
               'employee_id': 'salim@PC1',
@@ -289,6 +289,15 @@ class WorkflowTestEnv {
               'status': 'Online',
               'last_activity': '2026-11-01T09:00:00+01:00',
               'last_request': '/api/v1/health',
+              'custom_name': null,
+              'role': 'support',
+              'presence_status': 'busy',
+              'status_note': null,
+              'today_stats': {
+                'activities_count': 3,
+                'interventions_count': 2,
+                'appointments_count': 1,
+              },
             },
           ],
         }),

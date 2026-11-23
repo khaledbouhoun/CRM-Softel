@@ -6,6 +6,8 @@ import '../utils/json_utils.dart';
 import 'state_views.dart';
 import '../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
 /// Standard dialog for forms: title, scrollable body, error banner and
 /// Cancel / Save buttons. The save button is disabled while [busy] to prevent
 /// duplicate submissions.
@@ -27,7 +29,7 @@ class FormDialog extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final IconData? icon;
+  final HugeData? icon;
   final Widget child;
   final VoidCallback onSubmit;
   final VoidCallback onCancel;
@@ -53,7 +55,7 @@ class FormDialog extends StatelessWidget {
             child: Row(
               children: [
                 if (icon != null) ...[
-                  Icon(icon, color: context.colors.primary),
+                  HugeIcon(icon: icon!, color: context.colors.primary),
                   const SizedBox(width: 10),
                 ],
                 Expanded(
@@ -74,7 +76,7 @@ class FormDialog extends StatelessWidget {
                 IconButton(
                   tooltip: tr.actionClose,
                   onPressed: busy ? null : onCancel,
-                  icon: const Icon(Icons.close),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                 ),
               ],
             ),
@@ -113,7 +115,7 @@ class FormDialog extends StatelessWidget {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.check, size: 18),
+                      : const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 18),
                   label: Text(
                     busy ? tr.actionSaving : (submitLabel ?? tr.actionSave),
                   ),
@@ -225,11 +227,14 @@ class DateTimeField extends StatelessWidget {
         errorText: errorText,
         helperText: helperText,
         enabled: enabled,
-        prefixIcon: const Icon(Icons.event, size: 20),
+        prefixIcon: const Padding(
+          padding: EdgeInsets.all(8),
+          child: HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 18),
+        ),
         suffixIcon: clearable && value != null && enabled
             ? IconButton(
                 tooltip: tr.actionClear,
-                icon: const Icon(Icons.close, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01, size: 18),
                 onPressed: () => onChanged(null),
               )
             : null,
@@ -305,8 +310,8 @@ class ColorPickerField extends StatelessWidget {
                         ),
                       ),
                       child: current == hex
-                          ? const Icon(
-                              Icons.check,
+                          ? const HugeIcon(icon: 
+                              HugeIcons.strokeRoundedTick02,
                               size: 16,
                               color: Colors.white,
                             )

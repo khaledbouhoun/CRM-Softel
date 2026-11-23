@@ -11,6 +11,8 @@ import '../utils/formatters.dart';
 import '../utils/json_utils.dart';
 import 'layout_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
 /// Color from a configured `#RRGGBB` value, or [fallback] when missing or
 /// malformed. Colors of types, statuses and priorities come from the CRM.
 Color hexColor(String? hex, Color fallback) {
@@ -30,7 +32,7 @@ class StatusBadge extends StatelessWidget {
 
   final String label;
   final Color color;
-  final IconData? icon;
+  final HugeData? icon;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -60,16 +62,16 @@ class AppointmentStatusBadge extends StatelessWidget {
     };
   }
 
-  static IconData iconOf(AppointmentStatus status) => switch (status) {
-    AppointmentStatus.held => Icons.hourglass_top,
-    AppointmentStatus.proposed => Icons.swap_horiz,
-    AppointmentStatus.confirmed => Icons.event_available,
-    AppointmentStatus.completed => Icons.check_circle_outline,
-    AppointmentStatus.rejected => Icons.block,
-    AppointmentStatus.cancelled => Icons.event_busy,
-    AppointmentStatus.expired => Icons.timer_off_outlined,
-    AppointmentStatus.noShow => Icons.person_off_outlined,
-    AppointmentStatus.unknown => Icons.help_outline,
+  static HugeData iconOf(AppointmentStatus status) => switch (status) {
+    AppointmentStatus.held => HugeIcons.strokeRoundedHourglass,
+    AppointmentStatus.proposed => HugeIcons.strokeRoundedArrowLeftRight,
+    AppointmentStatus.confirmed => HugeIcons.strokeRoundedCalendarCheck01,
+    AppointmentStatus.completed => HugeIcons.strokeRoundedCheckmarkCircle03,
+    AppointmentStatus.rejected => HugeIcons.strokeRoundedCancel02,
+    AppointmentStatus.cancelled => HugeIcons.strokeRoundedCalendarRemove02,
+    AppointmentStatus.expired => HugeIcons.strokeRoundedTimerOff,
+    AppointmentStatus.noShow => HugeIcons.strokeRoundedUserBlock01,
+    AppointmentStatus.unknown => HugeIcons.strokeRoundedHelpCircle,
   };
 
   @override
@@ -95,7 +97,7 @@ class InterventionStatusBadge extends StatelessWidget {
     return StatusBadge(
       label: s.name,
       color: hexColor(s.color, context.colors.primary),
-      icon: s.isClosed ? Icons.check_circle_outline : null,
+      icon: s.isClosed ? HugeIcons.strokeRoundedCheckmarkCircle03 : null,
     );
   }
 }
@@ -118,7 +120,7 @@ class PriorityChip extends StatelessWidget {
       );
     }
     final color = hexColor(p.color, context.colors.primary);
-    return StatusBadge(label: p.name, color: color, icon: Icons.flag);
+    return StatusBadge(label: p.name, color: color, icon: HugeIcons.strokeRoundedFlag01);
   }
 }
 
@@ -187,7 +189,7 @@ class _HoldCountdownState extends State<HoldCountdown> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.timer_outlined, size: 15, color: color),
+        HugeIcon(icon: HugeIcons.strokeRoundedTimer02, size: 15, color: color),
         const SizedBox(width: 4),
         Text(
           expired
@@ -226,7 +228,7 @@ class ConflictList extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.warning_amber_rounded, color: crm.warning, size: 20),
+              HugeIcon(icon: HugeIcons.strokeRoundedAlert02, color: crm.warning, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -272,11 +274,11 @@ class CalendarEventCard extends StatelessWidget {
   /// One-line variant for month cells.
   final bool compact;
 
-  static IconData kindIcon(CalendarKind kind) => switch (kind) {
-    CalendarKind.appointment => Icons.event,
-    CalendarKind.followUp => Icons.notifications_active_outlined,
-    CalendarKind.intervention => Icons.build_circle_outlined,
-    CalendarKind.activity => Icons.task_alt,
+  static HugeData kindIcon(CalendarKind kind) => switch (kind) {
+    CalendarKind.appointment => HugeIcons.strokeRoundedCalendar03,
+    CalendarKind.followUp => HugeIcons.strokeRoundedNotification01,
+    CalendarKind.intervention => HugeIcons.strokeRoundedWrench01,
+    CalendarKind.activity => HugeIcons.strokeRoundedCheckmarkCircle01,
   };
 
   @override
@@ -308,8 +310,8 @@ class CalendarEventCard extends StatelessWidget {
           ),
     );
 
-    final leadingIcon = Icon(
-      done ? Icons.check_circle : kindIcon(item.kind),
+    final leadingIcon = HugeIcon(icon: 
+      done ? HugeIcons.strokeRoundedCheckmarkCircle02 : kindIcon(item.kind),
       size: compact ? 13 : 16,
       color: done ? crm.success : accent,
     );
@@ -321,7 +323,7 @@ class CalendarEventCard extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(child: title),
               if (item.hasConflict)
-                Icon(Icons.warning_amber_rounded, size: 13, color: crm.warning),
+                HugeIcon(icon: HugeIcons.strokeRoundedAlert02, size: 13, color: crm.warning),
             ],
           )
         : Column(
@@ -345,8 +347,8 @@ class CalendarEventCard extends StatelessWidget {
                           .map((c) => c.reasonLabel)
                           .toSet()
                           .join(' · '),
-                      child: Icon(
-                        Icons.warning_amber_rounded,
+                      child: HugeIcon(icon: 
+                        HugeIcons.strokeRoundedAlert02,
                         size: 16,
                         color: crm.warning,
                       ),
@@ -486,7 +488,7 @@ class VisibilityBadge extends StatelessWidget {
   Widget build(BuildContext context) => StatusBadge(
     label: internal ? tr.wfInternalNote : tr.wfCustomerReply,
     color: internal ? context.crm.warning : context.crm.info,
-    icon: internal ? Icons.lock_outline : Icons.visibility_outlined,
+    icon: internal ? HugeIcons.strokeRoundedLock : HugeIcons.strokeRoundedView,
   );
 }
 

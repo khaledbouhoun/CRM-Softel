@@ -16,21 +16,19 @@ class Formatters {
       (_cache['$locale|$pattern'] ??= create(locale)!) as T;
 
   static DateFormat get _date => _of('d', (l) => DateFormat('dd/MM/yyyy', l));
-  static DateFormat get _dateTime =>
-      _of('dt', (l) => DateFormat('dd/MM/yyyy HH:mm', l));
+  static DateFormat get _dateShort => _of('ds', (l) => DateFormat('dd/MM', l));
+  static DateFormat get _dateTime => _of('dt', (l) => DateFormat('dd/MM/yyyy HH:mm', l));
   static DateFormat get _time => _of('t', (l) => DateFormat('HH:mm', l));
-  static DateFormat get _longDate =>
-      _of('ld', (l) => DateFormat('EEEE d MMMM yyyy', l));
+  static DateFormat get _longDate => _of('ld', (l) => DateFormat('EEEE d MMMM yyyy', l));
   static NumberFormat get _number => _of('n', NumberFormat.decimalPattern);
 
-  static String date(DateTime? value) =>
-      value == null ? '—' : _date.format(value.toLocal());
+  static String date(DateTime? value) => value == null ? '—' : _date.format(value.toLocal());
 
-  static String dateTime(DateTime? value) =>
-      value == null ? '—' : _dateTime.format(value.toLocal());
+  static String day(DateTime? value) => value == null ? '—' : _dateShort.format(value.toLocal());
 
-  static String time(DateTime? value) =>
-      value == null ? '—' : _time.format(value.toLocal());
+  static String dateTime(DateTime? value) => value == null ? '—' : _dateTime.format(value.toLocal());
+
+  static String time(DateTime? value) => value == null ? '—' : _time.format(value.toLocal());
 
   static String longDate(DateTime value) {
     final text = _longDate.format(value.toLocal());

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
+import '../../app/l10n/l10n.dart';
 import '../../app/theme/app_theme.dart';
 import '../utils/debouncer.dart';
 import '../utils/formatters.dart';
-import '../../app/l10n/l10n.dart';
 
 /// Search box that reports changes after the user stops typing.
 class SearchField extends StatefulWidget {
-  const SearchField({
-    super.key,
-    required this.onChanged,
-    this.initialValue = '',
-    this.hint,
-    this.width = 300,
-  });
+  const SearchField({super.key, required this.onChanged, this.initialValue = '', this.hint, this.width = 300});
 
   final ValueChanged<String> onChanged;
   final String initialValue;
@@ -42,14 +37,20 @@ class _SearchFieldState extends State<SearchField> {
       controller: _controller,
       decoration: InputDecoration(
         hintText: widget.hint ?? tr.searchHint,
-        prefixIcon: const Icon(Icons.search, size: 20),
+        prefixIcon: const Padding(
+          padding: EdgeInsets.all(8),
+          child: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
+        ),
         suffixIcon: ValueListenableBuilder(
           valueListenable: _controller,
           builder: (context, value, _) => value.text.isEmpty
               ? const SizedBox.shrink()
               : IconButton(
                   tooltip: tr.actionClear,
-                  icon: const Icon(Icons.close, size: 18),
+                  icon: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
+                  ),
                   onPressed: () {
                     _controller.clear();
                     _debouncer.dispose();
@@ -102,25 +103,14 @@ class FilterDropdown<T> extends StatelessWidget {
         isExpanded: true,
         decoration: InputDecoration(labelText: label),
         items: [
-          DropdownMenuItem<T?>(
-            value: null,
-            child: Text(allLabel ?? tr.filterAll),
-          ),
+          DropdownMenuItem<T?>(value: null, child: Text(allLabel ?? tr.filterAll)),
           for (final item in items)
             DropdownMenuItem<T?>(
               value: item,
               child: Row(
                 children: [
-                  if (leading != null) ...[
-                    leading!(item),
-                    const SizedBox(width: 8),
-                  ],
-                  Expanded(
-                    child: Text(
-                      itemLabel(item),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                  if (leading != null) ...[leading!(item), const SizedBox(width: 8)],
+                  Expanded(child: Text(itemLabel(item), overflow: TextOverflow.ellipsis)),
                 ],
               ),
             ),
@@ -149,14 +139,12 @@ class DateRangeFilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasValue = from != null || to != null;
-    final text = hasValue
-        ? '${Formatters.date(from)} → ${Formatters.date(to)}'
-        : label;
+    final text = hasValue ? '${Formatters.date(from)} → ${Formatters.date(to)}' : label;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         OutlinedButton.icon(
-          icon: const Icon(Icons.date_range, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar05),
           label: Text(text),
           style: hasValue
               ? OutlinedButton.styleFrom(
@@ -170,9 +158,7 @@ class DateRangeFilterButton extends StatelessWidget {
               context: context,
               firstDate: DateTime(2000),
               lastDate: DateTime(now.year + 5),
-              initialDateRange: from != null && to != null
-                  ? DateTimeRange(start: from!, end: to!)
-                  : null,
+              initialDateRange: from != null && to != null ? DateTimeRange(start: from!, end: to!) : null,
               helpText: label,
             );
             if (range != null) onChanged(range.start, range.end);
@@ -181,7 +167,10 @@ class DateRangeFilterButton extends StatelessWidget {
         if (hasValue)
           IconButton(
             tooltip: tr.clearPeriod,
-            icon: const Icon(Icons.close, size: 18),
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
+            ),
             onPressed: () => onChanged(null, null),
           ),
       ],

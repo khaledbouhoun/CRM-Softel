@@ -6,6 +6,10 @@ import '../../app/theme/app_theme.dart';
 import '../state/load_state.dart';
 import '../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import 'huge_data.dart';
+import 'shimmer.dart';
+
 class LoadingView extends StatelessWidget {
   const LoadingView({super.key, this.message});
 
@@ -38,14 +42,14 @@ class EmptyView extends StatelessWidget {
     super.key,
     required this.title,
     this.message,
-    this.icon = Icons.inbox_outlined,
+    this.icon = HugeIcons.strokeRoundedInbox,
     this.action,
     this.compact = false,
   });
 
   final String title;
   final String? message;
-  final IconData icon;
+  final HugeData icon;
   final Widget? action;
   final bool compact;
 
@@ -58,7 +62,7 @@ class EmptyView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            HugeIcon(icon: 
               icon,
               size: compact ? 28 : 44,
               color: muted.withValues(alpha: 0.6),
@@ -112,10 +116,10 @@ class ErrorView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              HugeIcon(icon: 
                 isConnectionError
-                    ? Icons.cloud_off_outlined
-                    : Icons.error_outline,
+                    ? HugeIcons.strokeRoundedCloudOff
+                    : HugeIcons.strokeRoundedAlertCircle,
                 size: compact ? 28 : 44,
                 color: crm.danger,
               ),
@@ -141,13 +145,13 @@ class ErrorView extends StatelessWidget {
                   if (onRetry != null)
                     FilledButton.icon(
                       onPressed: onRetry,
-                      icon: const Icon(Icons.refresh, size: 18),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                       label: Text(tr.actionRetry),
                     ),
                   if (isConnectionError)
                     OutlinedButton.icon(
                       onPressed: () => Get.offAllNamed(Routes.settings),
-                      icon: const Icon(Icons.settings_ethernet, size: 18),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedEthernetPort, size: 18),
                       label: Text(tr.serverSettings),
                     ),
                 ],
@@ -160,7 +164,20 @@ class ErrorView extends StatelessWidget {
   }
 }
 
+/// Shape of the shimmer skeleton shown by [LoadStateView] while loading.
+enum SkeletonKind {
+  /// Table / list rows (default).
+  rows,
+
+  /// KPI cards and panels (dashboard, analytics).
+  cards,
+
+  /// Plain spinner, for tiny inline areas.
+  spinner,
+}
+
 /// Chooses between loading / error / empty / content for a [LoadState].
+/// Loading shows a shimmering skeleton ([skeleton]) instead of a spinner.
 /// Rebuilds by itself when the state changes; [isEmpty] must come from an
 /// enclosing `Obx` when it depends on observables.
 class LoadStateView extends StatelessWidget {
@@ -172,6 +189,7 @@ class LoadStateView extends StatelessWidget {
     this.onRetry,
     this.empty,
     this.compact = false,
+    this.skeleton = SkeletonKind.rows,
   });
 
   final LoadState state;
@@ -180,9 +198,16 @@ class LoadStateView extends StatelessWidget {
   final VoidCallback? onRetry;
   final Widget? empty;
   final bool compact;
+  final SkeletonKind skeleton;
 
   @override
   Widget build(BuildContext context) => Obx(() => _build(context));
+
+  Widget _loading() => switch (skeleton) {
+    SkeletonKind.cards => const SkeletonCards(),
+    SkeletonKind.spinner => const LoadingView(),
+    SkeletonKind.rows => SkeletonRows(count: compact ? 3 : 8),
+  };
 
   Widget _build(BuildContext context) {
     final status = state.status.value;
@@ -196,7 +221,7 @@ class LoadStateView extends StatelessWidget {
     }
     if ((status == LoadStatus.loading || status == LoadStatus.initial) &&
         isEmpty) {
-      return const LoadingView();
+      return _loading();
     }
     if (isEmpty) {
       return empty ?? EmptyView(title: tr.noItems);
@@ -238,7 +263,7 @@ class ErrorBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline, color: crm.danger, size: 20),
+          HugeIcon(icon: HugeIcons.strokeRoundedAlertCircle, color: crm.danger, size: 20),
           const SizedBox(width: 10),
           Expanded(child: Text(message, style: context.text.bodyMedium)),
           if (onRetry != null)
