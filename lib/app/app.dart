@@ -40,6 +40,7 @@ class SoftelCrmApp extends StatelessWidget {
       getPages: AppPages.pages,
       unknownRoute: AppPages.pages.first,
       defaultTransition: Transition.fadeIn,
+      transitionDuration: AppPages.defaultDuration,
       ),
     );
   }

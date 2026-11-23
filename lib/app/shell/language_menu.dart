@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../config/app_settings_service.dart';
 import '../l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Top-bar language switcher: العربية / Français / English.
 ///
 /// Switching is immediate (no restart) and persisted on this computer.
@@ -31,7 +32,7 @@ class LanguageMenuButton extends StatelessWidget {
                   SizedBox(
                     width: 22,
                     child: locale == current
-                        ? const Icon(Icons.check, size: 18)
+                        ? const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 18)
                         : null,
                   ),
                   const SizedBox(width: 8),
@@ -45,7 +46,7 @@ class LanguageMenuButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.language, size: 20),
+              const HugeIcon(icon: HugeIcons.strokeRoundedGlobe02, size: 20),
               const SizedBox(width: 6),
               Text(
                 AppLocales.nativeName(current),

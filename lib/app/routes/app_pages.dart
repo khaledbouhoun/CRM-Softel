@@ -1,7 +1,10 @@
+import 'package:flutter/animation.dart' show Curves;
 import 'package:get/get.dart';
 
 import '../../features/activities/presentation/bindings/activities_binding.dart';
 import '../../features/activities/presentation/pages/activities_page.dart';
+import '../../features/analytics/presentation/bindings/analytics_binding.dart';
+import '../../features/analytics/presentation/pages/analytics_page.dart';
 import '../../features/dashboard/presentation/bindings/dashboard_binding.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/follow_ups/presentation/bindings/follow_ups_binding.dart';
@@ -35,11 +38,27 @@ import '../../features/releases/presentation/pages/releases_page.dart';
 import '../../features/billing/presentation/bindings/billing_binding.dart';
 import '../../features/billing/presentation/pages/billing_customer_page.dart';
 import '../../features/billing/presentation/pages/billing_page.dart';
+import '../../core/widgets/animated_entrance.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
   static const _transition = Transition.fadeIn;
-  static const _duration = Duration(milliseconds: 120);
+
+  /// Refined ease-out-cubic curve for every route transition.
+  static const _curve = Curves.easeOutCubic;
+
+  /// Top-level pages cross-fade in 200 ms, detail pages slide in 220 ms.
+  /// Collapsed to zero when the OS asks to reduce motion (sampled at start-up,
+  /// because route definitions have no BuildContext).
+  static final _duration = AppMotion.platformReduced
+      ? Duration.zero
+      : AppMotion.page;
+  static final _detailDuration = AppMotion.platformReduced
+      ? Duration.zero
+      : AppMotion.detailPage;
+
+  /// Fallback used by `GetMaterialApp` for routes without their own duration.
+  static Duration get defaultDuration => _duration;
 
   static final pages = <GetPage<dynamic>>[
     GetPage(
@@ -48,6 +67,15 @@ abstract final class AppPages {
       binding: DashboardBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
+    ),
+    GetPage(
+      name: Routes.analytics,
+      page: () => const AnalyticsPage(),
+      binding: AnalyticsBinding(),
+      transition: _transition,
+      transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.prospects,
@@ -55,12 +83,14 @@ abstract final class AppPages {
       binding: ProspectsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.prospectDetails,
       page: () => const ProspectDetailsPage(),
       transition: Transition.rightToLeftWithFade,
-      transitionDuration: const Duration(milliseconds: 180),
+      transitionDuration: _detailDuration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.pipeline,
@@ -68,6 +98,7 @@ abstract final class AppPages {
       binding: PipelineBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.activities,
@@ -75,6 +106,7 @@ abstract final class AppPages {
       binding: ActivitiesBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.followUps,
@@ -82,6 +114,7 @@ abstract final class AppPages {
       binding: FollowUpsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.products,
@@ -89,6 +122,7 @@ abstract final class AppPages {
       binding: ProductsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.customers,
@@ -96,12 +130,14 @@ abstract final class AppPages {
       binding: CustomersBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.customerDetails,
       page: () => const CustomerProfilePage(),
       transition: Transition.rightToLeftWithFade,
-      transitionDuration: const Duration(milliseconds: 180),
+      transitionDuration: _detailDuration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.calendar,
@@ -109,6 +145,7 @@ abstract final class AppPages {
       binding: CalendarBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.training,
@@ -116,6 +153,7 @@ abstract final class AppPages {
       binding: TrainingBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.requests,
@@ -123,6 +161,7 @@ abstract final class AppPages {
       binding: PendingRequestsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.afterSales,
@@ -130,12 +169,14 @@ abstract final class AppPages {
       binding: InterventionsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.afterSalesDetails,
       page: () => const InterventionDetailPage(),
       transition: Transition.rightToLeftWithFade,
-      transitionDuration: const Duration(milliseconds: 180),
+      transitionDuration: _detailDuration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.billing,
@@ -143,12 +184,14 @@ abstract final class AppPages {
       binding: BillingBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.billingDetails,
       page: () => const BillingCustomerPage(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.releases,
@@ -156,6 +199,7 @@ abstract final class AppPages {
       binding: ReleasesBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.employees,
@@ -163,12 +207,14 @@ abstract final class AppPages {
       binding: EmployeesBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.workflowSettings,
       page: () => const WorkflowSettingsPage(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.settings,
@@ -176,6 +222,7 @@ abstract final class AppPages {
       binding: ConnectionSettingsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.stagesSettings,
@@ -183,6 +230,7 @@ abstract final class AppPages {
       binding: StagesSettingsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.lossReasonsSettings,
@@ -190,6 +238,7 @@ abstract final class AppPages {
       binding: LossReasonsSettingsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
     GetPage(
       name: Routes.prospectListsSettings,
@@ -197,6 +246,7 @@ abstract final class AppPages {
       binding: ProspectFormOptionsSettingsBinding(),
       transition: _transition,
       transitionDuration: _duration,
+      curve: _curve,
     ),
   ];
 }

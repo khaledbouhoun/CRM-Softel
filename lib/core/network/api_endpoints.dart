@@ -10,6 +10,9 @@ class ApiEndpoints {
   // Dashboard
   static const dashboard = '/dashboard';
 
+  // Analytics
+  static const analytics = '/analytics';
+
   // Prospects
   static const prospects = '/prospects';
   static String prospect(int id) => '/prospects/$id';
@@ -60,6 +63,7 @@ class ApiEndpoints {
   // Employees (heartbeat sessions)
   static const heartbeat = '/system/heartbeat';
   static const employees = '/system/employees';
+  static const employeePresence = '/system/employees/presence';
 
   // Customers and conversion (docs/PORTAL_AND_WORKFLOWS.md section 3)
   static const customers = '/customers';

@@ -4,21 +4,21 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../core/utils/formatters.dart';
+import '../../features/employees/data/employee_options.dart';
 import '../../features/prospects/presentation/dialogs/prospect_search_dialog.dart';
-import '../config/app_config.dart';
 import '../config/app_settings_service.dart';
 import '../l10n/l10n.dart';
 import '../routes/app_routes.dart';
 import '../services/connection_service.dart';
 import '../services/employee_identity.dart';
+import '../services/presence_service.dart';
 import '../theme/app_theme.dart';
 import 'language_menu.dart';
 import 'navigation.dart';
 import 'settings_nav.dart';
 
 class _NavItem {
-  const _NavItem(this.route, this.label, this.icon, [HugeData? selectedIcon])
-    : selectedIcon = selectedIcon ?? icon;
+  const _NavItem(this.route, this.label, this.icon, [HugeData? selectedIcon]) : selectedIcon = selectedIcon ?? icon;
 
   final String route;
   final String label;
@@ -26,7 +26,7 @@ class _NavItem {
   final HugeData selectedIcon;
 }
 
-/// One of the four sidebar workspaces.
+/// One of the six sidebar workspaces.
 class _Workspace {
   const _Workspace(this.label, this.items);
 
@@ -37,8 +37,8 @@ class _Workspace {
 /// Sidebar workspaces. Employees all share the same access level, so every
 /// entry is always visible (no role checks).
 List<_Workspace> get _workspaces => [
-  // 1. Agenda & overview.
-  _Workspace(tr.navWorkspaceAgenda, [
+  // 1. Prospects & sales lifecycle.
+  _Workspace(tr.navWorkspaceProspects, [
     _NavItem(
       Routes.dashboard,
       tr.navDashboard,
@@ -51,55 +51,44 @@ List<_Workspace> get _workspaces => [
       HugeIcons.strokeRoundedCalendar03,
       HugeIcons.strokeRoundedCalendarFavorite01,
     ),
+    _NavItem(Routes.prospects, tr.navProspects, HugeIcons.strokeRoundedUserGroup),
+    _NavItem(Routes.pipeline, tr.navPipeline, HugeIcons.strokeRoundedUserAdd01),
     _NavItem(Routes.followUps, tr.navFollowUps, HugeIcons.strokeRoundedNote01),
     _NavItem(Routes.activities, tr.navActivities, HugeIcons.strokeRoundedTime02),
   ]),
-  // 2. Sales & clients.
-  _Workspace(tr.navWorkspaceSales, [
-    _NavItem(Routes.prospects, tr.navProspects, HugeIcons.strokeRoundedUserGroup),
-    _NavItem(Routes.pipeline, tr.navPipeline, HugeIcons.strokeRoundedUserAdd01),
-    _NavItem(
-      Routes.customers,
-      tr.navCustomers,
-      HugeIcons.strokeRoundedBuilding02,
-      HugeIcons.strokeRoundedUserCheck01,
-    ),
-    _NavItem(Routes.products, tr.navProducts, HugeIcons.strokeRoundedPackage),
-  ]),
-  // 3. Support & operations.
-  _Workspace(tr.navWorkspaceSupport, [
+  // 2. Customers & operations.
+  _Workspace(tr.navWorkspaceCustomers, [
+    _NavItem(Routes.customers, tr.navCustomers, HugeIcons.strokeRoundedBuilding02, HugeIcons.strokeRoundedUserCheck01),
     _NavItem(
       Routes.afterSales,
       tr.navAfterSales,
       HugeIcons.strokeRoundedHeadset,
       HugeIcons.strokeRoundedCustomerService,
     ),
-    _NavItem(
-      Routes.training,
-      tr.navTraining,
-      HugeIcons.strokeRoundedMortarboard01,
-    ),
-    _NavItem(
-      Routes.requests,
-      tr.navRequests,
-      HugeIcons.strokeRoundedFile01,
-      HugeIcons.strokeRoundedInvoice01,
-    ),
-    _NavItem(
-      Routes.employees,
-      tr.navEmployees,
-      HugeIcons.strokeRoundedUserSettings01,
-    ),
+    _NavItem(Routes.training, tr.navTraining, HugeIcons.strokeRoundedMortarboard01),
+    _NavItem(Routes.requests, tr.navRequests, HugeIcons.strokeRoundedFile01, HugeIcons.strokeRoundedInvoice01),
   ]),
-  // 4. Billing & releases.
+  // 3. Billing & subscriptions.
   _Workspace(tr.navWorkspaceBilling, [
     _NavItem(Routes.billing, tr.navBilling, HugeIcons.strokeRoundedCreditCard),
+  ]),
+  // 4. Products & releases.
+  _Workspace(tr.navWorkspaceProducts, [
+    _NavItem(Routes.products, tr.navProducts, HugeIcons.strokeRoundedPackage),
     _NavItem(
       Routes.releases,
       tr.navReleases,
       HugeIcons.strokeRoundedDownload04,
       HugeIcons.strokeRoundedSoftwareLicense,
     ),
+  ]),
+  // 5. Team & workstations.
+  _Workspace(tr.navWorkspaceTeam, [
+    _NavItem(Routes.employees, tr.navEmployees, HugeIcons.strokeRoundedUserSettings01),
+  ]),
+  // 6. Analytics & reports.
+  _Workspace(tr.navWorkspaceAnalytics, [
+    _NavItem(Routes.analytics, tr.navAnalytics, HugeIcons.strokeRoundedAnalytics01, HugeIcons.strokeRoundedAnalytics02),
   ]),
 ];
 
@@ -112,13 +101,7 @@ const _autoCompactWidth = 1180.0;
 
 /// Desktop layout: sidebar navigation + top bar + page content.
 class AppShell extends StatelessWidget {
-  const AppShell({
-    super.key,
-    required this.route,
-    required this.child,
-    this.crumb,
-    this.settingsSection,
-  });
+  const AppShell({super.key, required this.route, required this.child, this.crumb, this.settingsSection});
 
   /// Top-level route this page belongs to (selects the sidebar item).
   final String route;
@@ -138,11 +121,7 @@ class AppShell extends StatelessWidget {
         valueListenable: _sidebarCollapsed,
         builder: (context, collapsed, _) => Row(
           children: [
-            _Sidebar(
-              selected: route,
-              compact: autoCompact || collapsed,
-              canToggle: !autoCompact,
-            ),
+            _Sidebar(selected: route, compact: autoCompact || collapsed, canToggle: !autoCompact),
             Expanded(
               child: Column(
                 children: [
@@ -159,11 +138,7 @@ class AppShell extends StatelessWidget {
 }
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
-    required this.selected,
-    required this.compact,
-    required this.canToggle,
-  });
+  const _Sidebar({required this.selected, required this.compact, required this.canToggle});
 
   final String selected;
   final bool compact;
@@ -176,9 +151,7 @@ class _Sidebar extends StatelessWidget {
       width: compact ? 72 : 256,
       decoration: BoxDecoration(
         color: crm.sidebarBackground,
-        border: BorderDirectional(
-          end: BorderSide(color: context.colors.outlineVariant),
-        ),
+        border: BorderDirectional(end: BorderSide(color: context.colors.outlineVariant)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -205,17 +178,13 @@ class _Sidebar extends StatelessWidget {
 
   Widget _header(BuildContext context) {
     final crm = context.crm;
-    final logo = Container(
-      width: 34,
-      height: 34,
-      decoration: BoxDecoration(
-        color: BrandColors.primary,
-        borderRadius: BorderRadius.circular(AppRadius.md + 1),
-      ),
-      child: const Icon(
-        Icons.handshake_outlined,
-        color: BrandColors.navy,
-        size: 20,
+    final logo = Padding(
+      padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 12),
+      child: Image.asset(
+        'assets/branding/crm-softel-icon.png',
+        width: compact ? 36 : 120,
+        height: compact ? 36 : 40,
+        fit: BoxFit.contain,
       ),
     );
     final toggle = canToggle
@@ -237,35 +206,12 @@ class _Sidebar extends StatelessWidget {
     if (compact) {
       return SizedBox(
         height: canToggle ? 108 : 64,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [logo, if (toggle != null) toggle],
-        ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [logo, ?toggle]),
       );
     }
     return SizedBox(
       height: 64,
-      child: Row(
-        children: [
-          const SizedBox(width: 18),
-          logo,
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              AppConfig.appName,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: crm.sidebarForeground,
-                fontWeight: FontWeight.w800,
-                fontSize: 16,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ),
-          if (toggle != null) toggle,
-          const SizedBox(width: 6),
-        ],
-      ),
+      child: Row(children: [const SizedBox(width: 18), logo, ?toggle, const SizedBox(width: 6)]),
     );
   }
 
@@ -283,12 +229,7 @@ class _Sidebar extends StatelessWidget {
         label.toUpperCase(),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: crm.sidebarMuted,
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
-        ),
+        style: TextStyle(color: crm.sidebarMuted, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.8),
       ),
     );
   }
@@ -326,9 +267,7 @@ class _Sidebar extends StatelessWidget {
           height: 40,
           padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 12),
           child: Row(
-            mainAxisAlignment: compact
-                ? MainAxisAlignment.center
-                : MainAxisAlignment.start,
+            mainAxisAlignment: compact ? MainAxisAlignment.center : MainAxisAlignment.start,
             children: [
               HugeIcon(
                 icon: isSelected ? item.selectedIcon : item.icon,
@@ -374,7 +313,7 @@ class _TopBar extends StatelessWidget {
     for (final w in _workspaces) {
       for (final i in w.items) {
         if (i.route == route) {
-          return [w.label, i.label, if (crumb != null) crumb!].join('  ›  ');
+          return [w.label, i.label, ?crumb].join('  ›  ');
         }
       }
     }
@@ -395,45 +334,38 @@ class _TopBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerLowest,
-        border: Border(
-          bottom: BorderSide(color: context.colors.outlineVariant),
-        ),
+        border: Border(bottom: BorderSide(color: context.colors.outlineVariant)),
       ),
       child: Row(
         children: [
-          Expanded(
-            flex: 4,
-            // One Text so a crumb never duplicates a label elsewhere.
-            child: trail == null
-                ? const SizedBox.shrink()
-                : Text(
-                    trail,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-          ),
-          const SizedBox(width: 12),
-          const Flexible(flex: 5, child: _GlobalSearch()),
-          const SizedBox(width: 12),
-          if (wide)
+          // Compact breadcrumb; the search bar takes all the remaining width.
+          if (trail != null)
             Flexible(
-              flex: 3,
-              child: Text(
-                Formatters.longDate(DateTime.now()),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
-                style: context.text.bodyMedium?.copyWith(
-                  color: context.colors.onSurfaceVariant,
+              flex: 0,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 240),
+                // One Text so a crumb never duplicates a label elsewhere.
+                child: Text(
+                  trail,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            )
-          else
-            const Spacer(flex: 1),
+            ),
+          const Expanded(
+            child: Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: _GlobalSearch()),
+          ),
+          if (wide)
+            Text(
+              Formatters.longDate(DateTime.now()),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.text.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+            ),
           const SizedBox(width: 12),
           const _ConnectionIndicator(),
           const SizedBox(width: 4),
@@ -443,9 +375,7 @@ class _TopBar extends StatelessWidget {
             return IconButton(
               tooltip: dark ? tr.themeToggleToLight : tr.themeToggleToDark,
               icon: HugeIcon(
-                icon: dark
-                    ? HugeIcons.strokeRoundedSun03
-                    : HugeIcons.strokeRoundedMoon02,
+                icon: dark ? HugeIcons.strokeRoundedSun03 : HugeIcons.strokeRoundedMoon02,
                 color: context.colors.onSurfaceVariant,
                 size: 21,
               ),
@@ -465,33 +395,80 @@ class _TopBar extends StatelessWidget {
 }
 
 /// The staff member using this workstation (Windows user name; the CRM has
-/// no per-employee login or roles).
+/// no per-employee login or roles). The menu switches this workstation's
+/// presence (available, in a call, on-site, on break) for the whole team.
 class _UserAvatar extends StatelessWidget {
   const _UserAvatar();
 
   @override
   Widget build(BuildContext context) {
-    final name = Get.isRegistered<EmployeeIdentity>()
-        ? Get.find<EmployeeIdentity>().username
-        : '';
+    final name = Get.isRegistered<EmployeeIdentity>() ? Get.find<EmployeeIdentity>().username : '';
     final scheme = context.colors;
-    return Tooltip(
-      message: name,
-      child: CircleAvatar(
-        radius: 16,
-        backgroundColor: scheme.primaryContainer,
-        child: name.isEmpty
-            ? Icon(Icons.person_outline, size: 18, color: scheme.onPrimaryContainer)
-            : Text(
-                name.characters.first.toUpperCase(),
-                style: TextStyle(
-                  color: scheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                ),
-              ),
-      ),
+    final avatar = CircleAvatar(
+      radius: 16,
+      backgroundColor: scheme.primaryContainer,
+      child: name.isEmpty
+          ? HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 18, color: scheme.onPrimaryContainer)
+          : Text(
+              name.characters.first.toUpperCase(),
+              style: TextStyle(color: scheme.onPrimaryContainer, fontWeight: FontWeight.w700, fontSize: 13),
+            ),
     );
+    if (!Get.isRegistered<PresenceService>()) {
+      return Tooltip(message: name, child: avatar);
+    }
+    final presence = Get.find<PresenceService>();
+    return Obx(() {
+      final current = presence.current.value;
+      final color = current.color(context);
+      return PopupMenuButton<EmployeePresence>(
+        tooltip: '$name · ${current.label}',
+        position: PopupMenuPosition.under,
+        onOpened: presence.refresh,
+        onSelected: presence.set,
+        itemBuilder: (_) => [
+          for (final p in EmployeePresence.values)
+            PopupMenuItem(
+              value: p,
+              child: Row(
+                children: [
+                  HugeIcon(icon: p.icon, size: 18, color: p.color(context)),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(p.label)),
+                  if (p == current)
+                    HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkCircle02, size: 16, color: scheme.primary),
+                ],
+              ),
+            ),
+        ],
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                avatar,
+                PositionedDirectional(
+                  end: -1,
+                  bottom: -1,
+                  child: Container(
+                    width: 11,
+                    height: 11,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: scheme.surface, width: 1.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 6),
+            Text(current.label, style: context.text.labelMedium),
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -529,10 +506,7 @@ class _GlobalSearchState extends State<_GlobalSearch> {
     }
     if (ModalRoute.of(context)?.isCurrent != true) return false;
     _focus.requestFocus();
-    _controller.selection = TextSelection(
-      baseOffset: 0,
-      extentOffset: _controller.text.length,
-    );
+    _controller.selection = TextSelection(baseOffset: 0, extentOffset: _controller.text.length);
     return true;
   }
 
@@ -543,8 +517,8 @@ class _GlobalSearchState extends State<_GlobalSearch> {
       borderRadius: BorderRadius.circular(AppRadius.md),
       borderSide: BorderSide(color: c, width: w),
     );
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 420),
+    return SizedBox(
+      width: double.infinity,
       child: TextField(
         controller: _controller,
         focusNode: _focus,
@@ -554,11 +528,7 @@ class _GlobalSearchState extends State<_GlobalSearch> {
           hintMaxLines: 1,
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12),
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedSearch01,
-              color: scheme.onSurfaceVariant,
-              size: 18,
-            ),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: scheme.onSurfaceVariant, size: 18),
           ),
           suffixIcon: Padding(
             padding: const EdgeInsetsDirectional.only(end: 8),
@@ -572,10 +542,7 @@ class _GlobalSearchState extends State<_GlobalSearch> {
                 ),
                 child: Text(
                   'Ctrl K',
-                  style: context.text.labelSmall?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: context.text.labelSmall?.copyWith(color: scheme.onSurfaceVariant, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -590,7 +557,9 @@ class _GlobalSearchState extends State<_GlobalSearch> {
           _controller.clear();
           // Same lookup as everywhere else: all stages, with each stage shown.
           final prospect = await showProspectSearchDialog(initialQuery: query);
-          if (prospect != null) AppNavigation.openProspect(prospect.id);
+          if (prospect != null) {
+            AppNavigation.openRecord(id: prospect.id, isCustomer: prospect.isCustomer);
+          }
         },
       ),
     );
@@ -616,9 +585,7 @@ class _ConnectionIndicator extends StatelessWidget {
       final tooltip = StringBuffer(tr.connServer(settings.apiBaseUrl.value));
       if (error != null) tooltip.write('\n${error.message}');
       if (service.lastCheckedAt.value != null) {
-        tooltip.write(
-          tr.connLastCheck(Formatters.time(service.lastCheckedAt.value)),
-        );
+        tooltip.write(tr.connLastCheck(Formatters.time(service.lastCheckedAt.value)));
       }
       tooltip.write(tr.connClickToCheck);
       return Tooltip(
@@ -638,22 +605,15 @@ class _ConnectionIndicator extends StatelessWidget {
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                 ),
                 const SizedBox(width: 8),
                 Flexible(
                   child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12.5,
-                  ),
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 12.5),
                   ),
                 ),
               ],

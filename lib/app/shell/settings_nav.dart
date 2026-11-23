@@ -1,15 +1,16 @@
+import '../../core/widgets/huge_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+import '../../features/settings/data/models/prospect_form_option.dart';
 import '../../features/workflow_settings/domain/workflow_config_repository.dart';
 import '../l10n/l10n.dart';
 import '../routes/app_routes.dart';
 import '../theme/app_theme.dart';
 import 'navigation.dart';
 
-/// Hugeicons icon data.
-typedef HugeData = List<List<dynamic>>;
+export '../../core/widgets/huge_data.dart' show HugeData;
 
 /// One settings page (or one section of the "workflow" page).
 class SettingsEntry {
@@ -50,13 +51,17 @@ abstract final class SettingsNav {
     SettingsGroup(() => tr.settingsGroupSales, HugeIcons.strokeRoundedUserGroup, [
       SettingsEntry(Routes.stagesSettings, () => tr.navSalesStages),
       SettingsEntry(Routes.lossReasonsSettings, () => tr.navLossReasons),
+      SettingsEntry(Routes.prospectListsSettings, () => tr.navOptionSources, section: ProspectFormOption.typeSource),
+      SettingsEntry(Routes.prospectListsSettings, () => tr.navOptionActivities, section: ProspectFormOption.typeBusinessActivity),
+      SettingsEntry(Routes.prospectListsSettings, () => tr.navOptionSoftware, section: ProspectFormOption.typePreviousSoftware),
+      SettingsEntry(Routes.prospectListsSettings, () => tr.navOptionCities, section: ProspectFormOption.typeCity),
       SettingsEntry(
         Routes.prospectListsSettings,
         () => switch (L10n.current.languageCode) {
-          'ar' => 'قوائم النماذج',
-          'fr' => 'Listes prospect',
-          _ => 'Prospect Lists',
+          'ar' => 'المهن',
+          _ => 'Profession',
         },
+        section: ProspectFormOption.typeProfession,
       ),
     ]),
     SettingsGroup(() => tr.settingsGroupSchedule, HugeIcons.strokeRoundedCalendar03, [
@@ -100,6 +105,8 @@ abstract final class SettingsNav {
   }
 
   static void open(SettingsEntry entry) {
+    // Setting the request first lets a page that is already open (e.g. the
+    // prospect lists) switch section without a navigation.
     request.value = entry.section;
     AppNavigation.goTo(entry.route);
   }

@@ -5,6 +5,9 @@ import '../../core/network/network_info.dart';
 import '../../features/activities/data/datasources/activities_remote_data_source.dart';
 import '../../features/activities/data/repositories/activities_repository_impl.dart';
 import '../../features/activities/domain/activities_repository.dart';
+import '../../features/analytics/data/datasources/analytics_remote_data_source.dart';
+import '../../features/analytics/data/repositories/analytics_repository_impl.dart';
+import '../../features/analytics/domain/analytics_repository.dart';
 import '../../features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import '../../features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import '../../features/dashboard/domain/dashboard_repository.dart';
@@ -43,6 +46,7 @@ import '../../features/workflow_settings/data/repositories/workflow_config_repos
 import '../../features/workflow_settings/domain/workflow_config_repository.dart';
 import '../config/app_settings_service.dart';
 import '../services/connection_service.dart';
+import '../services/presence_service.dart';
 import '../services/employee_identity.dart';
 import '../services/lookup_service.dart';
 import '../services/workflow_lookup_service.dart';
@@ -102,6 +106,10 @@ class InitialBinding extends Bindings {
       DashboardRepositoryImpl(DashboardRemoteDataSource(api)),
       permanent: true,
     );
+    Get.put<AnalyticsRepository>(
+      AnalyticsRepositoryImpl(AnalyticsRemoteDataSource(api)),
+      permanent: true,
+    );
 
     // Customer journey workflows (docs/PORTAL_AND_WORKFLOWS.md, section 3).
     Get.put<CustomersRepository>(
@@ -130,6 +138,10 @@ class InitialBinding extends Bindings {
     );
     final employees = Get.put<EmployeesRepository>(
       EmployeesRepositoryImpl(api),
+      permanent: true,
+    );
+    Get.put<PresenceService>(
+      PresenceService(employees: employees, identity: identity),
       permanent: true,
     );
     Get.put<WorkflowLookupService>(

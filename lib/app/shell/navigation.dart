@@ -23,6 +23,10 @@ class AppNavigation {
   static Future<T?>? openProspect<T>(int id) =>
       Get.toNamed<T>(Routes.prospect(id));
 
+  /// Customers open their lifetime profile, leads the prospect page.
+  static Future<T?>? openRecord<T>({required int id, required bool isCustomer}) =>
+      Get.toNamed<T>(isCustomer ? Routes.customer(id) : Routes.prospect(id));
+
   static void searchProspects(String query) {
     if (currentPath == Routes.prospects &&
         Get.isRegistered<ProspectsListController>()) {

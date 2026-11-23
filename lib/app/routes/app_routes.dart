@@ -1,5 +1,6 @@
 abstract final class Routes {
   static const dashboard = '/dashboard';
+  static const analytics = '/analytics';
   static const prospects = '/prospects';
   static const prospectDetails = '/prospects/:id';
   static const pipeline = '/pipeline';
