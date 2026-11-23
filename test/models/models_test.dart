@@ -168,6 +168,7 @@ void main() {
       );
       expect(filter.toQuery(), {
         'search': 'ben',
+        'converted': 'active_only',
         'sales_stage_id': 2,
         'product_id': 3,
         'loss_reason_id': null,
@@ -185,11 +186,17 @@ void main() {
       expect(cleared.stageId, isNull);
       expect(cleared.productId, 3);
       expect(const ProspectFilter().hasActiveFilters, isFalse);
+      expect(
+        const ProspectFilter(converted: ProspectConvertedFilter.all).toQuery()['converted'],
+        'all',
+      );
       expect(filter.hasActiveFilters, isTrue);
       // Only the columns the API can sort on.
       expect(ProspectSort.values.map((s) => s.apiValue), [
         'name',
         'city',
+        'phone',
+        'stage',
         'created_at',
         'updated_at',
       ]);

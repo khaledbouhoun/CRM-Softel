@@ -14,6 +14,7 @@ import '../../data/models/follow_up.dart';
 import '../../domain/follow_ups_repository.dart';
 import '../controllers/follow_up_form_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Create ([existing] null) or edit a pending follow-up.
 Future<FollowUp?> showFollowUpFormDialog({ProspectRef? prospect, FollowUp? existing}) async {
   final saved = await showControllerDialog<FollowUpFormController, FollowUp>(
@@ -59,7 +60,7 @@ class _FollowUpFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: c.isEdit ? tr.editFollowUp : tr.scheduleFollowUp,
-      icon: Icons.event_available_outlined,
+      icon: HugeIcons.strokeRoundedCalendarCheck01,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
       onCancel: () => Get.back(),
@@ -140,7 +141,7 @@ class _CompleteFollowUpDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.completeFollowUpTitle,
-      icon: Icons.task_alt,
+      icon: HugeIcons.strokeRoundedCheckmarkCircle01,
       width: 640,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
@@ -224,7 +225,7 @@ class _CancelFollowUpDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.cancelFollowUp,
-      icon: Icons.event_busy_outlined,
+      icon: HugeIcons.strokeRoundedCalendarRemove02,
       width: 480,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,

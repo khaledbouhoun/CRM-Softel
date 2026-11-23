@@ -19,6 +19,10 @@ class FollowUpsController extends GetxController {
 
   final Rx<FollowUpView> view;
   final search = ''.obs;
+
+  /// Clicked column (`scheduled_at`, `status`, `prospect`); null = the view's own order.
+  final sort = RxnString();
+  final ascending = true.obs;
   final pageNumber = 1.obs;
   final perPage = AppConfig.defaultPageSize.obs;
   final page = Rx<Paginated<FollowUp>>(const Paginated.empty());
@@ -51,6 +55,8 @@ class FollowUpsController extends GetxController {
         search: search.value,
         page: pageNumber.value,
         perPage: perPage.value,
+        sort: sort.value,
+        ascending: ascending.value,
       );
       if (requestId != _requestId) return;
       page.value = result;
@@ -81,6 +87,7 @@ class FollowUpsController extends GetxController {
   void setView(FollowUpView next) {
     if (next == view.value) return;
     view.value = next;
+    sort.value = null;
     pageNumber.value = 1;
     page.value = const Paginated.empty();
     load();
@@ -89,6 +96,13 @@ class FollowUpsController extends GetxController {
   void setSearch(String query) {
     if (query.trim() == search.value.trim()) return;
     search.value = query;
+    pageNumber.value = 1;
+    load();
+  }
+
+  void sortBy(String key) {
+    ascending.value = sort.value == key ? !ascending.value : true;
+    sort.value = key;
     pageNumber.value = 1;
     load();
   }

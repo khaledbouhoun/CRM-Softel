@@ -11,10 +11,12 @@ import '../../data/models/activity.dart';
 import '../widgets/activity_widgets.dart';
 import 'link_activity_flow.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// Read-only view of an activity with the link actions. Resolves with the
 /// updated activity when it was linked / re-linked from here.
 Future<Activity?> showActivityDetailsDialog(Activity activity) =>
-    Get.dialog<Activity>(_ActivityDetailsDialog(activity));
+    showAppDialog<Activity>(_ActivityDetailsDialog(activity));
 
 class _ActivityDetailsDialog extends StatefulWidget {
   const _ActivityDetailsDialog(this.initial);
@@ -64,7 +66,7 @@ class _ActivityDetailsDialogState extends State<_ActivityDetailsDialog> {
                   ),
                   IconButton(
                     tooltip: tr.actionClose,
-                    icon: const Icon(Icons.close),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                     onPressed: () =>
                         Get.back(result: _changed ? _activity : null),
                   ),
@@ -183,14 +185,14 @@ class _ActivityDetailsDialogState extends State<_ActivityDetailsDialog> {
                         Get.back(result: _changed ? _activity : null);
                         AppNavigation.openProspect(prospect.id);
                       },
-                      icon: const Icon(Icons.open_in_new, size: 18),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedLinkSquare02, size: 18),
                       label: Text(tr.openProspect),
                     ),
                   const SizedBox(width: 8),
                   if (!a.isLinkedToFollowUp)
                     FilledButton.icon(
                       onPressed: _link,
-                      icon: const Icon(Icons.link, size: 18),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 18),
                       label: const Text('Link to follow-up'),
                     ),
                 ],

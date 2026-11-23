@@ -8,6 +8,7 @@ import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../data/models/follow_up.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Planned type of a follow-up (call, appointment, message) with its icon.
 class FollowUpTypeLabel extends StatelessWidget {
   const FollowUpTypeLabel(this.followUp, {super.key, this.compact = false});
@@ -28,7 +29,7 @@ class FollowUpTypeLabel extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(activityIcon(type), size: compact ? 15 : 18, color: color),
+        HugeIcon(icon: activityIcon(type), size: compact ? 15 : 18, color: color),
         const SizedBox(width: 6),
         Flexible(
           child: Text(
@@ -55,24 +56,24 @@ class FollowUpStatusPill extends StatelessWidget {
       return StatusPill(
         label: tr.followUpViewOverdue,
         color: crm.danger,
-        icon: Icons.warning_amber_rounded,
+        icon: HugeIcons.strokeRoundedAlert02,
       );
     }
     return switch (followUp.status) {
       FollowUpStatus.pending => StatusPill(
         label: tr.followUpStatusPending,
         color: crm.info,
-        icon: Icons.schedule,
+        icon: HugeIcons.strokeRoundedTime02,
       ),
       FollowUpStatus.completed => StatusPill(
         label: tr.followUpStatusCompleted,
         color: crm.success,
-        icon: Icons.check,
+        icon: HugeIcons.strokeRoundedTick02,
       ),
       FollowUpStatus.cancelled => StatusPill(
         label: tr.followUpStatusCancelled,
         color: context.colors.outline,
-        icon: Icons.block,
+        icon: HugeIcons.strokeRoundedCancel02,
       ),
     };
   }
@@ -87,6 +88,7 @@ class FollowUpTile extends StatelessWidget {
     this.onComplete,
     this.onEdit,
     this.onCancel,
+    this.onTap,
   });
 
   final FollowUp followUp;
@@ -95,11 +97,14 @@ class FollowUpTile extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onCancel;
 
+  /// Opens the follow-up (view / reschedule / complete).
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     final overdue = followUp.isOverdue();
     final crm = context.crm;
-    return Container(
+    final tile = Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 6, 10),
       decoration: BoxDecoration(
@@ -113,10 +118,10 @@ class FollowUpTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          HugeIcon(icon: 
             followUp.isPending
-                ? Icons.event_outlined
-                : Icons.event_available_outlined,
+                ? HugeIcons.strokeRoundedCalendar01
+                : HugeIcons.strokeRoundedCalendarCheck01,
             color: overdue ? crm.danger : context.colors.onSurfaceVariant,
             size: 20,
           ),
@@ -161,24 +166,30 @@ class FollowUpTile extends StatelessWidget {
             if (onComplete != null)
               IconButton(
                 tooltip: tr.markAsDone,
-                icon: Icon(Icons.task_alt, color: crm.success),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkCircle01, color: crm.success),
                 onPressed: onComplete,
               ),
             if (onEdit != null)
               IconButton(
                 tooltip: tr.actionEdit,
-                icon: const Icon(Icons.edit_outlined, size: 20),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 20),
                 onPressed: onEdit,
               ),
             if (onCancel != null)
               IconButton(
                 tooltip: tr.cancelFollowUp,
-                icon: const Icon(Icons.event_busy_outlined, size: 20),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarRemove02, size: 20),
                 onPressed: onCancel,
               ),
           ],
         ],
       ),
+    );
+    if (onTap == null) return tile;
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      child: tile,
     );
   }
 }

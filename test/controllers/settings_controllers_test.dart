@@ -258,6 +258,18 @@ void main() {
             },
           ],
           'lost_by_reason': [],
+          'customers': {
+            'total': 2,
+            'active_maintenance': 1,
+            'expiring_soon': 0,
+            'expired': 1,
+          },
+          'support': {
+            'open_tickets': 4,
+            'urgent_tickets': 1,
+            'pending_requests': 2,
+          },
+          'operations': {'appointments_today': 3, 'active_trials': 1},
           'this_month': {
             'month': '2026-11',
             'won': 0,
@@ -278,6 +290,9 @@ void main() {
       final c = Get.put(DashboardController(repository: repo));
       await settle();
       expect(c.summary.value!.totalProspects, 3);
+      expect(c.summary.value!.customers.activeMaintenance, 1);
+      expect(c.summary.value!.support.urgentTickets, 1);
+      expect(c.summary.value!.operations.appointmentsToday, 3);
       expect(c.summary.value!.stages.single.prospectsCount, 1);
       expect(c.lastUpdatedAt.value, isNotNull);
 

@@ -11,11 +11,12 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/whatsapp_launcher.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/crm_data_table.dart';
+import '../../../../app/services/lookup_service.dart';
 import '../../../../core/widgets/filter_widgets.dart';
+import '../../../../core/widgets/phone_cell.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/pagination_bar.dart';
 import '../../../../core/widgets/state_views.dart';
-import '../../../../core/widgets/whatsapp_button.dart';
 import '../../../activities/presentation/dialogs/activity_form_dialog.dart';
 import '../../../follow_ups/presentation/dialogs/follow_up_dialogs.dart';
 import '../../../products/data/models/product.dart';
@@ -24,11 +25,13 @@ import '../../../settings/data/models/loss_reason.dart';
 import '../../../settings/data/models/sales_stage.dart';
 import '../../../settings/presentation/widgets/stage_widgets.dart';
 import '../../data/models/prospect.dart';
+import '../../../settings/data/models/prospect_form_option.dart';
 import '../../data/models/prospect_catalogs.dart';
 import '../../data/models/prospect_filter.dart';
 import '../controllers/prospects_list_controller.dart';
 import '../dialogs/prospect_dialogs.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class ProspectsPage extends GetView<ProspectsListController> {
   const ProspectsPage({super.key});
 
@@ -54,10 +57,10 @@ class ProspectsPage extends GetView<ProspectsListController> {
             actions: [
               OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
-              FilledButton.icon(onPressed: _create, icon: const Icon(Icons.add, size: 18), label: Text(tr.newProspect)),
+              FilledButton.icon(onPressed: _create, icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18), label: Text(tr.newProspect)),
             ],
           ),
         ),
@@ -87,7 +90,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
                         isEmpty: page.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.person_search_outlined,
+                          icon: HugeIcons.strokeRoundedUserSearch01,
                           title: controller.filter.value.hasActiveFilters
                               ? tr.noProspectMatchesFilters
                               : tr.noProspectsYet,
@@ -95,7 +98,7 @@ class ProspectsPage extends GetView<ProspectsListController> {
                               ? OutlinedButton(onPressed: controller.clearFilters, child: Text(tr.clearFilters))
                               : FilledButton.icon(
                                   onPressed: _create,
-                                  icon: const Icon(Icons.add, size: 18),
+                                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                                   label: Text(tr.addProspect),
                                 ),
                         ),
@@ -124,6 +127,26 @@ class _FilterBar extends StatelessWidget {
 
   final ProspectsListController c;
 
+  /// Filter choices come from the configurable form options (database); the
+  /// built-in catalog is only a fallback while they are empty or unreachable.
+  /// Inactive options stay selectable because existing prospects may still
+  /// hold them. A legacy value that matches no option is kept visible.
+  static List<CatalogOption> _options(
+    LookupService lookups,
+    String type,
+    List<CatalogOption> fallback,
+    String? selected,
+  ) {
+    final db = lookups.prospectFormOptions.where((o) => o.type == type).toList()
+      ..sort((a, b) => a.sortOrder != b.sortOrder ? a.sortOrder.compareTo(b.sortOrder) : a.name.compareTo(b.name));
+    if (db.isEmpty) return fallback;
+    final options = [for (final o in db) CatalogOption(o.name, () => o.name)];
+    if (selected != null && !options.any((o) => o.code == selected)) {
+      options.add(CatalogOption(selected, () => selected));
+    }
+    return options;
+  }
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -136,6 +159,16 @@ class _FilterBar extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           SearchField(initialValue: f.search, hint: tr.prospectSearchHint, onChanged: c.setSearch),
+          SegmentedButton<ProspectConvertedFilter>(
+            showSelectedIcon: false,
+            segments: [
+              ButtonSegment(value: ProspectConvertedFilter.activeOnly, label: Text(tr.filterActiveLeads)),
+              ButtonSegment(value: ProspectConvertedFilter.all, label: Text(tr.filterAllLeads)),
+              ButtonSegment(value: ProspectConvertedFilter.convertedOnly, label: Text(tr.filterConvertedLeads)),
+            ],
+            selected: {f.converted},
+            onSelectionChanged: (v) => c.setConverted(v.first),
+          ),
           FilterDropdown<SalesStage>(
             label: tr.fieldStage,
             value: lookups.stageById(f.stageId),
@@ -164,23 +197,26 @@ class _FilterBar extends StatelessWidget {
             ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldSource,
-            value: ProspectCatalogs.sources.firstWhereOrNull((o) => o.code == f.source),
-            items: ProspectCatalogs.sources,
+            value: _options(lookups, ProspectFormOption.typeSource, ProspectCatalogs.sources, f.source)
+                .firstWhereOrNull((o) => o.code == f.source),
+            items: _options(lookups, ProspectFormOption.typeSource, ProspectCatalogs.sources, f.source),
             itemLabel: (o) => o.label,
             allLabel: tr.allSources,
             onChanged: (o) => c.setSource(o?.code),
           ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldBusinessActivity,
-            value: ProspectCatalogs.businessActivities.firstWhereOrNull((o) => o.code == f.businessActivity),
-            items: ProspectCatalogs.businessActivities,
+            value: _options(lookups, ProspectFormOption.typeBusinessActivity, ProspectCatalogs.businessActivities, f.businessActivity)
+                .firstWhereOrNull((o) => o.code == f.businessActivity),
+            items: _options(lookups, ProspectFormOption.typeBusinessActivity, ProspectCatalogs.businessActivities, f.businessActivity),
             itemLabel: (o) => o.label,
             onChanged: (o) => c.setBusinessActivity(o?.code),
           ),
           FilterDropdown<CatalogOption>(
             label: tr.fieldPreviousSoftware,
-            value: ProspectCatalogs.previousSoftware.firstWhereOrNull((o) => o.code == f.previousSoftware),
-            items: ProspectCatalogs.previousSoftware,
+            value: _options(lookups, ProspectFormOption.typePreviousSoftware, ProspectCatalogs.previousSoftware, f.previousSoftware)
+                .firstWhereOrNull((o) => o.code == f.previousSoftware),
+            items: _options(lookups, ProspectFormOption.typePreviousSoftware, ProspectCatalogs.previousSoftware, f.previousSoftware),
             itemLabel: (o) => o.label,
             onChanged: (o) => c.setPreviousSoftware(o?.code),
           ),
@@ -193,14 +229,14 @@ class _FilterBar extends StatelessWidget {
           if (f.hasActiveFilters)
             TextButton.icon(
               onPressed: c.clearFilters,
-              icon: const Icon(Icons.filter_alt_off_outlined, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedFilterRemove, size: 18),
               label: Text(tr.actionReset),
             ),
           if (lookups.lastError.value != null)
             Tooltip(
               message: tr.filtersUnavailable(lookups.lastError.value!.message),
               child: IconButton(
-                icon: Icon(Icons.warning_amber_rounded, color: context.crm.warning),
+                icon: HugeIcon(icon: HugeIcons.strokeRoundedAlert02, color: context.crm.warning),
                 onPressed: lookups.refreshQuietly,
               ),
             ),
@@ -266,23 +302,14 @@ class _ProspectsTable extends StatelessWidget {
         CrmColumn(
           label: tr.colContactDetails,
           flex: 4,
-          cell: (p) {
-            final phone = p.phone?.trim();
-            if (phone == null || phone.isEmpty) return const CellText('—');
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(child: CellText(phone)),
-                const SizedBox(width: 6),
-                WhatsAppIconButton(phone: phone, size: 28, iconSize: 20),
-              ],
-            );
-          },
+          sortKey: ProspectSort.phone,
+          cell: (p) => PhoneCell(p.phone),
         ),
         CrmColumn(label: tr.fieldCity, flex: 2, sortKey: ProspectSort.city, cell: (p) => CellText(p.city ?? '')),
         CrmColumn(
           label: tr.fieldStage,
           flex: 3,
+          sortKey: ProspectSort.stage,
           cell: (p) => Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +351,7 @@ class _ProspectsTable extends StatelessWidget {
             return Row(
               children: [
                 if (overdue) ...[
-                  Icon(Icons.warning_amber_rounded, size: 16, color: context.crm.danger),
+                  HugeIcon(icon: HugeIcons.strokeRoundedAlert02, size: 16, color: context.crm.danger),
                   const SizedBox(width: 4),
                 ],
                 Expanded(
@@ -355,12 +382,12 @@ class _ProspectsTable extends StatelessWidget {
 
               IconButton(
                 tooltip: tr.changeStage,
-                icon: const Icon(Icons.swap_horiz, size: 20),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight, size: 20),
                 onPressed: () => _changeStage(p),
               ),
               PopupMenuButton<String>(
                 tooltip: tr.colActions,
-                icon: const Icon(Icons.more_vert, size: 20),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoreVertical, size: 20),
                 onSelected: (action) => switch (action) {
                   'open' => _open(p),
                   'whatsapp' => WhatsAppLauncher.launch(p.phone),
@@ -373,16 +400,8 @@ class _ProspectsTable extends StatelessWidget {
                 itemBuilder: (_) => [
                   PopupMenuItem(
                     value: 'open',
-                    child: ListTile(leading: Icon(Icons.open_in_new), title: Text(tr.actionOpenRecord)),
+                    child: ListTile(leading: HugeIcon(icon: HugeIcons.strokeRoundedLinkSquare02), title: Text(tr.actionOpenRecord)),
                   ),
-                  if (WhatsAppLauncher.isValid(p.phone))
-                    PopupMenuItem(
-                      value: 'whatsapp',
-                      child: ListTile(
-                        leading: const FaIcon(FontAwesomeIcons.whatsapp, size: 20, color: WhatsAppLauncher.brandColor),
-                        title: Text(WhatsAppLauncher.tooltip),
-                      ),
-                    ),
                   if (WhatsAppLauncher.isValid(p.phone))
                     PopupMenuItem(
                       value: 'whatsapp',
@@ -393,19 +412,19 @@ class _ProspectsTable extends StatelessWidget {
                     ),
                   PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(leading: Icon(Icons.edit_outlined), title: Text(tr.actionEdit)),
+                    child: ListTile(leading: HugeIcon(icon: HugeIcons.strokeRoundedEdit02), title: Text(tr.actionEdit)),
                   ),
                   PopupMenuItem(
                     value: 'stage',
-                    child: ListTile(leading: Icon(Icons.swap_horiz), title: Text(tr.changeStage)),
+                    child: ListTile(leading: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight), title: Text(tr.changeStage)),
                   ),
                   PopupMenuItem(
                     value: 'activity',
-                    child: ListTile(leading: Icon(Icons.add_comment_outlined), title: Text(tr.addActivity)),
+                    child: ListTile(leading: HugeIcon(icon: HugeIcons.strokeRoundedMessageAdd01), title: Text(tr.addActivity)),
                   ),
                   PopupMenuItem(
                     value: 'followup',
-                    child: ListTile(leading: Icon(Icons.event_available_outlined), title: Text(tr.scheduleFollowUp)),
+                    child: ListTile(leading: HugeIcon(icon: HugeIcons.strokeRoundedCalendarCheck01), title: Text(tr.scheduleFollowUp)),
                   ),
                 ],
               ),

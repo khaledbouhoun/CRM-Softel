@@ -8,12 +8,14 @@ import '../../data/models/activity.dart';
 import '../../data/models/activity_type.dart';
 import '../../../../app/l10n/l10n.dart';
 
-IconData activityIcon(ActivityType type) => switch (type) {
-  ActivityType.call => Icons.call_outlined,
-  ActivityType.meeting => Icons.groups_outlined,
-  ActivityType.message => Icons.chat_bubble_outline,
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
+HugeData activityIcon(ActivityType type) => switch (type) {
+  ActivityType.call => HugeIcons.strokeRoundedCall,
+  ActivityType.meeting => HugeIcons.strokeRoundedUserMultiple,
+  ActivityType.message => HugeIcons.strokeRoundedMessage01,
 
-  ActivityType.other => Icons.more_horiz,
+  ActivityType.other => HugeIcons.strokeRoundedMoreHorizontal,
 };
 
 Color activityColor(ActivityType type) => switch (type) {
@@ -35,12 +37,12 @@ class ActivityLinkPill extends StatelessWidget {
       ? StatusPill(
           label: tr.linkStatusLinked,
           color: context.crm.success,
-          icon: Icons.link,
+          icon: HugeIcons.strokeRoundedLink01,
         )
       : StatusPill(
           label: tr.linkStatusUnlinked,
           color: context.crm.warning,
-          icon: Icons.link_off,
+          icon: HugeIcons.strokeRoundedUnlink01,
         );
 }
 
@@ -62,7 +64,7 @@ class ActivityTypeAvatar extends StatelessWidget {
           color: color.withValues(alpha: 0.12),
           shape: BoxShape.circle,
         ),
-        child: Icon(activityIcon(type), size: size * 0.52, color: color),
+        child: HugeIcon(icon: activityIcon(type), size: size * 0.52, color: color),
       ),
     );
   }
@@ -75,9 +77,13 @@ class ActivityTimelineTile extends StatelessWidget {
     required this.activity,
     this.showProspect = false,
     this.isLast = false,
+    this.onTap,
   });
 
   final Activity activity;
+
+  /// Opens the full activity (employee, outcome, description).
+  final VoidCallback? onTap;
   final bool showProspect;
   final bool isLast;
 
@@ -85,7 +91,7 @@ class ActivityTimelineTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final muted = context.colors.onSurfaceVariant;
     final prospect = activity.prospect;
-    return IntrinsicHeight(
+    final row = IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -172,7 +178,7 @@ class ActivityTimelineTile extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.flag_outlined, size: 15, color: muted),
+                          HugeIcon(icon: HugeIcons.strokeRoundedFlag01, size: 15, color: muted),
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(
@@ -191,5 +197,7 @@ class ActivityTimelineTile extends StatelessWidget {
         ],
       ),
     );
+    if (onTap == null) return row;
+    return InkWell(borderRadius: BorderRadius.circular(8), onTap: onTap, child: row);
   }
 }

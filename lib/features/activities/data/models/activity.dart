@@ -159,6 +159,8 @@ class ActivityFilter {
     this.linked,
     this.dateFrom,
     this.dateTo,
+    this.sort,
+    this.ascending = false,
     this.page = 1,
     this.perPage = AppConfig.defaultPageSize,
   });
@@ -172,6 +174,10 @@ class ActivityFilter {
   final bool? linked;
   final DateTime? dateFrom;
   final DateTime? dateTo;
+
+  /// `activity_at` (default), `type` or `prospect`.
+  final String? sort;
+  final bool ascending;
   final int page;
   final int perPage;
 
@@ -189,6 +195,7 @@ class ActivityFilter {
     'linked': linked,
     'date_from': dateFrom == null ? null : toApiDate(dateFrom!),
     'date_to': dateTo == null ? null : toApiDate(dateTo!),
+    if (sort != null) ...{'sort': sort, 'direction': ascending ? 'asc' : 'desc'},
     'page': page,
     'per_page': perPage,
   };
@@ -201,6 +208,8 @@ class ActivityFilter {
     Object? linked = _keep,
     Object? dateFrom = _keep,
     Object? dateTo = _keep,
+    String? sort,
+    bool? ascending,
     int? page,
     int? perPage,
   }) => ActivityFilter(
@@ -212,6 +221,8 @@ class ActivityFilter {
         ? this.dateFrom
         : dateFrom as DateTime?,
     dateTo: identical(dateTo, _keep) ? this.dateTo : dateTo as DateTime?,
+    sort: sort ?? this.sort,
+    ascending: ascending ?? this.ascending,
     page: page ?? this.page,
     perPage: perPage ?? this.perPage,
   );

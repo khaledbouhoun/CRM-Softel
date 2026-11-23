@@ -14,6 +14,7 @@ import '../../data/models/activity_type.dart';
 import '../controllers/activity_form_controller.dart';
 import '../widgets/activity_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Opens the "new activity" form and shows the outcome. Resolves with the
 /// result when the activity was saved.
 ///
@@ -57,7 +58,7 @@ class ActivityTypeSelector extends StatelessWidget {
         emptySelectionAllowed: true,
         segments: [
           for (final t in ActivityType.selectable)
-            ButtonSegment(value: t, label: Text(t.label), icon: Icon(activityIcon(t), size: 18)),
+            ButtonSegment(value: t, label: Text(t.label), icon: HugeIcon(icon: activityIcon(t), size: 18)),
         ],
         selected: value == null ? const {} : {value!.canonical},
         onSelectionChanged: (s) {
@@ -94,7 +95,7 @@ class _ActivityFormDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.event_note, color: context.colors.primary, size: 22),
+          HugeIcon(icon: HugeIcons.strokeRoundedCalendar02, color: context.colors.primary, size: 22),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -118,13 +119,13 @@ class _ActivityFormDialog extends StatelessWidget {
           ),
           if (fu != null && !c.followUpLocked)
             IconButton(
-              icon: const Icon(Icons.clear, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancelCircle, size: 18),
               tooltip: 'Clear',
               onPressed: () => c.selectFollowUp(null),
             ),
           if (!c.followUpLocked)
             OutlinedButton.icon(
-              icon: const Icon(Icons.search, size: 16),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedSearch01, size: 16),
               label: Text(fu == null ? 'Choose follow-up' : 'Change'),
               onPressed: () async {
                 final chosen = await showFollowUpSearchDialog(
@@ -143,7 +144,7 @@ class _ActivityFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.newActivity,
-      icon: Icons.add_comment_outlined,
+      icon: HugeIcons.strokeRoundedMessageAdd01,
       width: 680,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,

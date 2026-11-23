@@ -20,6 +20,7 @@ import '../dialogs/activity_form_dialog.dart';
 import '../dialogs/link_activity_flow.dart';
 import '../widgets/activity_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class ActivitiesPage extends GetView<ActivitiesController> {
   const ActivitiesPage({super.key});
 
@@ -43,10 +44,10 @@ class ActivitiesPage extends GetView<ActivitiesController> {
             actions: [
               OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
-              FilledButton.icon(onPressed: _create, icon: const Icon(Icons.add, size: 18), label: Text(tr.newActivity)),
+              FilledButton.icon(onPressed: _create, icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18), label: Text(tr.newActivity)),
             ],
           ),
         ),
@@ -65,7 +66,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                   value: f.type,
                   items: ActivityType.selectable,
                   itemLabel: (t) => t.label,
-                  leading: (t) => Icon(activityIcon(t), size: 16, color: activityColor(t)),
+                  leading: (t) => HugeIcon(icon: activityIcon(t), size: 16, color: activityColor(t)),
                   allLabel: tr.allTypes,
                   onChanged: controller.setType,
                 ),
@@ -87,7 +88,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                 if (f.hasActiveFilters)
                   TextButton.icon(
                     onPressed: controller.clearFilters,
-                    icon: const Icon(Icons.filter_alt_off_outlined, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedFilterRemove, size: 18),
                     label: Text(tr.actionReset),
                   ),
               ],
@@ -119,7 +120,7 @@ class ActivitiesPage extends GetView<ActivitiesController> {
                         isEmpty: page.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.history_toggle_off,
+                          icon: HugeIcons.strokeRoundedTime04,
                           title: controller.filter.value.hasActiveFilters
                               ? tr.noActivityMatchesFilters
                               : tr.noActivities,
@@ -164,15 +165,20 @@ class _ActivitiesTable extends StatelessWidget {
   Widget build(BuildContext context) => CrmDataTable<Activity>(
     rows: items,
     rowHeight: 64,
+    sortKey: controller.filter.value.sort ?? 'activity_at',
+    ascending: controller.filter.value.sort == null ? false : controller.filter.value.ascending,
+    onSort: (k) => controller.sortBy(k as String),
     onRowTap: _details,
     columns: [
       CrmColumn(
         label: tr.colDate,
+        sortKey: 'activity_at',
         width: 120,
         cell: (a) => CellText(Formatters.date(a.occurredAt), secondary: Formatters.time(a.occurredAt)),
       ),
       CrmColumn(
         label: tr.fieldType,
+        sortKey: 'type',
         width: 150,
         cell: (a) => Row(
           children: [
@@ -236,13 +242,13 @@ class _ActivitiesTable extends StatelessWidget {
             if (!a.isLinkedToFollowUp)
               IconButton(
                 tooltip: 'Link to follow-up',
-                icon: const Icon(Icons.add_link, size: 20),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 20),
                 onPressed: () => _linkFollowUp(a),
               )
             else if (a.prospect != null)
               IconButton(
                 tooltip: tr.openProspect,
-                icon: const Icon(Icons.open_in_new, size: 19),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedLinkSquare02, size: 19),
                 onPressed: () => AppNavigation.openProspect(a.prospect!.id),
               ),
           ],

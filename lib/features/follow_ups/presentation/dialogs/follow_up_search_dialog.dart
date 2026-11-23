@@ -12,12 +12,15 @@ import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../data/models/follow_up.dart';
 import '../../domain/follow_ups_repository.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// Modal dialog for finding and selecting an existing follow-up task.
 ///
 /// When [prospectId] is supplied, only follow-ups belonging to that prospect are
 /// returned (enforcing prospect consistency).
 Future<FollowUp?> showFollowUpSearchDialog({String? title, int? prospectId, String? prospectName}) =>
-    Get.dialog<FollowUp>(
+    showAppDialog<FollowUp>(
       _FollowUpSearchDialog(
         title: title ?? (prospectName != null ? 'Select follow-up for $prospectName' : 'Select follow-up'),
         prospectId: prospectId,
@@ -103,10 +106,10 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.event_note, color: context.colors.primary, size: 24),
+                  HugeIcon(icon: HugeIcons.strokeRoundedCalendar02, color: context.colors.primary, size: 24),
                   const SizedBox(width: 12),
                   Expanded(child: Text(widget.title, style: context.text.titleLarge)),
-                  IconButton(tooltip: tr.actionClose, icon: const Icon(Icons.close), onPressed: () => Get.back()),
+                  IconButton(tooltip: tr.actionClose, icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01), onPressed: () => Get.back()),
                 ],
               ),
               const SizedBox(height: 12),
@@ -115,10 +118,13 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
                 autofocus: widget.prospectId == null,
                 decoration: InputDecoration(
                   hintText: 'Search follow-up description or task...',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, size: 18),
+                  ),
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancelCircle),
                           onPressed: () {
                             _controller.clear();
                             _search('');
@@ -155,7 +161,7 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
                                 : CircleAvatar(
                                     radius: 14,
                                     backgroundColor: context.colors.surfaceContainerHighest,
-                                    child: const Icon(Icons.event, size: 16),
+                                    child: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 16),
                                   ),
                             title: Text(
                               item.description?.trim().isNotEmpty == true ? item.description! : 'Follow-up #${item.id}',
@@ -171,7 +177,7 @@ class _FollowUpSearchDialogState extends State<_FollowUpSearchDialog> {
                               ].join(' • '),
                               style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
                             ),
-                            trailing: const Icon(Icons.chevron_right, size: 20),
+                            trailing: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 20),
                             onTap: () => Get.back(result: item),
                           );
                         },

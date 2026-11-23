@@ -72,6 +72,9 @@ class ProspectsListController extends GetxController {
     _apply(filter.value.copyWith(search: query, page: 1));
   }
 
+  void setConverted(ProspectConvertedFilter value) =>
+      _apply(filter.value.copyWith(converted: value, page: 1));
+
   void setStage(int? stageId) =>
       _apply(filter.value.copyWith(stageId: stageId, page: 1));
 

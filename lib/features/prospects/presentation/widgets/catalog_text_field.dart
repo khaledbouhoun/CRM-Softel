@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/prospect_catalogs.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 /// Text field with a menu of suggested options. Picking an option fills the
 /// field with its label; the user can also type anything (the catalogue
 /// never restricts valid values).
@@ -21,7 +23,7 @@ class CatalogTextField extends StatelessWidget {
   final List<CatalogOption> options;
   final String label;
   final String? hint;
-  final IconData? icon;
+  final HugeData? icon;
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
 
@@ -33,10 +35,10 @@ class CatalogTextField extends StatelessWidget {
     decoration: InputDecoration(
       labelText: label,
       hintText: hint,
-      prefixIcon: icon == null ? null : Icon(icon, size: 20),
+      prefixIcon: icon == null ? null : HugeIcon(icon: icon!, size: 18),
       suffixIcon: PopupMenuButton<CatalogOption>(
         tooltip: label,
-        icon: const Icon(Icons.arrow_drop_down),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowDown01),
         onSelected: (o) {
           controller.text = o.label;
           controller.selection = TextSelection.collapsed(

@@ -4,6 +4,7 @@ import 'package:softel_crm/app/l10n/l10n.dart';
 import 'package:softel_crm/features/prospects/presentation/widgets/searchable_option_dropdown.dart';
 import 'package:softel_crm/features/settings/data/models/prospect_form_option.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 void main() {
   const options = [
     ProspectFormOption(
@@ -47,7 +48,7 @@ void main() {
           child: SearchableOptionDropdown(
             type: ProspectFormOption.typeBusinessActivity,
             label: 'Business Activity',
-            icon: Icons.storefront,
+            icon: HugeIcons.strokeRoundedStore01,
             options: options,
             currentValue: currentValue,
             onChanged: onChanged,
@@ -122,7 +123,7 @@ void main() {
     expect(find.textContaining('Clinic'), findsWidgets);
 
     // Tap on add option icon
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedAddCircle));
     await tester.pumpAndSettle();
 
     expect(addedName, equals('Clinic'));
@@ -173,7 +174,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap on the edit_note button inside the add tile
-    await tester.tap(find.byIcon(Icons.edit_note));
+    await tester.tap(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedEdit01));
     await tester.pumpAndSettle();
 
     expect(addedName, equals('Special Agency'));
@@ -217,7 +218,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap clear (X) icon in suffix
-    await tester.tap(find.byIcon(Icons.close));
+    await tester.tap(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCancel01));
     await tester.pumpAndSettle();
 
     expect(selectedValue, isNull);

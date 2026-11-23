@@ -48,6 +48,12 @@ class ActivitiesController extends GetxController {
     _apply(filter.value.copyWith(search: query, page: 1));
   }
 
+  void sortBy(String key) {
+    final f = filter.value;
+    final asc = f.sort == key ? !f.ascending : key != 'activity_at';
+    _apply(f.copyWith(sort: key, ascending: asc, page: 1));
+  }
+
   void setType(ActivityType? type) =>
       _apply(filter.value.copyWith(type: type, page: 1));
 

@@ -6,6 +6,8 @@ import '../../../../core/utils/json_utils.dart';
 enum ProspectSort {
   companyName('name'),
   city('city'),
+  phone('phone'),
+  stage('stage'),
   createdAt('created_at'),
   updatedAt('updated_at');
 
@@ -13,13 +15,25 @@ enum ProspectSort {
   final String apiValue;
 
   /// Text columns read naturally A→Z; dates newest first.
-  bool get defaultsToAscending => this == companyName || this == city;
+  bool get defaultsToAscending => this == companyName || this == city || this == phone || this == stage;
+}
+
+/// Which prospects the list shows: converted leads are customers and leave the
+/// active pipeline (API `converted`).
+enum ProspectConvertedFilter {
+  activeOnly('active_only'),
+  convertedOnly('converted_only'),
+  all('all');
+
+  const ProspectConvertedFilter(this.apiValue);
+  final String apiValue;
 }
 
 /// Query of GET `/prospects`. Immutable; controllers replace it on change.
 class ProspectFilter {
   const ProspectFilter({
     this.search = '',
+    this.converted = ProspectConvertedFilter.activeOnly,
     this.stageId,
     this.productId,
     this.lossReasonId,
@@ -35,6 +49,7 @@ class ProspectFilter {
   });
 
   final String search;
+  final ProspectConvertedFilter converted;
   final int? stageId;
   final int? productId;
   final int? lossReasonId;
@@ -61,6 +76,7 @@ class ProspectFilter {
 
   Map<String, dynamic> toQuery() => {
     'search': search.trim(),
+    'converted': converted.apiValue,
     'sales_stage_id': stageId,
     'product_id': productId,
     'loss_reason_id': lossReasonId,
@@ -81,6 +97,7 @@ class ProspectFilter {
   /// nullable filters can be cleared.
   ProspectFilter copyWith({
     String? search,
+    ProspectConvertedFilter? converted,
     Object? stageId = _keep,
     Object? productId = _keep,
     Object? lossReasonId = _keep,
@@ -95,6 +112,7 @@ class ProspectFilter {
     int? perPage,
   }) => ProspectFilter(
     search: search ?? this.search,
+    converted: converted ?? this.converted,
     stageId: identical(stageId, _keep) ? this.stageId : stageId as int?,
     productId: identical(productId, _keep) ? this.productId : productId as int?,
     lossReasonId: identical(lossReasonId, _keep) ? this.lossReasonId : lossReasonId as int?,

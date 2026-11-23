@@ -45,6 +45,9 @@ class Prospect {
     this.convertedAt,
     this.convertedBy,
     this.conversionNote,
+    this.maintenanceStatus,
+    this.maintenanceExpiresAt,
+    this.portalAccountsCount,
   });
 
   final int id;
@@ -103,6 +106,14 @@ class Prospect {
   final String? convertedBy;
   final String? conversionNote;
 
+  /// Customer list only: maintenance plan state (`active`, `expiring_soon`,
+  /// `expired`, `none`), its end date and the number of portal logins.
+  final String? maintenanceStatus;
+  final DateTime? maintenanceExpiresAt;
+  final int? portalAccountsCount;
+
+  bool get hasPortalAccount => (portalAccountsCount ?? 0) > 0;
+
   /// Lost status is derived from the stage type, never from its name.
   bool get isLost => stage?.isLost ?? false;
   bool get isWon => stage?.isWon ?? false;
@@ -117,6 +128,7 @@ class Prospect {
     contactName: contactName,
     phone: phone,
     stage: stage,
+    isCustomer: isCustomer,
   );
 
   factory Prospect.fromJson(JsonMap json) {
@@ -170,6 +182,9 @@ class Prospect {
       convertedAt: asDateTimeOrNull(json['converted_at']),
       convertedBy: asStringOrNull(json['converted_by']),
       conversionNote: asStringOrNull(json['conversion_note']),
+      maintenanceStatus: asStringOrNull(asMapOrNull(json['maintenance'])?['status']),
+      maintenanceExpiresAt: asDateTimeOrNull(asMapOrNull(json['maintenance'])?['expires_at']),
+      portalAccountsCount: asIntOrNull(json['portal_accounts_count']),
     );
   }
 

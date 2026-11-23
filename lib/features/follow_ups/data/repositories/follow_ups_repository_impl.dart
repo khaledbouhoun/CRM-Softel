@@ -16,7 +16,17 @@ class FollowUpsRepositoryImpl implements FollowUpsRepository {
     String? search,
     int page = 1,
     int perPage = 25,
-  }) => _remote.fetchPage(view: view, prospectId: prospectId, search: search, page: page, perPage: perPage);
+    String? sort,
+    bool ascending = true,
+  }) => _remote.fetchPage(
+    view: view,
+    prospectId: prospectId,
+    search: search,
+    page: page,
+    perPage: perPage,
+    sort: sort,
+    ascending: ascending,
+  );
 
   @override
   Future<FollowUp> createFollowUp(FollowUpPayload payload) => _remote.create(payload);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:softel_crm/core/widgets/whatsapp_button.dart';
 
 import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
@@ -10,6 +9,7 @@ import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/crm_data_table.dart';
 import '../../../../core/widgets/filter_widgets.dart';
+import '../../../../core/widgets/phone_cell.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/pagination_bar.dart';
 import '../../../../core/widgets/state_views.dart';
@@ -18,6 +18,7 @@ import '../controllers/follow_ups_controller.dart';
 import '../dialogs/follow_up_dialogs.dart';
 import '../widgets/follow_up_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class FollowUpsPage extends GetView<FollowUpsController> {
   const FollowUpsPage({super.key});
 
@@ -38,13 +39,13 @@ class FollowUpsPage extends GetView<FollowUpsController> {
             Obx(
               () => OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.refreshAfterMutation,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
             ),
             FilledButton.icon(
               onPressed: () => _after(showFollowUpFormDialog()),
-              icon: const Icon(Icons.add, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
               label: Text(tr.scheduleFollowUp),
             ),
           ],
@@ -73,6 +74,8 @@ class FollowUpsPage extends GetView<FollowUpsController> {
               clipBehavior: Clip.antiAlias,
               child: Obx(() {
                 final page = controller.page.value;
+                final sortKey = controller.sort.value;
+                final ascending = controller.ascending.value;
                 final view = controller.view.value;
                 return Column(
                   children: [
@@ -92,8 +95,8 @@ class FollowUpsPage extends GetView<FollowUpsController> {
                         onRetry: controller.load,
                         empty: EmptyView(
                           icon: view == FollowUpView.overdue
-                              ? Icons.celebration_outlined
-                              : Icons.event_available_outlined,
+                              ? HugeIcons.strokeRoundedPartyPopper
+                              : HugeIcons.strokeRoundedCalendarCheck01,
                           title: switch (view) {
                             FollowUpView.today => tr.noFollowUpsToday,
                             FollowUpView.overdue => tr.noFollowUpsOverdue,
@@ -103,6 +106,9 @@ class FollowUpsPage extends GetView<FollowUpsController> {
                           },
                         ),
                         builder: (_) => _FollowUpsTable(
+                          sortKey: sortKey,
+                          ascending: ascending,
+                          onSort: controller.sortBy,
                           items: page.items,
                           onComplete: (f) => _after(showCompleteFollowUpDialog(f)),
                           onEdit: (f) => _after(showFollowUpFormDialog(existing: f)),
@@ -170,8 +176,11 @@ class _ViewTabs extends StatelessWidget {
 }
 
 class _FollowUpsTable extends StatelessWidget {
-  const _FollowUpsTable({required this.items, required this.onComplete, required this.onEdit, required this.onCancel});
+  const _FollowUpsTable({required this.sortKey, required this.ascending, required this.onSort, required this.items, required this.onComplete, required this.onEdit, required this.onCancel});
 
+  final String? sortKey;
+  final bool ascending;
+  final ValueChanged<String> onSort;
   final List<FollowUp> items;
   final ValueChanged<FollowUp> onComplete;
   final ValueChanged<FollowUp> onEdit;
@@ -183,6 +192,9 @@ class _FollowUpsTable extends StatelessWidget {
     return CrmDataTable<FollowUp>(
       rows: items,
       rowHeight: 60,
+      sortKey: sortKey,
+      ascending: ascending,
+      onSort: (key) => onSort(key as String),
       highlight: (f) => f.isOverdue() ? crm.dangerContainer.withValues(alpha: 0.45) : null,
       onRowTap: (f) {
         if (f.prospect != null) AppNavigation.openProspect(f.prospect!.id);
@@ -190,13 +202,14 @@ class _FollowUpsTable extends StatelessWidget {
       columns: [
         CrmColumn(
           label: tr.colDueDate,
+          sortKey: 'scheduled_at',
           width: 170,
           cell: (f) {
             final overdue = f.isOverdue();
             return Row(
               children: [
                 if (overdue) ...[
-                  Icon(Icons.warning_amber_rounded, size: 18, color: crm.danger),
+                  HugeIcon(icon: HugeIcons.strokeRoundedAlert02, size: 18, color: crm.danger),
                   const SizedBox(width: 6),
                 ],
                 Expanded(
@@ -214,18 +227,17 @@ class _FollowUpsTable extends StatelessWidget {
         CrmColumn(
           label: tr.colProspect,
           flex: 3,
-          cell: (f) => Row(
-            children: [
-              CellText(
-                f.prospect?.companyName ?? '',
-                secondary: [f.prospect?.contactName, f.prospect?.phone].whereType<String>().join(' · '),
-                bold: true,
-              ),
-              const SizedBox(width: 15),
-              if (f.prospect?.phone != null)
-                WhatsAppIconButton(phone: f.prospect!.phone, message: f.description, size: 28, iconSize: 23),
-            ],
+          sortKey: 'prospect',
+          cell: (f) => CellText(
+            f.prospect?.companyName ?? '',
+            secondary: f.prospect?.contactName,
+            bold: true,
           ),
+        ),
+        CrmColumn(
+          label: tr.fieldPhone,
+          flex: 3,
+          cell: (f) => PhoneCell(f.prospect?.phone, message: f.description),
         ),
         CrmColumn(label: tr.fieldType, width: 140, cell: (f) => FollowUpTypeLabel(f)),
         CrmColumn(
@@ -234,7 +246,7 @@ class _FollowUpsTable extends StatelessWidget {
           cell: (f) =>
               Text(f.description ?? '—', maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.bodyMedium),
         ),
-        CrmColumn(label: tr.colStatus, width: 120, cell: (f) => FollowUpStatusPill(f)),
+        CrmColumn(label: tr.colStatus, width: 120, sortKey: 'status', cell: (f) => FollowUpStatusPill(f)),
         CrmColumn(
           label: '',
           width: 212,
@@ -246,17 +258,17 @@ class _FollowUpsTable extends StatelessWidget {
                   children: [
                     IconButton(
                       tooltip: tr.markAsDone,
-                      icon: Icon(Icons.task_alt, color: crm.success),
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkCircle01, color: crm.success),
                       onPressed: () => onComplete(f),
                     ),
                     IconButton(
                       tooltip: tr.actionEdit,
-                      icon: const Icon(Icons.edit_outlined, size: 20),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 20),
                       onPressed: () => onEdit(f),
                     ),
                     IconButton(
                       tooltip: tr.actionCancel,
-                      icon: const Icon(Icons.event_busy_outlined, size: 20),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarRemove02, size: 20),
                       onPressed: () => onCancel(f),
                     ),
                   ],

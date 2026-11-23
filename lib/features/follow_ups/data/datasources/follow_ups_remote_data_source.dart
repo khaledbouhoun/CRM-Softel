@@ -15,10 +15,19 @@ class FollowUpsRemoteDataSource {
     String? search,
     required int page,
     required int perPage,
+    String? sort,
+    bool ascending = true,
   }) async {
     final body = await _api.get(
       prospectId == null ? ApiEndpoints.followUps : ApiEndpoints.prospectFollowUps(prospectId),
-      query: {...?view?.toQuery(), 'search': search, 'page': page, 'per_page': perPage},
+      query: {
+        ...?view?.toQuery(),
+        // A clicked column overrides the view's default order.
+        if (sort != null) ...{'sort': sort, 'direction': ascending ? 'asc' : 'desc'},
+        'search': search,
+        'page': page,
+        'per_page': perPage,
+      },
     );
     return ApiResponse.paginated(body, FollowUp.fromJson);
   }

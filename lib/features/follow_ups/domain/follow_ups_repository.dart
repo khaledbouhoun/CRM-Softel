@@ -20,6 +20,8 @@ abstract interface class FollowUpsRepository {
     String? search,
     int page = 1,
     int perPage = 25,
+    String? sort,
+    bool ascending = true,
   });
 
   Future<FollowUp> createFollowUp(FollowUpPayload payload);

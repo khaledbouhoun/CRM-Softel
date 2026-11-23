@@ -5,6 +5,8 @@ import '../../../../app/l10n/l10n.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../settings/data/models/prospect_form_option.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 /// A searchable dropdown form field with instant in-line option creation.
 ///
 /// Filters existing options as the user types and displays an "Add new" option
@@ -25,7 +27,7 @@ class SearchableOptionDropdown extends StatefulWidget {
 
   final String type;
   final String label;
-  final IconData icon;
+  final HugeData icon;
   final List<ProspectFormOption> options;
   final String? currentValue;
   final ValueChanged<String?> onChanged;
@@ -252,7 +254,7 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.search, size: 14, color: context.colors.outline),
+                    HugeIcon(icon: HugeIcons.strokeRoundedSearch01, size: 14, color: context.colors.outline),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
@@ -293,8 +295,8 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
               child: CircularProgressIndicator(strokeWidth: 2),
             )
           else
-            Icon(
-              Icons.add_circle,
+            HugeIcon(icon: 
+              HugeIcons.strokeRoundedAddCircle,
               size: 20,
               color: context.colors.primary,
             ),
@@ -350,7 +352,7 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
               _ => 'Add with required details',
             },
             child: IconButton(
-              icon: const Icon(Icons.edit_note, size: 20),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit01, size: 20),
               onPressed: _isAdding
                   ? null
                   : () => _handleAddNew(query, requiresDetails: true),
@@ -376,8 +378,8 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
             : null,
         child: Row(
           children: [
-            Icon(
-              isSelected ? Icons.check_circle : Icons.circle_outlined,
+            HugeIcon(icon: 
+              isSelected ? HugeIcons.strokeRoundedCheckmarkCircle02 : HugeIcons.strokeRoundedCircle,
               size: 16,
               color:
                   isSelected ? context.colors.primary : context.colors.outline,
@@ -408,8 +410,8 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.edit_note,
+                    HugeIcon(icon: 
+                      HugeIcons.strokeRoundedEdit01,
                       size: 12,
                       color: context.colors.onSecondaryContainer,
                     ),
@@ -441,7 +443,7 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
-          Icon(Icons.clear, size: 16, color: context.colors.outline),
+          HugeIcon(icon: HugeIcons.strokeRoundedCancelCircle, size: 16, color: context.colors.outline),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -476,7 +478,10 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
           decoration: InputDecoration(
             labelText: widget.label,
             errorText: widget.errorText,
-            prefixIcon: Icon(widget.icon, size: 20),
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(8),
+              child: HugeIcon(icon: widget.icon, size: 18),
+            ),
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -485,7 +490,7 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
                     widget.enabled)
                   IconButton(
                     tooltip: tr.actionClear,
-                    icon: const Icon(Icons.close, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01, size: 18),
                     onPressed: () {
                       _textController.clear();
                       widget.onChanged(null);
@@ -494,8 +499,8 @@ class _SearchableOptionDropdownState extends State<SearchableOptionDropdown> {
                   ),
                 IconButton(
                   tooltip: widget.label,
-                  icon: Icon(
-                    _isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  icon: HugeIcon(icon: 
+                    _isOpen ? HugeIcons.strokeRoundedArrowUp01 : HugeIcons.strokeRoundedArrowDown01,
                     size: 22,
                   ),
                   onPressed: !widget.enabled

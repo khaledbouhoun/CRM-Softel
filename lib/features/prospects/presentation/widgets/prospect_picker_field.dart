@@ -4,6 +4,7 @@ import '../../../../app/l10n/l10n.dart';
 import '../../data/models/prospect_ref.dart';
 import '../dialogs/prospect_search_dialog.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Read-only field that opens the shared prospect search dialog.
 ///
 /// [optional] fields can be cleared; required ones can only be replaced.
@@ -44,17 +45,20 @@ class ProspectPickerField extends StatelessWidget {
           hintText: tr.pickProspect,
           errorText: errorText,
           enabled: enabled,
-          prefixIcon: Icon(selected == null ? Icons.search : Icons.business_outlined, size: 20),
+          prefixIcon: Padding(
+            padding: EdgeInsets.all(8),
+            child: HugeIcon(icon: selected == null ? HugeIcons.strokeRoundedSearch01 : HugeIcons.strokeRoundedBuilding03, size: 18),
+          ),
           suffixIcon: !enabled
               ? null
               : selected != null && optional
               ? IconButton(
                   tooltip: tr.actionClear,
-                  icon: const Icon(Icons.close, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01, size: 18),
                   onPressed: () => onChanged(null),
                 )
               : selected != null
-              ? IconButton(tooltip: tr.changeProspect, icon: const Icon(Icons.swap_horiz, size: 18), onPressed: _pick)
+              ? IconButton(tooltip: tr.changeProspect, icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight, size: 18), onPressed: _pick)
               : null,
         ),
         child: selected == null ? null : Text(selected.displayName, overflow: TextOverflow.ellipsis),

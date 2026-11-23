@@ -11,6 +11,7 @@ class ProspectRef {
     this.phone,
     this.stage,
     this.isDeleted = false,
+    this.isCustomer = false,
   });
 
   final int id;
@@ -23,6 +24,9 @@ class ProspectRef {
 
   /// The prospect was deleted; its history entries remain.
   final bool isDeleted;
+
+  /// Already converted: opens the customer profile instead of the prospect page.
+  final bool isCustomer;
 
   static ProspectRef? fromJsonOrNull(Object? value) {
     final json = asMapOrNull(value);
@@ -38,6 +42,7 @@ class ProspectRef {
     contactName: asStringOrNull(json['contact_person']),
     phone: asStringOrNull(json['phone']),
     isDeleted: asBool(json['is_deleted']),
+    isCustomer: asBool(json['is_customer']),
   );
 
   JsonMap toJson() => {
@@ -48,6 +53,7 @@ class ProspectRef {
     'sales_stage_id': stage?.id,
     'sales_stage': stage?.toJson(),
     'is_deleted': isDeleted,
+    'is_customer': isCustomer,
   };
 
   /// "Company — Contact" when a contact is known.

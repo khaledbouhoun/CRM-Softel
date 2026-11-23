@@ -21,6 +21,8 @@ import '../controllers/stage_change_controller.dart';
 import '../widgets/searchable_option_dropdown.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 /// Opens the create/edit form. Resolves with the saved prospect (as returned
 /// by the API) or null when cancelled.
 Future<Prospect?> showProspectFormDialog({Prospect? initial}) =>
@@ -73,7 +75,7 @@ class _ProspectFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: c.isEdit ? tr.editProspect : tr.newProspect,
-      icon: c.isEdit ? Icons.edit_outlined : Icons.person_add_alt_1_outlined,
+      icon: c.isEdit ? HugeIcons.strokeRoundedEdit02 : HugeIcons.strokeRoundedUserAdd01,
       width: 780,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
@@ -93,7 +95,10 @@ class _ProspectFormDialog extends StatelessWidget {
                   autofocus: !c.isEdit,
                   decoration: InputDecoration(
                     labelText: tr.fieldCompanyRequired,
-                    prefixIcon: Icon(Icons.business_outlined, size: 20),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedBuilding03, size: 18),
+                    ),
                   ),
                   validator: c.validateCompanyName,
                   onChanged: (_) => c.clearServerError('company_name'),
@@ -102,7 +107,10 @@ class _ProspectFormDialog extends StatelessWidget {
                   controller: c.contactName,
                   decoration: InputDecoration(
                     labelText: tr.fieldContactPerson,
-                    prefixIcon: Icon(Icons.person_outline, size: 20),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 18),
+                    ),
                   ),
                   validator: c.validateContactName,
                   onChanged: (_) => c.clearServerError('contact_name'),
@@ -116,7 +124,10 @@ class _ProspectFormDialog extends StatelessWidget {
                   controller: c.phone,
                   decoration: InputDecoration(
                     labelText: tr.fieldPhone,
-                    prefixIcon: Icon(Icons.phone_outlined, size: 20),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedCall, size: 18),
+                    ),
                   ),
                   validator: c.validatePhone,
                   onChanged: (_) => c.clearServerError('phone'),
@@ -125,7 +136,10 @@ class _ProspectFormDialog extends StatelessWidget {
                   controller: c.email,
                   decoration: InputDecoration(
                     labelText: tr.fieldEmail,
-                    prefixIcon: Icon(Icons.alternate_email, size: 20),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedAt, size: 18),
+                    ),
                   ),
                   validator: c.validateEmail,
                   onChanged: (_) => c.clearServerError('email'),
@@ -159,7 +173,7 @@ class _ProspectFormDialog extends StatelessWidget {
                   _configurableField(
                     type: ProspectFormOption.typeBusinessActivity,
                     label: tr.fieldBusinessActivity,
-                    icon: Icons.storefront_outlined,
+                    icon: HugeIcons.strokeRoundedStore01,
                     options: c.lookups.activeBusinessActivities,
                     currentValue: c.businessActivity.value,
                     onChanged: c.selectBusinessActivity,
@@ -173,7 +187,7 @@ class _ProspectFormDialog extends StatelessWidget {
                   _configurableField(
                     type: ProspectFormOption.typeProfession,
                     label: ProspectCatalogs.professionLabel,
-                    icon: Icons.work_outline,
+                    icon: HugeIcons.strokeRoundedBriefcase01,
                     options: c.lookups.activeProfessions,
                     currentValue: c.profession.value,
                     onChanged: c.selectProfession,
@@ -187,7 +201,7 @@ class _ProspectFormDialog extends StatelessWidget {
                   _configurableField(
                     type: ProspectFormOption.typePreviousSoftware,
                     label: tr.fieldPreviousSoftware,
-                    icon: Icons.apps_outlined,
+                    icon: HugeIcons.strokeRoundedGridView,
                     options: c.lookups.activePreviousSoftware,
                     currentValue: c.previousSoftware.value,
                     onChanged: c.selectPreviousSoftware,
@@ -201,7 +215,7 @@ class _ProspectFormDialog extends StatelessWidget {
                   _configurableField(
                     type: ProspectFormOption.typeSource,
                     label: tr.fieldSource,
-                    icon: Icons.campaign_outlined,
+                    icon: HugeIcons.strokeRoundedMegaphone01,
                     options: c.lookups.activeSources,
                     currentValue: c.source.value,
                     onChanged: c.selectSource,
@@ -240,7 +254,7 @@ class _ProspectFormDialog extends StatelessWidget {
   Widget _configurableField({
     required String type,
     required String label,
-    required IconData icon,
+    required HugeData icon,
     required List<ProspectFormOption> options,
     required String? currentValue,
     required ValueChanged<String?> onChanged,
@@ -290,7 +304,10 @@ class _ProspectFormDialog extends StatelessWidget {
               'fr' => 'Précisions ($label)',
               _ => 'Details ($label)',
             },
-            prefixIcon: const Icon(Icons.edit_note, size: 20),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.all(8),
+              child: HugeIcon(icon: HugeIcons.strokeRoundedEdit01, size: 18),
+            ),
           ),
           validator: detailsValidator,
           onChanged: (_) => c.clearServerError(detailsFieldKey),
@@ -377,7 +394,7 @@ class _StageChangeDialog extends StatelessWidget {
     final isLost = target?.isLost ?? false;
     return FormDialog(
       title: tr.changeStage,
-      icon: Icons.swap_horiz,
+      icon: HugeIcons.strokeRoundedArrowLeftRight,
       width: 560,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
@@ -440,7 +457,7 @@ class _StageChangeDialog extends StatelessWidget {
                 if (target?.isWon ?? false) ...[
                   const SizedBox(height: 12),
                   _InfoNote(
-                    icon: Icons.emoji_events_outlined,
+                    icon: HugeIcons.strokeRoundedAward01,
                     color: context.crm.success,
                     text: tr.stageMarksWon,
                   ),
@@ -448,7 +465,7 @@ class _StageChangeDialog extends StatelessWidget {
                 if (isLost) ...[
                   const SizedBox(height: 12),
                   _InfoNote(
-                    icon: Icons.info_outline,
+                    icon: HugeIcons.strokeRoundedInformationCircle,
                     color: context.crm.danger,
                     text: tr.validLossReasonRequiredForLost,
                   ),
@@ -505,7 +522,7 @@ class _InfoNote extends StatelessWidget {
     required this.text,
   });
 
-  final IconData icon;
+  final HugeData icon;
   final Color color;
   final String text;
 
@@ -518,7 +535,7 @@ class _InfoNote extends StatelessWidget {
     ),
     child: Row(
       children: [
-        Icon(icon, color: color, size: 18),
+        HugeIcon(icon: icon, color: color, size: 18),
         const SizedBox(width: 8),
         Expanded(child: Text(text, style: context.text.bodyMedium)),
       ],
@@ -540,7 +557,7 @@ class _ProspectProductsDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.interestedProducts,
-      icon: Icons.inventory_2_outlined,
+      icon: HugeIcons.strokeRoundedPackageOpen,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value ?? c.lookupState.errorMessage.value,
       submitEnabled: c.hasChanges,

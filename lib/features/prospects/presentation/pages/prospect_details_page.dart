@@ -5,12 +5,19 @@ import '../../../../app/l10n/l10n.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
 import '../../../../app/theme/app_theme.dart';
+import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/state/load_state.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/state_views.dart';
-import '../../../../core/widgets/whatsapp_button.dart';
+import '../../../../core/widgets/phone_cell.dart';
+import '../../../../core/widgets/workflow_widgets.dart';
+import '../../../activities/presentation/dialogs/activity_details_dialog.dart';
+import '../../../customers/data/models/customer_models.dart';
+import '../../../customers/presentation/dialogs/trial_details_dialog.dart';
+import '../../../scheduling/presentation/dialogs/appointment_dialogs.dart';
+import '../../../customers/domain/customers_repository.dart';
 import '../../../activities/presentation/dialogs/activity_form_dialog.dart';
 import '../../../activities/presentation/widgets/activity_widgets.dart';
 import '../../../follow_ups/data/models/follow_up.dart';
@@ -24,6 +31,8 @@ import '../../data/models/prospect_catalogs.dart';
 import '../controllers/prospect_details_controller.dart';
 import '../dialogs/prospect_dialogs.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 /// Route `/prospects/:id`. Owns a controller tagged with the prospect id so
 /// several detail pages can be stacked safely.
 class ProspectDetailsPage extends StatefulWidget {
@@ -68,10 +77,35 @@ class _ProspectDetailsPageState extends State<ProspectDetailsPage> {
   );
 }
 
-class _DetailsBody extends StatelessWidget {
+/// Prospect hub: sticky header + five tabs (same pattern as the customer
+/// profile).
+class _DetailsBody extends StatefulWidget {
   const _DetailsBody(this.c);
 
   final ProspectDetailsController c;
+
+  @override
+  State<_DetailsBody> createState() => _DetailsBodyState();
+}
+
+class _DetailsBodyState extends State<_DetailsBody> with SingleTickerProviderStateMixin {
+  late final TabController _tabs = TabController(length: 5, vsync: this);
+
+  ProspectDetailsController get c => widget.c;
+
+  @override
+  void dispose() {
+    _tabs.dispose();
+    super.dispose();
+  }
+
+  Tab _tab(HugeData icon, String label) => Tab(
+    height: 44,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [HugeIcon(icon: icon, size: 18), const SizedBox(width: 8), Text(label)],
+    ),
+  );
 
   @override
   Widget build(BuildContext context) => Obx(() {
@@ -89,6 +123,7 @@ class _DetailsBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _Header(c: c, prospect: prospect),
+        _BadgesRow(prospect),
         RefreshingBar(visible: c.prospectState.isLoading),
         if (c.prospectState.hasError)
           Padding(
@@ -98,44 +133,209 @@ class _DetailsBody extends StatelessWidget {
               onRetry: c.loadProspect,
             ),
           ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: TabBar(
+            controller: _tabs,
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            tabs: [
+              _tab(HugeIcons.strokeRoundedPackage, tr.prospectTabOverview),
+              _tab(HugeIcons.strokeRoundedTimeline, tr.prospectTabPipeline),
+              _tab(HugeIcons.strokeRoundedNote01, tr.prospectTabFollowUps),
+              _tab(HugeIcons.strokeRoundedTime02, tr.prospectTabActivities),
+              _tab(HugeIcons.strokeRoundedPlayCircle, tr.prospectTabDemos),
+            ],
+          ),
+        ),
         Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final left = [
-                _InfoSection(prospect),
-                _ProductsSection(c: c, prospect: prospect),
-                _StageSection(c: c, prospect: prospect),
-                _HistorySection(c),
-              ];
-              final right = [_FollowUpsSection(c: c, prospect: prospect), _TimelineSection(c: c, prospect: prospect)];
-              if (constraints.maxWidth < 1050) {
-                // Spec order on narrow windows.
-                return ListView(
-                  padding: const EdgeInsetsDirectional.fromSTEB(28, 4, 28, 28),
-                  children: _spaced([left[0], left[1], left[2], right[1], right[0], left[3]]),
-                );
-              }
-              return SingleChildScrollView(
-                padding: const EdgeInsetsDirectional.fromSTEB(28, 4, 28, 28),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(flex: 4, child: Column(children: _spaced(left))),
-                    const SizedBox(width: 18),
-                    Expanded(flex: 6, child: Column(children: _spaced(right))),
-                  ],
-                ),
-              );
-            },
+          child: TabBarView(
+            controller: _tabs,
+            children: [
+              _TabScroll([_InfoSection(prospect), _ProductsSection(c: c, prospect: prospect)]),
+              _TabScroll([_StageSection(c: c, prospect: prospect), _HistorySection(c)]),
+              _TabScroll([_FollowUpsSection(c: c, prospect: prospect)]),
+              _TabScroll([_TimelineSection(c: c, prospect: prospect)]),
+              _TabScroll([_DemosSection(prospect)]),
+            ],
           ),
         ),
       ],
     );
   });
+}
 
-  static List<Widget> _spaced(List<Widget> children) => [
-    for (var i = 0; i < children.length; i++) ...[if (i > 0) const SizedBox(height: 16), children[i]],
-  ];
+class _TabScroll extends StatelessWidget {
+  const _TabScroll(this.children);
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => ListView(
+    padding: const EdgeInsetsDirectional.fromSTEB(28, 16, 28, 28),
+    children: [
+      for (var i = 0; i < children.length; i++) ...[if (i > 0) const SizedBox(height: 16), children[i]],
+    ],
+  );
+}
+
+/// Current stage pill, creation date and phone with its WhatsApp shortcut.
+class _BadgesRow extends StatelessWidget {
+  const _BadgesRow(this.p);
+
+  final Prospect p;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 8),
+    child: Wrap(
+      spacing: 10,
+      runSpacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        StageChip(stage: p.stage),
+        Text(
+          tr.createdOnDate(Formatters.date(p.createdAt)),
+          style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant),
+        ),
+        if (p.phone != null && p.phone!.trim().isNotEmpty) ...[
+          PhoneCell(p.phone, compact: true),
+        ],
+      ],
+    ),
+  );
+}
+
+/// Demo trials (with a copy-link action) and the demo/training appointments of
+/// this prospect, read from the same profile endpoint customers use.
+class _DemosSection extends StatefulWidget {
+  const _DemosSection(this.prospect);
+
+  final Prospect prospect;
+
+  @override
+  State<_DemosSection> createState() => _DemosSectionState();
+}
+
+class _DemosSectionState extends State<_DemosSection> {
+  CustomerProfile? _profile;
+  String? _error;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final profile = await Get.find<CustomersRepository>().getCustomer(widget.prospect.id);
+      if (!mounted) return;
+      setState(() => _profile = profile);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _error = ApiException.from(e).message);
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _newTrial() async {
+    final trial = await showTrialDialog(prospectId: widget.prospect.id);
+    if (trial == null) return;
+    AppFeedback.success(tr.wfTrialActivated);
+    await _load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final profile = _profile;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_loading) const LinearProgressIndicator(),
+        if (_error != null) ErrorBanner(message: _error!, onRetry: _load),
+        const SizedBox(height: 8),
+        SectionCard(
+          title: tr.wfTrials,
+          icon: HugeIcons.strokeRoundedPlayCircle,
+          actions: [
+            TextButton.icon(
+              onPressed: _newTrial,
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
+              label: Text(tr.wfNewTrial),
+            ),
+          ],
+          child: profile == null || profile.trials.isEmpty
+              ? EmptyView(compact: true, title: tr.wfNoTrials)
+              : Column(
+                  children: [
+                    for (final t in profile.trials)
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        onTap: () async {
+                          if (await showTrialDetailsDialog(t)) await _load();
+                        },
+                        leading: const HugeIcon(icon: HugeIcons.strokeRoundedPlayCircle, size: 20),
+                        title: Text(t.product.name),
+                        subtitle: Text(
+                          joinNonEmpty(['${Formatters.date(t.startsAt)} → ${Formatters.date(t.endsAt)}', t.url]),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (t.url != null && t.url!.isNotEmpty)
+                              IconButton(
+                                tooltip: tr.copyDemoLink,
+                                icon: const HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 18),
+                                onPressed: () => copyDemoLink(t.url!),
+                              ),
+                            StatusBadge(
+                              label: t.stateLabel,
+                              color: t.isActive ? context.crm.success : context.colors.outline,
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+        ),
+        const SizedBox(height: 16),
+        SectionCard(
+          title: tr.wfAppointments,
+          icon: HugeIcons.strokeRoundedCalendar03,
+          child: profile == null || profile.appointments.isEmpty
+              ? EmptyView(compact: true, title: tr.wfNoAppointments)
+              : Column(
+                  children: [
+                    for (final a in profile.appointments)
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        onTap: () async {
+                          if (await showAppointmentDetailDialog(a)) await _load();
+                        },
+                        leading: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 20),
+                        title: Text(a.displayTitle),
+                        subtitle: Text(
+                          joinNonEmpty([Formatters.dateTime(a.startsAt), a.product?.name, a.assignedEmployee]),
+                        ),
+                        trailing: AppointmentStatusBadge(status: a.status),
+                      ),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -178,7 +378,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PageHeader(
-    leading: IconButton(tooltip: tr.actionBack, icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
+    leading: IconButton(tooltip: tr.actionBack, icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01), onPressed: () => Get.back()),
     title: prospect.companyName,
     subtitle: [
       if (prospect.contactName != null) prospect.contactName!,
@@ -187,36 +387,36 @@ class _Header extends StatelessWidget {
       if (prospect.isCustomer) tr.wfCustomerBadge,
     ].join('  ·  '),
     actions: [
-      IconButton(tooltip: tr.actionRefresh, onPressed: c.loadAll, icon: const Icon(Icons.refresh)),
+      IconButton(tooltip: tr.actionRefresh, onPressed: c.loadAll, icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh)),
       OutlinedButton.icon(
         onPressed: _edit,
-        icon: const Icon(Icons.edit_outlined, size: 18),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 18),
         label: Text(tr.actionEdit),
       ),
       OutlinedButton.icon(
         onPressed: _scheduleFollowUp,
-        icon: const Icon(Icons.event_available_outlined, size: 18),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarCheck01, size: 18),
         label: Text(tr.scheduleFollowUp),
       ),
       OutlinedButton.icon(
         onPressed: _addActivity,
-        icon: const Icon(Icons.add_comment_outlined, size: 18),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedMessageAdd01, size: 18),
         label: Text(tr.addActivity),
       ),
       if (prospect.isCustomer)
         OutlinedButton.icon(
           onPressed: () => Get.toNamed(Routes.customer(prospect.id)),
-          icon: const Icon(Icons.verified_user_outlined, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedBuilding02, size: 18),
           label: Text(tr.wfOpenCustomerProfile),
         )
       else
         OutlinedButton.icon(
           onPressed: _convert,
-          icon: const Icon(Icons.verified_user_outlined, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 18),
           label: Text(tr.wfConvertAction),
         ),      FilledButton.icon(
         onPressed: _changeStage,
-        icon: const Icon(Icons.swap_horiz, size: 18),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight, size: 18),
         label: Text(tr.changeStage),
       ),
     ],
@@ -231,50 +431,41 @@ class _InfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SectionCard(
     title: tr.sectionInformation,
-    icon: Icons.badge_outlined,
+    icon: HugeIcons.strokeRoundedId,
     child: Column(
       children: [
-        InfoRow(label: tr.fieldCompany, value: p.companyName, icon: Icons.business_outlined),
-        InfoRow(label: tr.fieldContact, value: p.contactName, icon: Icons.person_outline),
+        InfoRow(label: tr.fieldCompany, value: p.companyName, icon: HugeIcons.strokeRoundedBuilding03),
+        InfoRow(label: tr.fieldContact, value: p.contactName, icon: HugeIcons.strokeRoundedUser),
         InfoRow(
           label: tr.fieldPhone,
-          icon: Icons.phone_outlined,
-          child: (p.phone == null || p.phone!.trim().isEmpty)
-              ? SelectableText('—', style: context.text.bodyMedium)
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SelectableText(p.phone!, style: context.text.bodyMedium),
-                    const SizedBox(width: 10),
-                    WhatsAppButton(phone: p.phone!),
-                  ],
-                ),
+          icon: HugeIcons.strokeRoundedCall,
+          child: PhoneCell(p.phone),
         ),
-        InfoRow(label: tr.fieldEmail, value: p.email, icon: Icons.alternate_email),
-        InfoRow(label: tr.fieldAddress, value: p.address, icon: Icons.place_outlined),
-        InfoRow(label: tr.fieldCity, value: p.city, icon: Icons.location_city_outlined),
+        InfoRow(label: tr.fieldEmail, value: p.email, icon: HugeIcons.strokeRoundedAt),
+        InfoRow(label: tr.fieldAddress, value: p.address, icon: HugeIcons.strokeRoundedLocation01),
+        InfoRow(label: tr.fieldCity, value: p.city, icon: HugeIcons.strokeRoundedCity01),
         InfoRow(
           label: tr.fieldBusinessActivity,
           value: ProspectCatalogs.displayWithDetails(p.businessActivity, p.businessActivityDetails),
-          icon: Icons.storefront_outlined,
+          icon: HugeIcons.strokeRoundedStore01,
         ),
         InfoRow(
           label: ProspectCatalogs.professionLabel,
           value: ProspectCatalogs.displayWithDetails(p.profession, p.professionDetails),
-          icon: Icons.work_outline,
+          icon: HugeIcons.strokeRoundedBriefcase01,
         ),
         InfoRow(
           label: tr.fieldSource,
           value: ProspectCatalogs.displayWithDetails(p.source, p.sourceDetails ?? p.sourceOther),
-          icon: Icons.campaign_outlined,
+          icon: HugeIcons.strokeRoundedMegaphone01,
         ),
         InfoRow(
           label: tr.fieldPreviousSoftware,
           value: ProspectCatalogs.displayWithDetails(p.previousSoftware, p.previousSoftwareDetails),
-          icon: Icons.apps_outlined,
+          icon: HugeIcons.strokeRoundedGridView,
         ),
-        InfoRow(label: tr.fieldNotes, value: p.notes, icon: Icons.notes),
-        InfoRow(label: tr.updatedLabel, value: Formatters.dateTime(p.updatedAt), icon: Icons.update),
+        InfoRow(label: tr.fieldNotes, value: p.notes, icon: HugeIcons.strokeRoundedNote01),
+        InfoRow(label: tr.updatedLabel, value: Formatters.dateTime(p.updatedAt), icon: HugeIcons.strokeRoundedRefresh),
       ],
     ),
   );
@@ -289,7 +480,7 @@ class _ProductsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SectionCard(
     title: tr.interestedProducts,
-    icon: Icons.inventory_2_outlined,
+    icon: HugeIcons.strokeRoundedPackageOpen,
     actions: [
       TextButton.icon(
         onPressed: () async {
@@ -298,7 +489,7 @@ class _ProductsSection extends StatelessWidget {
           c.onProspectSaved(updated);
           AppFeedback.success(tr.productsUpdated);
         },
-        icon: const Icon(Icons.edit_outlined, size: 18),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 18),
         label: Text(tr.actionEdit),
       ),
     ],
@@ -322,7 +513,7 @@ class _StageSection extends StatelessWidget {
     final crm = context.crm;
     return SectionCard(
       title: tr.sectionCommercialStage,
-      icon: Icons.linear_scale,
+      icon: HugeIcons.strokeRoundedMenu01,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -356,7 +547,7 @@ class _StageSection extends StatelessWidget {
           ],
           if (prospect.isWon) ...[
             const SizedBox(height: 12),
-            StatusPill(label: tr.saleWon, color: crm.success, icon: Icons.emoji_events_outlined),
+            StatusPill(label: tr.saleWon, color: crm.success, icon: HugeIcons.strokeRoundedAward01),
           ],
         ],
       ),
@@ -373,7 +564,7 @@ class _HistorySection extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => SectionCard(
       title: tr.stageHistory,
-      icon: Icons.timeline,
+      icon: HugeIcons.strokeRoundedTimeline,
       child: _SectionState(
         state: c.historyState,
         isEmpty: c.history.isEmpty,
@@ -405,7 +596,7 @@ class _HistorySection extends StatelessWidget {
                             children: [
                               if (h.fromStage != null) ...[
                                 StageChip(stage: h.fromStage, dense: true),
-                                const Icon(Icons.arrow_forward, size: 14),
+                                const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, size: 14),
                               ] else
                                 Text(tr.creationArrow, style: context.text.bodySmall),
                               StageChip(stage: h.toStage, dense: true),
@@ -450,11 +641,11 @@ class _FollowUpsSection extends StatelessWidget {
     return SectionCard(
       title: tr.navFollowUps,
       subtitle: tr.pendingCount(pending.length),
-      icon: Icons.event_note_outlined,
+      icon: HugeIcons.strokeRoundedCalendar02,
       actions: [
         TextButton.icon(
           onPressed: () => _after(showFollowUpFormDialog(prospect: prospect.toRef())),
-          icon: const Icon(Icons.add, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
           label: Text(tr.actionSchedule),
         ),
       ],
@@ -470,6 +661,7 @@ class _FollowUpsSection extends StatelessWidget {
               FollowUpTile(
                 followUp: f,
                 phone: prospect.phone,
+                onTap: () => _after(showFollowUpFormDialog(existing: f)),
                 onComplete: () => _after(showCompleteFollowUpDialog(f)),
                 onEdit: () => _after(showFollowUpFormDialog(existing: f)),
                 onCancel: () => _after(showCancelFollowUpDialog(f)),
@@ -501,14 +693,14 @@ class _TimelineSection extends StatelessWidget {
     () => SectionCard(
       title: tr.activityHistory,
       subtitle: tr.countActivities(c.activitiesTotal.value),
-      icon: Icons.history,
+      icon: HugeIcons.strokeRoundedHistory,
       actions: [
         TextButton.icon(
           onPressed: () async {
             final result = await showActivityFormDialog(prospect: prospect.toRef());
             if (result != null) await c.onActivityAdded();
           },
-          icon: const Icon(Icons.add, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
           label: Text(tr.actionAdd),
         ),
       ],
@@ -521,7 +713,14 @@ class _TimelineSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (var i = 0; i < c.activities.length; i++)
-              ActivityTimelineTile(activity: c.activities[i], isLast: i == c.activities.length - 1),
+              ActivityTimelineTile(
+                activity: c.activities[i],
+                isLast: i == c.activities.length - 1,
+                onTap: () async {
+                  final updated = await showActivityDetailsDialog(c.activities[i]);
+                  if (updated != null) await c.onActivityAdded();
+                },
+              ),
             if (c.hasMoreActivities.value)
               Center(
                 child: OutlinedButton(
