@@ -44,7 +44,6 @@ class FollowUpsRemoteDataSource {
 
   Future<FollowUp> complete(int id, CompleteFollowUpRequest request) async {
     final body = await _api.post(ApiEndpoints.followUpComplete(id), data: request.toJson());
-    print('FollowUpsRemoteDataSource.complete: $body');
     return FollowUp.fromJson(ApiResponse.object(body));
   }
 
