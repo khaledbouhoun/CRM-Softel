@@ -970,6 +970,156 @@ abstract class AppLocalizations {
   /// **'Chiffres peut-être obsolètes : {error}'**
   String dashStale(Object error);
 
+  /// No description provided for @dashTodayActions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions du jour'**
+  String get dashTodayActions;
+
+  /// No description provided for @dashAllCaughtUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'🎉 Tout est fait pour aujourd\'hui !'**
+  String get dashAllCaughtUp;
+
+  /// No description provided for @dashOverdueCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} en retard'**
+  String dashOverdueCount(Object count);
+
+  /// No description provided for @dashMarkDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme fait'**
+  String get dashMarkDone;
+
+  /// No description provided for @dashNewLead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau prospect'**
+  String get dashNewLead;
+
+  /// No description provided for @dashNewTicket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ticket de support'**
+  String get dashNewTicket;
+
+  /// No description provided for @dashNewMeeting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau rendez-vous'**
+  String get dashNewMeeting;
+
+  /// No description provided for @dashNewThisMonthCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} nouveaux ce mois-ci'**
+  String dashNewThisMonthCount(Object count);
+
+  /// No description provided for @dashWelcome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour, {name} 👋'**
+  String dashWelcome(Object name);
+
+  /// No description provided for @dashSummaryLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'{appointments} rendez-vous aujourd\'hui · {urgent} tickets urgents · {leads} prospects actifs'**
+  String dashSummaryLine(Object appointments, Object urgent, Object leads);
+
+  /// No description provided for @dashActiveClients.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients & licences'**
+  String get dashActiveClients;
+
+  /// No description provided for @dashMaintenanceActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} maintenances actives'**
+  String dashMaintenanceActive(Object count);
+
+  /// No description provided for @dashMaintenanceExpiring.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} bientôt expirées'**
+  String dashMaintenanceExpiring(Object count);
+
+  /// No description provided for @dashPipelineDeals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pipeline & affaires'**
+  String get dashPipelineDeals;
+
+  /// No description provided for @dashOpenSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tickets de support ouverts'**
+  String get dashOpenSupport;
+
+  /// No description provided for @dashUrgentAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} urgents'**
+  String dashUrgentAlert(Object count);
+
+  /// No description provided for @dashAllClear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun ticket urgent'**
+  String get dashAllClear;
+
+  /// No description provided for @dashAppointmentsToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendez-vous aujourd\'hui'**
+  String get dashAppointmentsToday;
+
+  /// No description provided for @dashPendingRequests.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} demandes portail en attente'**
+  String dashPendingRequests(Object count);
+
+  /// No description provided for @dashThisMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois-ci'**
+  String get dashThisMonth;
+
+  /// No description provided for @dashNewThisMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveaux prospects'**
+  String get dashNewThisMonth;
+
+  /// No description provided for @dashNetConversion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux de conversion net'**
+  String get dashNetConversion;
+
+  /// No description provided for @dashTodayHub.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi du jour'**
+  String get dashTodayHub;
+
+  /// No description provided for @dashTodayHubSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez pour ouvrir la liste'**
+  String get dashTodayHubSubtitle;
+
+  /// No description provided for @dashActiveTrials.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} essais actifs'**
+  String dashActiveTrials(Object count);
+
   /// No description provided for @stageTypeOpen.
   ///
   /// In fr, this message translates to:
@@ -2095,7 +2245,7 @@ abstract class AppLocalizations {
   /// No description provided for @productActiveOnWeb.
   ///
   /// In fr, this message translates to:
-  /// **'Afficher sur le site web & portail'**
+  /// **'Le site web & portail'**
   String get productActiveOnWeb;
 
   /// No description provided for @productActiveOnWebHint.
@@ -3055,7 +3205,7 @@ abstract class AppLocalizations {
   /// No description provided for @navAfterSales.
   ///
   /// In fr, this message translates to:
-  /// **'Après-vente'**
+  /// **'Interventions & Support'**
   String get navAfterSales;
 
   /// No description provided for @navCalendar.
@@ -3121,8 +3271,62 @@ abstract class AppLocalizations {
   /// No description provided for @navWorkspaceBilling.
   ///
   /// In fr, this message translates to:
-  /// **'Facturation et versions'**
+  /// **'Facturation & Abonnements'**
   String get navWorkspaceBilling;
+
+  /// No description provided for @navWorkspaceProspects.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prospects & Ventes'**
+  String get navWorkspaceProspects;
+
+  /// No description provided for @navWorkspaceCustomers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients & Opérations'**
+  String get navWorkspaceCustomers;
+
+  /// No description provided for @navWorkspaceProducts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits & Versions'**
+  String get navWorkspaceProducts;
+
+  /// No description provided for @navWorkspaceTeam.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe & Postes'**
+  String get navWorkspaceTeam;
+
+  /// No description provided for @navWorkspaceAnalytics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statistiques & Rapports'**
+  String get navWorkspaceAnalytics;
+
+  /// No description provided for @navOptionSources.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sources d\'acquisition'**
+  String get navOptionSources;
+
+  /// No description provided for @navOptionActivities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Secteurs d\'activité'**
+  String get navOptionActivities;
+
+  /// No description provided for @navOptionSoftware.
+  ///
+  /// In fr, this message translates to:
+  /// **'Logiciels précédents'**
+  String get navOptionSoftware;
+
+  /// No description provided for @navOptionCities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Villes & Wilayas'**
+  String get navOptionCities;
 
   /// No description provided for @navToggleSidebar.
   ///
@@ -6291,6 +6495,738 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ajouter la fonctionnalité'**
   String get productAddFeature;
+
+  /// No description provided for @customerViewProspectHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique prospect'**
+  String get customerViewProspectHistory;
+
+  /// No description provided for @customerTabLicenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licences & Logiciels'**
+  String get customerTabLicenses;
+
+  /// No description provided for @customerTabBilling.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnements & Facturation'**
+  String get customerTabBilling;
+
+  /// No description provided for @customerTabSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support & Interventions'**
+  String get customerTabSupport;
+
+  /// No description provided for @customerTabAppointments.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendez-vous & Formation'**
+  String get customerTabAppointments;
+
+  /// No description provided for @customerTabPortal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes Portail'**
+  String get customerTabPortal;
+
+  /// No description provided for @customerTabProspectArchive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archive & Parcours Prospect'**
+  String get customerTabProspectArchive;
+
+  /// No description provided for @filterActiveLeads.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prospects actifs'**
+  String get filterActiveLeads;
+
+  /// No description provided for @filterConvertedLeads.
+  ///
+  /// In fr, this message translates to:
+  /// **'Convertis en clients'**
+  String get filterConvertedLeads;
+
+  /// No description provided for @filterAllLeads.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get filterAllLeads;
+
+  /// No description provided for @prospectStageTimeline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Parcours des étapes de vente'**
+  String get prospectStageTimeline;
+
+  /// No description provided for @prospectInitialData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données initiales du prospect'**
+  String get prospectInitialData;
+
+  /// No description provided for @customerSoftelClient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client Softel'**
+  String get customerSoftelClient;
+
+  /// No description provided for @customerMaintenanceActiveUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance active jusqu\'au {date}'**
+  String customerMaintenanceActiveUntil(String date);
+
+  /// No description provided for @customerMaintenanceExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance expirée'**
+  String get customerMaintenanceExpired;
+
+  /// No description provided for @customerMaintenanceNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune maintenance'**
+  String get customerMaintenanceNone;
+
+  /// No description provided for @customerSubscriptionLifetime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence perpétuelle'**
+  String get customerSubscriptionLifetime;
+
+  /// No description provided for @customerSubscriptionMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance & support'**
+  String get customerSubscriptionMaintenance;
+
+  /// No description provided for @customerSubscriptionPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Du {start} au {end}'**
+  String customerSubscriptionPeriod(String start, String end);
+
+  /// No description provided for @customerNoSubscriptions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun abonnement'**
+  String get customerNoSubscriptions;
+
+  /// No description provided for @customerOpenBilling.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la facturation'**
+  String get customerOpenBilling;
+
+  /// No description provided for @customerNoInterventions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune intervention'**
+  String get customerNoInterventions;
+
+  /// No description provided for @customerNoStageHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun historique d\'étapes'**
+  String get customerNoStageHistory;
+
+  /// No description provided for @customerNoProspectActivities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune activité enregistrée avant la conversion'**
+  String get customerNoProspectActivities;
+
+  /// No description provided for @customerProspectActivities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activités de la phase prospect'**
+  String get customerProspectActivities;
+
+  /// No description provided for @customerInitialInquiryDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de la première demande'**
+  String get customerInitialInquiryDate;
+
+  /// No description provided for @customerProspectNotes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notes commerciales'**
+  String get customerProspectNotes;
+
+  /// No description provided for @prospectTabOverview.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu & intérêts'**
+  String get prospectTabOverview;
+
+  /// No description provided for @prospectTabPipeline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Parcours de vente'**
+  String get prospectTabPipeline;
+
+  /// No description provided for @prospectTabFollowUps.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relances & tâches'**
+  String get prospectTabFollowUps;
+
+  /// No description provided for @prospectTabActivities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activités & notes'**
+  String get prospectTabActivities;
+
+  /// No description provided for @prospectTabDemos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Démos & rendez-vous'**
+  String get prospectTabDemos;
+
+  /// No description provided for @copyDemoLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier le lien de démo'**
+  String get copyDemoLink;
+
+  /// No description provided for @demoLinkCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien copié'**
+  String get demoLinkCopied;
+
+  /// No description provided for @customerFilterAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get customerFilterAll;
+
+  /// No description provided for @customerFilterMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance'**
+  String get customerFilterMaintenance;
+
+  /// No description provided for @customerFilterPortal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Portail'**
+  String get customerFilterPortal;
+
+  /// No description provided for @customerMaintenanceActivePlan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan actif'**
+  String get customerMaintenanceActivePlan;
+
+  /// No description provided for @customerMaintenanceExpiringSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expire dans < 60 jours'**
+  String get customerMaintenanceExpiringSoon;
+
+  /// No description provided for @customerMaintenanceExpiredNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiré / sans plan'**
+  String get customerMaintenanceExpiredNone;
+
+  /// No description provided for @customerPortalHas.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avec compte portail'**
+  String get customerPortalHas;
+
+  /// No description provided for @customerPortalNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans compte'**
+  String get customerPortalNone;
+
+  /// No description provided for @customerQuickCall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get customerQuickCall;
+
+  /// No description provided for @trialFieldPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période'**
+  String get trialFieldPeriod;
+
+  /// No description provided for @trialFieldCreatedBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créé par'**
+  String get trialFieldCreatedBy;
+
+  /// No description provided for @trialFieldLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de démo'**
+  String get trialFieldLink;
+
+  /// No description provided for @openDemoLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir le lien de démo'**
+  String get openDemoLink;
+
+  /// No description provided for @phoneCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro copié'**
+  String get phoneCopied;
+
+  /// No description provided for @phoneTapToCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliquer pour copier le numéro'**
+  String get phoneTapToCopy;
+
+  /// No description provided for @searchKeyboardHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'↑ ↓ pour naviguer · ↵ pour ouvrir · Échap pour fermer'**
+  String get searchKeyboardHint;
+
+  /// No description provided for @actionOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir'**
+  String get actionOpen;
+
+  /// No description provided for @calNewAppointment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau rendez-vous'**
+  String get calNewAppointment;
+
+  /// No description provided for @calQuickAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get calQuickAll;
+
+  /// No description provided for @calQuickDemos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Démos'**
+  String get calQuickDemos;
+
+  /// No description provided for @calQuickTrainings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formations'**
+  String get calQuickTrainings;
+
+  /// No description provided for @calQuickSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support et interventions'**
+  String get calQuickSupport;
+
+  /// No description provided for @calQuickFollowUps.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relances'**
+  String get calQuickFollowUps;
+
+  /// No description provided for @empWorkstationName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du poste / bureau'**
+  String get empWorkstationName;
+
+  /// No description provided for @empEditWorkstation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le poste'**
+  String get empEditWorkstation;
+
+  /// No description provided for @empRole.
+  ///
+  /// In fr, this message translates to:
+  /// **'Département & Rôle'**
+  String get empRole;
+
+  /// No description provided for @empRoleSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commercial & Ventes'**
+  String get empRoleSales;
+
+  /// No description provided for @empRoleSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support technique'**
+  String get empRoleSupport;
+
+  /// No description provided for @empRoleManagement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Direction & Gestion'**
+  String get empRoleManagement;
+
+  /// No description provided for @empRoleTraining.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formation & Accompagnement'**
+  String get empRoleTraining;
+
+  /// No description provided for @empPresenceAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible'**
+  String get empPresenceAvailable;
+
+  /// No description provided for @empPresenceBusy.
+  ///
+  /// In fr, this message translates to:
+  /// **'En appel / réunion'**
+  String get empPresenceBusy;
+
+  /// No description provided for @empPresenceAway.
+  ///
+  /// In fr, this message translates to:
+  /// **'En intervention externe'**
+  String get empPresenceAway;
+
+  /// No description provided for @empPresenceBreak.
+  ///
+  /// In fr, this message translates to:
+  /// **'En pause'**
+  String get empPresenceBreak;
+
+  /// No description provided for @empActionsToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions aujourd\'hui'**
+  String get empActionsToday;
+
+  /// No description provided for @empOnlineNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connectés maintenant'**
+  String get empOnlineNow;
+
+  /// No description provided for @empSalesActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe commerciale'**
+  String get empSalesActive;
+
+  /// No description provided for @empSupportActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe support'**
+  String get empSupportActive;
+
+  /// No description provided for @empTeamActionsToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions de l\'équipe aujourd\'hui'**
+  String get empTeamActionsToday;
+
+  /// No description provided for @empSaveFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrement impossible. Réessayez.'**
+  String get empSaveFailed;
+
+  /// No description provided for @empFollowUpsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} suivis'**
+  String empFollowUpsCount(int count);
+
+  /// No description provided for @empTicketsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} tickets support'**
+  String empTicketsCount(int count);
+
+  /// No description provided for @empAppointmentsCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} rendez-vous'**
+  String empAppointmentsCount(int count);
+
+  /// No description provided for @navAnalytics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyses & Rapports'**
+  String get navAnalytics;
+
+  /// No description provided for @analyticsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Indicateurs de performance, pipeline et activité de l\'équipe'**
+  String get analyticsSubtitle;
+
+  /// No description provided for @analyticsRangeMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois'**
+  String get analyticsRangeMonth;
+
+  /// No description provided for @analyticsRangeQuarter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce trimestre'**
+  String get analyticsRangeQuarter;
+
+  /// No description provided for @analyticsRangeYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette année'**
+  String get analyticsRangeYear;
+
+  /// No description provided for @analyticsRangeAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get analyticsRangeAll;
+
+  /// No description provided for @analyticsTabSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes & Pipeline'**
+  String get analyticsTabSales;
+
+  /// No description provided for @analyticsTabRevenue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnements & Licences'**
+  String get analyticsTabRevenue;
+
+  /// No description provided for @analyticsTabSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support & SLA'**
+  String get analyticsTabSupport;
+
+  /// No description provided for @analyticsTabTeam.
+  ///
+  /// In fr, this message translates to:
+  /// **'Performance Équipe'**
+  String get analyticsTabTeam;
+
+  /// No description provided for @analyticsFunnel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entonnoir de conversion'**
+  String get analyticsFunnel;
+
+  /// No description provided for @analyticsFunnelWon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prospects gagnés'**
+  String get analyticsFunnelWon;
+
+  /// No description provided for @analyticsLossReasons.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motifs de perte'**
+  String get analyticsLossReasons;
+
+  /// No description provided for @analyticsNoReason.
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif non renseigné'**
+  String get analyticsNoReason;
+
+  /// No description provided for @analyticsSources.
+  ///
+  /// In fr, this message translates to:
+  /// **'Canaux d\'acquisition'**
+  String get analyticsSources;
+
+  /// No description provided for @analyticsTopCities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Villes principales'**
+  String get analyticsTopCities;
+
+  /// No description provided for @analyticsUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non renseigné'**
+  String get analyticsUnknown;
+
+  /// No description provided for @analyticsAvgCycle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cycle de vente moyen'**
+  String get analyticsAvgCycle;
+
+  /// No description provided for @analyticsUnitDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'jours'**
+  String get analyticsUnitDays;
+
+  /// No description provided for @analyticsUnitHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'h'**
+  String get analyticsUnitHours;
+
+  /// No description provided for @analyticsNoData.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée pour cette période'**
+  String get analyticsNoData;
+
+  /// No description provided for @analyticsTotalCustomers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clients'**
+  String get analyticsTotalCustomers;
+
+  /// No description provided for @analyticsActiveMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance active'**
+  String get analyticsActiveMaintenance;
+
+  /// No description provided for @analyticsExpiredMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance expirée'**
+  String get analyticsExpiredMaintenance;
+
+  /// No description provided for @analyticsAvgPcs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits par client'**
+  String get analyticsAvgPcs;
+
+  /// No description provided for @analyticsRetention.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux de rétention maintenance'**
+  String get analyticsRetention;
+
+  /// No description provided for @analyticsRetentionShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rétention'**
+  String get analyticsRetentionShort;
+
+  /// No description provided for @analyticsProductPopularity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits les plus vendus'**
+  String get analyticsProductPopularity;
+
+  /// No description provided for @analyticsExpiringTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenances arrivant à échéance (60 jours)'**
+  String get analyticsExpiringTitle;
+
+  /// No description provided for @analyticsExpiringNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune maintenance n\'expire prochainement.'**
+  String get analyticsExpiringNone;
+
+  /// No description provided for @analyticsExpiringAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la facturation'**
+  String get analyticsExpiringAction;
+
+  /// No description provided for @analyticsTotalTickets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tickets'**
+  String get analyticsTotalTickets;
+
+  /// No description provided for @analyticsResolvedTickets.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tickets résolus'**
+  String get analyticsResolvedTickets;
+
+  /// No description provided for @analyticsResolutionRate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux de résolution'**
+  String get analyticsResolutionRate;
+
+  /// No description provided for @analyticsResolutionSpeed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai moyen de résolution'**
+  String get analyticsResolutionSpeed;
+
+  /// No description provided for @analyticsTicketsByCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tickets par catégorie'**
+  String get analyticsTicketsByCategory;
+
+  /// No description provided for @analyticsDemoConversion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conversion des versions démo'**
+  String get analyticsDemoConversion;
+
+  /// No description provided for @analyticsDemoConverted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devenus clients'**
+  String get analyticsDemoConverted;
+
+  /// No description provided for @analyticsDemoNotConverted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans achat'**
+  String get analyticsDemoNotConverted;
+
+  /// No description provided for @analyticsLeaderboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Classement de l\'équipe'**
+  String get analyticsLeaderboard;
+
+  /// No description provided for @analyticsColEmployee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Employé'**
+  String get analyticsColEmployee;
+
+  /// No description provided for @analyticsColActivities.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activités'**
+  String get analyticsColActivities;
+
+  /// No description provided for @analyticsColInterventions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Interventions'**
+  String get analyticsColInterventions;
+
+  /// No description provided for @analyticsColDeals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes conclues'**
+  String get analyticsColDeals;
+
+  /// No description provided for @analyticsExpiringCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} maintenance(s) à renouveler prochainement'**
+  String analyticsExpiringCount(int count);
 }
 
 class _AppLocalizationsDelegate

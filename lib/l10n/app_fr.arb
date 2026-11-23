@@ -322,6 +322,100 @@
       }
     }
   },
+  "dashTodayActions": "Actions du jour",
+  "dashAllCaughtUp": "🎉 Tout est fait pour aujourd'hui !",
+  "dashOverdueCount": "{count} en retard",
+  "@dashOverdueCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashMarkDone": "Marquer comme fait",
+  "dashNewLead": "Nouveau prospect",
+  "dashNewTicket": "Ticket de support",
+  "dashNewMeeting": "Nouveau rendez-vous",
+  "dashNewThisMonthCount": "{count} nouveaux ce mois-ci",
+  "@dashNewThisMonthCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashWelcome": "Bonjour, {name} 👋",
+  "@dashWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashSummaryLine": "{appointments} rendez-vous aujourd'hui · {urgent} tickets urgents · {leads} prospects actifs",
+  "@dashSummaryLine": {
+    "placeholders": {
+      "appointments": {
+        "type": "Object"
+      },
+      "urgent": {
+        "type": "Object"
+      },
+      "leads": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashActiveClients": "Clients & licences",
+  "dashMaintenanceActive": "{count} maintenances actives",
+  "@dashMaintenanceActive": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashMaintenanceExpiring": "{count} bientôt expirées",
+  "@dashMaintenanceExpiring": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashPipelineDeals": "Pipeline & affaires",
+  "dashOpenSupport": "Tickets de support ouverts",
+  "dashUrgentAlert": "{count} urgents",
+  "@dashUrgentAlert": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashAllClear": "Aucun ticket urgent",
+  "dashAppointmentsToday": "Rendez-vous aujourd'hui",
+  "dashPendingRequests": "{count} demandes portail en attente",
+  "@dashPendingRequests": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "dashThisMonth": "Ce mois-ci",
+  "dashNewThisMonth": "Nouveaux prospects",
+  "dashNetConversion": "Taux de conversion net",
+  "dashTodayHub": "Suivi du jour",
+  "dashTodayHubSubtitle": "Touchez pour ouvrir la liste",
+  "dashActiveTrials": "{count} essais actifs",
+  "@dashActiveTrials": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
   "stageTypeOpen": "En cours",
   "dashWon": "Gagnés",
   "dashLost": "Perdus",
@@ -682,7 +776,7 @@
   "productUploadDemo": "Téléverser le fichier démo sur le serveur",
   "productDemoUploaded": "Fichier démo téléversé avec succès et lien mis à jour.",
   "productUploadingDemo": "Téléversement du fichier démo vers le serveur…",
-  "productActiveOnWeb": "Afficher sur le site web & portail",
+  "productActiveOnWeb": "Le site web & portail",
   "productActiveOnWebHint": "Rend ce produit visible et sélectionnable par les clients en ligne.",
   "productPacksTitle": "Gestion des packs",
   "selectedCount": "{count} sélectionné(s)",
@@ -992,7 +1086,7 @@
       }
     }
   },
-  "navAfterSales": "Après-vente",
+  "navAfterSales": "Interventions & Support",
   "navCalendar": "Calendrier",
   "navCustomers": "Clients",
   "navEmployees": "Employés",
@@ -1003,7 +1097,16 @@
   "navWorkspaceAgenda": "Agenda et vue d'ensemble",
   "navWorkspaceSales": "Ventes et clients",
   "navWorkspaceSupport": "Support et opérations",
-  "navWorkspaceBilling": "Facturation et versions",
+  "navWorkspaceBilling": "Facturation & Abonnements",
+  "navWorkspaceProspects": "Prospects & Ventes",
+  "navWorkspaceCustomers": "Clients & Opérations",
+  "navWorkspaceProducts": "Produits & Versions",
+  "navWorkspaceTeam": "Équipe & Postes",
+  "navWorkspaceAnalytics": "Statistiques & Rapports",
+  "navOptionSources": "Sources d'acquisition",
+  "navOptionActivities": "Secteurs d'activité",
+  "navOptionSoftware": "Logiciels précédents",
+  "navOptionCities": "Villes & Wilayas",
   "navToggleSidebar": "Réduire / agrandir le menu",
   "settingsGroupGeneral": "Général et serveur",
   "settingsGroupSales": "Ventes et prospects",
@@ -1722,5 +1825,166 @@
   "productWebDescriptionLabel": "Description complète",
   "productFeatures": "Fonctionnalités",
   "productFeatureHint": "Ajoutez une fonctionnalité puis validez",
-  "productAddFeature": "Ajouter la fonctionnalité"
+  "productAddFeature": "Ajouter la fonctionnalité",
+  "customerViewProspectHistory": "Historique prospect",
+  "customerTabLicenses": "Licences & Logiciels",
+  "customerTabBilling": "Abonnements & Facturation",
+  "customerTabSupport": "Support & Interventions",
+  "customerTabAppointments": "Rendez-vous & Formation",
+  "customerTabPortal": "Comptes Portail",
+  "customerTabProspectArchive": "Archive & Parcours Prospect",
+  "filterActiveLeads": "Prospects actifs",
+  "filterConvertedLeads": "Convertis en clients",
+  "filterAllLeads": "Tous",
+  "prospectStageTimeline": "Parcours des étapes de vente",
+  "prospectInitialData": "Données initiales du prospect",
+  "customerSoftelClient": "Client Softel",
+  "customerMaintenanceActiveUntil": "Maintenance active jusqu'au {date}",
+  "@customerMaintenanceActiveUntil": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "customerMaintenanceExpired": "Maintenance expirée",
+  "customerMaintenanceNone": "Aucune maintenance",
+  "customerSubscriptionLifetime": "Licence perpétuelle",
+  "customerSubscriptionMaintenance": "Maintenance & support",
+  "customerSubscriptionPeriod": "Du {start} au {end}",
+  "@customerSubscriptionPeriod": {
+    "placeholders": {
+      "start": {"type": "String"},
+      "end": {"type": "String"}
+    }
+  },
+  "customerNoSubscriptions": "Aucun abonnement",
+  "customerOpenBilling": "Ouvrir la facturation",
+  "customerNoInterventions": "Aucune intervention",
+  "customerNoStageHistory": "Aucun historique d'étapes",
+  "customerNoProspectActivities": "Aucune activité enregistrée avant la conversion",
+  "customerProspectActivities": "Activités de la phase prospect",
+  "customerInitialInquiryDate": "Date de la première demande",
+  "customerProspectNotes": "Notes commerciales",
+  "prospectTabOverview": "Aperçu & intérêts",
+  "prospectTabPipeline": "Parcours de vente",
+  "prospectTabFollowUps": "Relances & tâches",
+  "prospectTabActivities": "Activités & notes",
+  "prospectTabDemos": "Démos & rendez-vous",
+  "copyDemoLink": "Copier le lien de démo",
+  "demoLinkCopied": "Lien copié",
+  "customerFilterAll": "Tous",
+  "customerFilterMaintenance": "Maintenance",
+  "customerFilterPortal": "Portail",
+  "customerMaintenanceActivePlan": "Plan actif",
+  "customerMaintenanceExpiringSoon": "Expire dans < 60 jours",
+  "customerMaintenanceExpiredNone": "Expiré / sans plan",
+  "customerPortalHas": "Avec compte portail",
+  "customerPortalNone": "Sans compte",
+  "customerQuickCall": "Appeler",
+  "trialFieldPeriod": "Période",
+  "trialFieldCreatedBy": "Créé par",
+  "trialFieldLink": "Lien de démo",
+  "openDemoLink": "Ouvrir le lien de démo",
+  "phoneCopied": "Numéro copié",
+  "phoneTapToCopy": "Cliquer pour copier le numéro",
+  "searchKeyboardHint": "↑ ↓ pour naviguer · ↵ pour ouvrir · Échap pour fermer",
+  "actionOpen": "Ouvrir",
+  "calNewAppointment": "Nouveau rendez-vous",
+  "calQuickAll": "Tous",
+  "calQuickDemos": "Démos",
+  "calQuickTrainings": "Formations",
+  "calQuickSupport": "Support et interventions",
+  "calQuickFollowUps": "Relances",
+  "empWorkstationName": "Nom du poste / bureau",
+  "empEditWorkstation": "Modifier le poste",
+  "empRole": "Département & Rôle",
+  "empRoleSales": "Commercial & Ventes",
+  "empRoleSupport": "Support technique",
+  "empRoleManagement": "Direction & Gestion",
+  "empRoleTraining": "Formation & Accompagnement",
+  "empPresenceAvailable": "Disponible",
+  "empPresenceBusy": "En appel / réunion",
+  "empPresenceAway": "En intervention externe",
+  "empPresenceBreak": "En pause",
+  "empActionsToday": "Actions aujourd'hui",
+  "empOnlineNow": "Connectés maintenant",
+  "empSalesActive": "Équipe commerciale",
+  "empSupportActive": "Équipe support",
+  "empTeamActionsToday": "Actions de l'équipe aujourd'hui",
+  "empSaveFailed": "Enregistrement impossible. Réessayez.",
+  "empFollowUpsCount": "{count} suivis",
+  "@empFollowUpsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "empTicketsCount": "{count} tickets support",
+  "@empTicketsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "empAppointmentsCount": "{count} rendez-vous",
+  "@empAppointmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navAnalytics": "Analyses & Rapports",
+  "analyticsSubtitle": "Indicateurs de performance, pipeline et activité de l'équipe",
+  "analyticsRangeMonth": "Ce mois",
+  "analyticsRangeQuarter": "Ce trimestre",
+  "analyticsRangeYear": "Cette année",
+  "analyticsRangeAll": "Tous",
+  "analyticsTabSales": "Ventes & Pipeline",
+  "analyticsTabRevenue": "Abonnements & Licences",
+  "analyticsTabSupport": "Support & SLA",
+  "analyticsTabTeam": "Performance Équipe",
+  "analyticsFunnel": "Entonnoir de conversion",
+  "analyticsFunnelWon": "Prospects gagnés",
+  "analyticsLossReasons": "Motifs de perte",
+  "analyticsNoReason": "Motif non renseigné",
+  "analyticsSources": "Canaux d'acquisition",
+  "analyticsTopCities": "Villes principales",
+  "analyticsUnknown": "Non renseigné",
+  "analyticsAvgCycle": "Cycle de vente moyen",
+  "analyticsUnitDays": "jours",
+  "analyticsUnitHours": "h",
+  "analyticsNoData": "Aucune donnée pour cette période",
+  "analyticsTotalCustomers": "Clients",
+  "analyticsActiveMaintenance": "Maintenance active",
+  "analyticsExpiredMaintenance": "Maintenance expirée",
+  "analyticsAvgPcs": "Produits par client",
+  "analyticsRetention": "Taux de rétention maintenance",
+  "analyticsRetentionShort": "Rétention",
+  "analyticsProductPopularity": "Produits les plus vendus",
+  "analyticsExpiringTitle": "Maintenances arrivant à échéance (60 jours)",
+  "analyticsExpiringNone": "Aucune maintenance n'expire prochainement.",
+  "analyticsExpiringAction": "Ouvrir la facturation",
+  "analyticsTotalTickets": "Tickets",
+  "analyticsResolvedTickets": "Tickets résolus",
+  "analyticsResolutionRate": "Taux de résolution",
+  "analyticsResolutionSpeed": "Délai moyen de résolution",
+  "analyticsTicketsByCategory": "Tickets par catégorie",
+  "analyticsDemoConversion": "Conversion des versions démo",
+  "analyticsDemoConverted": "Devenus clients",
+  "analyticsDemoNotConverted": "Sans achat",
+  "analyticsLeaderboard": "Classement de l'équipe",
+  "analyticsColEmployee": "Employé",
+  "analyticsColActivities": "Activités",
+  "analyticsColInterventions": "Interventions",
+  "analyticsColDeals": "Ventes conclues",
+  "analyticsExpiringCount": "{count} maintenance(s) à renouveler prochainement",
+  "@analyticsExpiringCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

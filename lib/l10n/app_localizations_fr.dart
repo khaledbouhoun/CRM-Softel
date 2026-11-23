@@ -508,6 +508,99 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get dashTodayActions => 'Actions du jour';
+
+  @override
+  String get dashAllCaughtUp => '🎉 Tout est fait pour aujourd\'hui !';
+
+  @override
+  String dashOverdueCount(Object count) {
+    return '$count en retard';
+  }
+
+  @override
+  String get dashMarkDone => 'Marquer comme fait';
+
+  @override
+  String get dashNewLead => 'Nouveau prospect';
+
+  @override
+  String get dashNewTicket => 'Ticket de support';
+
+  @override
+  String get dashNewMeeting => 'Nouveau rendez-vous';
+
+  @override
+  String dashNewThisMonthCount(Object count) {
+    return '$count nouveaux ce mois-ci';
+  }
+
+  @override
+  String dashWelcome(Object name) {
+    return 'Bonjour, $name 👋';
+  }
+
+  @override
+  String dashSummaryLine(Object appointments, Object urgent, Object leads) {
+    return '$appointments rendez-vous aujourd\'hui · $urgent tickets urgents · $leads prospects actifs';
+  }
+
+  @override
+  String get dashActiveClients => 'Clients & licences';
+
+  @override
+  String dashMaintenanceActive(Object count) {
+    return '$count maintenances actives';
+  }
+
+  @override
+  String dashMaintenanceExpiring(Object count) {
+    return '$count bientôt expirées';
+  }
+
+  @override
+  String get dashPipelineDeals => 'Pipeline & affaires';
+
+  @override
+  String get dashOpenSupport => 'Tickets de support ouverts';
+
+  @override
+  String dashUrgentAlert(Object count) {
+    return '$count urgents';
+  }
+
+  @override
+  String get dashAllClear => 'Aucun ticket urgent';
+
+  @override
+  String get dashAppointmentsToday => 'Rendez-vous aujourd\'hui';
+
+  @override
+  String dashPendingRequests(Object count) {
+    return '$count demandes portail en attente';
+  }
+
+  @override
+  String get dashThisMonth => 'Ce mois-ci';
+
+  @override
+  String get dashNewThisMonth => 'Nouveaux prospects';
+
+  @override
+  String get dashNetConversion => 'Taux de conversion net';
+
+  @override
+  String get dashTodayHub => 'Suivi du jour';
+
+  @override
+  String get dashTodayHubSubtitle => 'Touchez pour ouvrir la liste';
+
+  @override
+  String dashActiveTrials(Object count) {
+    return '$count essais actifs';
+  }
+
+  @override
   String get stageTypeOpen => 'En cours';
 
   @override
@@ -1132,7 +1225,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Téléversement du fichier démo vers le serveur…';
 
   @override
-  String get productActiveOnWeb => 'Afficher sur le site web & portail';
+  String get productActiveOnWeb => 'Le site web & portail';
 
   @override
   String get productActiveOnWebHint =>
@@ -1715,7 +1808,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get navAfterSales => 'Après-vente';
+  String get navAfterSales => 'Interventions & Support';
 
   @override
   String get navCalendar => 'Calendrier';
@@ -1748,7 +1841,34 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navWorkspaceSupport => 'Support et opérations';
 
   @override
-  String get navWorkspaceBilling => 'Facturation et versions';
+  String get navWorkspaceBilling => 'Facturation & Abonnements';
+
+  @override
+  String get navWorkspaceProspects => 'Prospects & Ventes';
+
+  @override
+  String get navWorkspaceCustomers => 'Clients & Opérations';
+
+  @override
+  String get navWorkspaceProducts => 'Produits & Versions';
+
+  @override
+  String get navWorkspaceTeam => 'Équipe & Postes';
+
+  @override
+  String get navWorkspaceAnalytics => 'Statistiques & Rapports';
+
+  @override
+  String get navOptionSources => 'Sources d\'acquisition';
+
+  @override
+  String get navOptionActivities => 'Secteurs d\'activité';
+
+  @override
+  String get navOptionSoftware => 'Logiciels précédents';
+
+  @override
+  String get navOptionCities => 'Villes & Wilayas';
 
   @override
   String get navToggleSidebar => 'Réduire / agrandir le menu';
@@ -3462,4 +3582,387 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get productAddFeature => 'Ajouter la fonctionnalité';
+
+  @override
+  String get customerViewProspectHistory => 'Historique prospect';
+
+  @override
+  String get customerTabLicenses => 'Licences & Logiciels';
+
+  @override
+  String get customerTabBilling => 'Abonnements & Facturation';
+
+  @override
+  String get customerTabSupport => 'Support & Interventions';
+
+  @override
+  String get customerTabAppointments => 'Rendez-vous & Formation';
+
+  @override
+  String get customerTabPortal => 'Comptes Portail';
+
+  @override
+  String get customerTabProspectArchive => 'Archive & Parcours Prospect';
+
+  @override
+  String get filterActiveLeads => 'Prospects actifs';
+
+  @override
+  String get filterConvertedLeads => 'Convertis en clients';
+
+  @override
+  String get filterAllLeads => 'Tous';
+
+  @override
+  String get prospectStageTimeline => 'Parcours des étapes de vente';
+
+  @override
+  String get prospectInitialData => 'Données initiales du prospect';
+
+  @override
+  String get customerSoftelClient => 'Client Softel';
+
+  @override
+  String customerMaintenanceActiveUntil(String date) {
+    return 'Maintenance active jusqu\'au $date';
+  }
+
+  @override
+  String get customerMaintenanceExpired => 'Maintenance expirée';
+
+  @override
+  String get customerMaintenanceNone => 'Aucune maintenance';
+
+  @override
+  String get customerSubscriptionLifetime => 'Licence perpétuelle';
+
+  @override
+  String get customerSubscriptionMaintenance => 'Maintenance & support';
+
+  @override
+  String customerSubscriptionPeriod(String start, String end) {
+    return 'Du $start au $end';
+  }
+
+  @override
+  String get customerNoSubscriptions => 'Aucun abonnement';
+
+  @override
+  String get customerOpenBilling => 'Ouvrir la facturation';
+
+  @override
+  String get customerNoInterventions => 'Aucune intervention';
+
+  @override
+  String get customerNoStageHistory => 'Aucun historique d\'étapes';
+
+  @override
+  String get customerNoProspectActivities =>
+      'Aucune activité enregistrée avant la conversion';
+
+  @override
+  String get customerProspectActivities => 'Activités de la phase prospect';
+
+  @override
+  String get customerInitialInquiryDate => 'Date de la première demande';
+
+  @override
+  String get customerProspectNotes => 'Notes commerciales';
+
+  @override
+  String get prospectTabOverview => 'Aperçu & intérêts';
+
+  @override
+  String get prospectTabPipeline => 'Parcours de vente';
+
+  @override
+  String get prospectTabFollowUps => 'Relances & tâches';
+
+  @override
+  String get prospectTabActivities => 'Activités & notes';
+
+  @override
+  String get prospectTabDemos => 'Démos & rendez-vous';
+
+  @override
+  String get copyDemoLink => 'Copier le lien de démo';
+
+  @override
+  String get demoLinkCopied => 'Lien copié';
+
+  @override
+  String get customerFilterAll => 'Tous';
+
+  @override
+  String get customerFilterMaintenance => 'Maintenance';
+
+  @override
+  String get customerFilterPortal => 'Portail';
+
+  @override
+  String get customerMaintenanceActivePlan => 'Plan actif';
+
+  @override
+  String get customerMaintenanceExpiringSoon => 'Expire dans < 60 jours';
+
+  @override
+  String get customerMaintenanceExpiredNone => 'Expiré / sans plan';
+
+  @override
+  String get customerPortalHas => 'Avec compte portail';
+
+  @override
+  String get customerPortalNone => 'Sans compte';
+
+  @override
+  String get customerQuickCall => 'Appeler';
+
+  @override
+  String get trialFieldPeriod => 'Période';
+
+  @override
+  String get trialFieldCreatedBy => 'Créé par';
+
+  @override
+  String get trialFieldLink => 'Lien de démo';
+
+  @override
+  String get openDemoLink => 'Ouvrir le lien de démo';
+
+  @override
+  String get phoneCopied => 'Numéro copié';
+
+  @override
+  String get phoneTapToCopy => 'Cliquer pour copier le numéro';
+
+  @override
+  String get searchKeyboardHint =>
+      '↑ ↓ pour naviguer · ↵ pour ouvrir · Échap pour fermer';
+
+  @override
+  String get actionOpen => 'Ouvrir';
+
+  @override
+  String get calNewAppointment => 'Nouveau rendez-vous';
+
+  @override
+  String get calQuickAll => 'Tous';
+
+  @override
+  String get calQuickDemos => 'Démos';
+
+  @override
+  String get calQuickTrainings => 'Formations';
+
+  @override
+  String get calQuickSupport => 'Support et interventions';
+
+  @override
+  String get calQuickFollowUps => 'Relances';
+
+  @override
+  String get empWorkstationName => 'Nom du poste / bureau';
+
+  @override
+  String get empEditWorkstation => 'Modifier le poste';
+
+  @override
+  String get empRole => 'Département & Rôle';
+
+  @override
+  String get empRoleSales => 'Commercial & Ventes';
+
+  @override
+  String get empRoleSupport => 'Support technique';
+
+  @override
+  String get empRoleManagement => 'Direction & Gestion';
+
+  @override
+  String get empRoleTraining => 'Formation & Accompagnement';
+
+  @override
+  String get empPresenceAvailable => 'Disponible';
+
+  @override
+  String get empPresenceBusy => 'En appel / réunion';
+
+  @override
+  String get empPresenceAway => 'En intervention externe';
+
+  @override
+  String get empPresenceBreak => 'En pause';
+
+  @override
+  String get empActionsToday => 'Actions aujourd\'hui';
+
+  @override
+  String get empOnlineNow => 'Connectés maintenant';
+
+  @override
+  String get empSalesActive => 'Équipe commerciale';
+
+  @override
+  String get empSupportActive => 'Équipe support';
+
+  @override
+  String get empTeamActionsToday => 'Actions de l\'équipe aujourd\'hui';
+
+  @override
+  String get empSaveFailed => 'Enregistrement impossible. Réessayez.';
+
+  @override
+  String empFollowUpsCount(int count) {
+    return '$count suivis';
+  }
+
+  @override
+  String empTicketsCount(int count) {
+    return '$count tickets support';
+  }
+
+  @override
+  String empAppointmentsCount(int count) {
+    return '$count rendez-vous';
+  }
+
+  @override
+  String get navAnalytics => 'Analyses & Rapports';
+
+  @override
+  String get analyticsSubtitle =>
+      'Indicateurs de performance, pipeline et activité de l\'équipe';
+
+  @override
+  String get analyticsRangeMonth => 'Ce mois';
+
+  @override
+  String get analyticsRangeQuarter => 'Ce trimestre';
+
+  @override
+  String get analyticsRangeYear => 'Cette année';
+
+  @override
+  String get analyticsRangeAll => 'Tous';
+
+  @override
+  String get analyticsTabSales => 'Ventes & Pipeline';
+
+  @override
+  String get analyticsTabRevenue => 'Abonnements & Licences';
+
+  @override
+  String get analyticsTabSupport => 'Support & SLA';
+
+  @override
+  String get analyticsTabTeam => 'Performance Équipe';
+
+  @override
+  String get analyticsFunnel => 'Entonnoir de conversion';
+
+  @override
+  String get analyticsFunnelWon => 'Prospects gagnés';
+
+  @override
+  String get analyticsLossReasons => 'Motifs de perte';
+
+  @override
+  String get analyticsNoReason => 'Motif non renseigné';
+
+  @override
+  String get analyticsSources => 'Canaux d\'acquisition';
+
+  @override
+  String get analyticsTopCities => 'Villes principales';
+
+  @override
+  String get analyticsUnknown => 'Non renseigné';
+
+  @override
+  String get analyticsAvgCycle => 'Cycle de vente moyen';
+
+  @override
+  String get analyticsUnitDays => 'jours';
+
+  @override
+  String get analyticsUnitHours => 'h';
+
+  @override
+  String get analyticsNoData => 'Aucune donnée pour cette période';
+
+  @override
+  String get analyticsTotalCustomers => 'Clients';
+
+  @override
+  String get analyticsActiveMaintenance => 'Maintenance active';
+
+  @override
+  String get analyticsExpiredMaintenance => 'Maintenance expirée';
+
+  @override
+  String get analyticsAvgPcs => 'Produits par client';
+
+  @override
+  String get analyticsRetention => 'Taux de rétention maintenance';
+
+  @override
+  String get analyticsRetentionShort => 'Rétention';
+
+  @override
+  String get analyticsProductPopularity => 'Produits les plus vendus';
+
+  @override
+  String get analyticsExpiringTitle =>
+      'Maintenances arrivant à échéance (60 jours)';
+
+  @override
+  String get analyticsExpiringNone =>
+      'Aucune maintenance n\'expire prochainement.';
+
+  @override
+  String get analyticsExpiringAction => 'Ouvrir la facturation';
+
+  @override
+  String get analyticsTotalTickets => 'Tickets';
+
+  @override
+  String get analyticsResolvedTickets => 'Tickets résolus';
+
+  @override
+  String get analyticsResolutionRate => 'Taux de résolution';
+
+  @override
+  String get analyticsResolutionSpeed => 'Délai moyen de résolution';
+
+  @override
+  String get analyticsTicketsByCategory => 'Tickets par catégorie';
+
+  @override
+  String get analyticsDemoConversion => 'Conversion des versions démo';
+
+  @override
+  String get analyticsDemoConverted => 'Devenus clients';
+
+  @override
+  String get analyticsDemoNotConverted => 'Sans achat';
+
+  @override
+  String get analyticsLeaderboard => 'Classement de l\'équipe';
+
+  @override
+  String get analyticsColEmployee => 'Employé';
+
+  @override
+  String get analyticsColActivities => 'Activités';
+
+  @override
+  String get analyticsColInterventions => 'Interventions';
+
+  @override
+  String get analyticsColDeals => 'Ventes conclues';
+
+  @override
+  String analyticsExpiringCount(int count) {
+    return '$count maintenance(s) à renouveler prochainement';
+  }
 }

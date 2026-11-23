@@ -505,6 +505,99 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get dashTodayActions => 'متابعات ومهام اليوم';
+
+  @override
+  String get dashAllCaughtUp => '🎉 كل مهام اليوم منجزة!';
+
+  @override
+  String dashOverdueCount(Object count) {
+    return '$count متأخرة';
+  }
+
+  @override
+  String get dashMarkDone => 'تحديد كمنجزة';
+
+  @override
+  String get dashNewLead => 'مهتم جديد';
+
+  @override
+  String get dashNewTicket => 'تذكرة دعم';
+
+  @override
+  String get dashNewMeeting => 'موعد جديد';
+
+  @override
+  String dashNewThisMonthCount(Object count) {
+    return '$count جدد هذا الشهر';
+  }
+
+  @override
+  String dashWelcome(Object name) {
+    return 'مرحبًا، $name 👋';
+  }
+
+  @override
+  String dashSummaryLine(Object appointments, Object urgent, Object leads) {
+    return '$appointments مواعيد اليوم · $urgent تذاكر عاجلة · $leads مهتم نشط';
+  }
+
+  @override
+  String get dashActiveClients => 'العملاء والتراخيص';
+
+  @override
+  String dashMaintenanceActive(Object count) {
+    return '$count صيانة نشطة';
+  }
+
+  @override
+  String dashMaintenanceExpiring(Object count) {
+    return '$count تنتهي قريبًا';
+  }
+
+  @override
+  String get dashPipelineDeals => 'مسار المبيعات والصفقات';
+
+  @override
+  String get dashOpenSupport => 'تذاكر الدعم المفتوحة';
+
+  @override
+  String dashUrgentAlert(Object count) {
+    return '$count عاجلة';
+  }
+
+  @override
+  String get dashAllClear => 'لا توجد تذاكر عاجلة';
+
+  @override
+  String get dashAppointmentsToday => 'مواعيد اليوم';
+
+  @override
+  String dashPendingRequests(Object count) {
+    return '$count طلبات بوابة معلقة';
+  }
+
+  @override
+  String get dashThisMonth => 'هذا الشهر';
+
+  @override
+  String get dashNewThisMonth => 'مهتمون جدد';
+
+  @override
+  String get dashNetConversion => 'نسبة التحويل الصافية';
+
+  @override
+  String get dashTodayHub => 'متابعات اليوم';
+
+  @override
+  String get dashTodayHubSubtitle => 'انقر لفتح القائمة';
+
+  @override
+  String dashActiveTrials(Object count) {
+    return '$count تجربة نشطة';
+  }
+
+  @override
   String get stageTypeOpen => 'جارٍ';
 
   @override
@@ -1123,11 +1216,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get productUploadingDemo => 'جارٍ رفع الملف إلى السيرفر…';
 
   @override
-  String get productActiveOnWeb => 'عرض في موقع الويب وبوابة الطلبات';
+  String get productActiveOnWeb => 'الموقع والبوابة';
 
   @override
   String get productActiveOnWebHint =>
-      'إتاحة هذا المنتج لطلبات العملاء عبر موقع الويب.';
+      'يجعل هذا المنتج مرئياً وقابلاً للاختيار من قبل العملاء عبر الإنترنت.';
 
   @override
   String get productPacksTitle => 'إدارة الحزم والباقات';
@@ -1715,7 +1808,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get navAfterSales => 'ما بعد البيع';
+  String get navAfterSales => 'التدخلات والدعم';
 
   @override
   String get navCalendar => 'التقويم';
@@ -1748,7 +1841,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navWorkspaceSupport => 'العمليات والدعم الفني';
 
   @override
-  String get navWorkspaceBilling => 'المالية والاشتراكات';
+  String get navWorkspaceBilling => 'الفوترة والاشتراكات';
+
+  @override
+  String get navWorkspaceProspects => 'المهتمين والمبيعات';
+
+  @override
+  String get navWorkspaceCustomers => 'الزبائن والعمليات';
+
+  @override
+  String get navWorkspaceProducts => 'المنتجات والإصدارات';
+
+  @override
+  String get navWorkspaceTeam => 'فريق العمل';
+
+  @override
+  String get navWorkspaceAnalytics => 'التقارير والإحصائيات';
+
+  @override
+  String get navOptionSources => 'مصادر المهتمين';
+
+  @override
+  String get navOptionActivities => 'الأنشطة التجارية';
+
+  @override
+  String get navOptionSoftware => 'البرمجيات السابقة';
+
+  @override
+  String get navOptionCities => 'المدن والولايات';
 
   @override
   String get navToggleSidebar => 'طي / توسيع القائمة';
@@ -3434,4 +3554,382 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get productAddFeature => 'إضافة ميزة';
+
+  @override
+  String get customerViewProspectHistory => 'سجل مرحلة المهتم';
+
+  @override
+  String get customerTabLicenses => 'التراخيص والبرمجيات';
+
+  @override
+  String get customerTabBilling => 'الاشتراكات والفوترة';
+
+  @override
+  String get customerTabSupport => 'الدعم الفني والتدخلات';
+
+  @override
+  String get customerTabAppointments => 'المواعيد والتدريب';
+
+  @override
+  String get customerTabPortal => 'حسابات البوابة';
+
+  @override
+  String get customerTabProspectArchive => 'أرشيف وسجل المهتم';
+
+  @override
+  String get filterActiveLeads => 'المهتمين الحاليين';
+
+  @override
+  String get filterConvertedLeads => 'المحولين لزبائن';
+
+  @override
+  String get filterAllLeads => 'الكل';
+
+  @override
+  String get prospectStageTimeline => 'مسار مراحل البيع السابقة';
+
+  @override
+  String get prospectInitialData => 'البيانات الأولية للمهتم';
+
+  @override
+  String get customerSoftelClient => 'عميل Softel';
+
+  @override
+  String customerMaintenanceActiveUntil(String date) {
+    return 'صيانة نشطة حتى $date';
+  }
+
+  @override
+  String get customerMaintenanceExpired => 'صيانة منتهية';
+
+  @override
+  String get customerMaintenanceNone => 'لا توجد صيانة';
+
+  @override
+  String get customerSubscriptionLifetime => 'ترخيص دائم';
+
+  @override
+  String get customerSubscriptionMaintenance => 'صيانة ودعم فني';
+
+  @override
+  String customerSubscriptionPeriod(String start, String end) {
+    return 'من $start إلى $end';
+  }
+
+  @override
+  String get customerNoSubscriptions => 'لا توجد اشتراكات';
+
+  @override
+  String get customerOpenBilling => 'فتح الفوترة';
+
+  @override
+  String get customerNoInterventions => 'لا توجد تدخلات';
+
+  @override
+  String get customerNoStageHistory => 'لا يوجد سجل مراحل';
+
+  @override
+  String get customerNoProspectActivities => 'لا توجد أنشطة مسجلة قبل التحويل';
+
+  @override
+  String get customerProspectActivities => 'أنشطة مرحلة المهتم';
+
+  @override
+  String get customerInitialInquiryDate => 'تاريخ أول استفسار';
+
+  @override
+  String get customerProspectNotes => 'ملاحظات المبيعات';
+
+  @override
+  String get prospectTabOverview => 'النظرة العامة والاهتمامات';
+
+  @override
+  String get prospectTabPipeline => 'مسار البيع والمراحل';
+
+  @override
+  String get prospectTabFollowUps => 'المتابعات والمهام';
+
+  @override
+  String get prospectTabActivities => 'سجل الأنشطة والملاحظات';
+
+  @override
+  String get prospectTabDemos => 'النسخ التجريبية والمواعيد';
+
+  @override
+  String get copyDemoLink => 'نسخ رابط النسخة التجريبية';
+
+  @override
+  String get demoLinkCopied => 'تم نسخ الرابط';
+
+  @override
+  String get customerFilterAll => 'الكل';
+
+  @override
+  String get customerFilterMaintenance => 'الصيانة';
+
+  @override
+  String get customerFilterPortal => 'البوابة';
+
+  @override
+  String get customerMaintenanceActivePlan => 'خطة نشطة';
+
+  @override
+  String get customerMaintenanceExpiringSoon => 'تنتهي خلال أقل من 60 يومًا';
+
+  @override
+  String get customerMaintenanceExpiredNone => 'منتهية / بدون خطة';
+
+  @override
+  String get customerPortalHas => 'لديه حساب بوابة';
+
+  @override
+  String get customerPortalNone => 'بدون حساب';
+
+  @override
+  String get customerQuickCall => 'اتصال';
+
+  @override
+  String get trialFieldPeriod => 'الفترة';
+
+  @override
+  String get trialFieldCreatedBy => 'أنشئ بواسطة';
+
+  @override
+  String get trialFieldLink => 'رابط النسخة التجريبية';
+
+  @override
+  String get openDemoLink => 'فتح رابط النسخة التجريبية';
+
+  @override
+  String get phoneCopied => 'تم نسخ الرقم';
+
+  @override
+  String get phoneTapToCopy => 'انقر لنسخ الرقم';
+
+  @override
+  String get searchKeyboardHint => '↑ ↓ للتنقل · ↵ للفتح · Esc للإغلاق';
+
+  @override
+  String get actionOpen => 'فتح';
+
+  @override
+  String get calNewAppointment => 'موعد جديد';
+
+  @override
+  String get calQuickAll => 'الكل';
+
+  @override
+  String get calQuickDemos => 'تجارب برمجية';
+
+  @override
+  String get calQuickTrainings => 'تدريب ومرافقة';
+
+  @override
+  String get calQuickSupport => 'تدخلات الدعم';
+
+  @override
+  String get calQuickFollowUps => 'متابعات';
+
+  @override
+  String get empWorkstationName => 'اسم الحاسوب / المكتب';
+
+  @override
+  String get empEditWorkstation => 'تعديل بيانات الحاسوب';
+
+  @override
+  String get empRole => 'القسم والدور';
+
+  @override
+  String get empRoleSales => 'المبيعات والتجاري';
+
+  @override
+  String get empRoleSupport => 'الدعم الفني والتدخلات';
+
+  @override
+  String get empRoleManagement => 'الإدارة والإشراف';
+
+  @override
+  String get empRoleTraining => 'المرافقة والتدريب';
+
+  @override
+  String get empPresenceAvailable => 'متاح للعمل';
+
+  @override
+  String get empPresenceBusy => 'في مكالمة أو اجتماع';
+
+  @override
+  String get empPresenceAway => 'مهمة خارجية';
+
+  @override
+  String get empPresenceBreak => 'استراحة';
+
+  @override
+  String get empActionsToday => 'إنجازات اليوم';
+
+  @override
+  String get empOnlineNow => 'المتصلون الآن';
+
+  @override
+  String get empSalesActive => 'فريق المبيعات';
+
+  @override
+  String get empSupportActive => 'فريق الدعم';
+
+  @override
+  String get empTeamActionsToday => 'إجمالي عمليات الفريق اليوم';
+
+  @override
+  String get empSaveFailed => 'تعذّر الحفظ. حاول مرة أخرى.';
+
+  @override
+  String empFollowUpsCount(int count) {
+    return '$count متابعة';
+  }
+
+  @override
+  String empTicketsCount(int count) {
+    return '$count تذكرة دعم';
+  }
+
+  @override
+  String empAppointmentsCount(int count) {
+    return '$count موعد';
+  }
+
+  @override
+  String get navAnalytics => 'التحليلات والتقارير';
+
+  @override
+  String get analyticsSubtitle => 'مؤشرات الأداء، مسار الصفقات، ونشاط الفريق';
+
+  @override
+  String get analyticsRangeMonth => 'هذا الشهر';
+
+  @override
+  String get analyticsRangeQuarter => 'الربع الحالي';
+
+  @override
+  String get analyticsRangeYear => 'هذه السنة';
+
+  @override
+  String get analyticsRangeAll => 'الكل';
+
+  @override
+  String get analyticsTabSales => 'المبيعات والصفقات';
+
+  @override
+  String get analyticsTabRevenue => 'الاشتراكات والتراخيص';
+
+  @override
+  String get analyticsTabSupport => 'الدعم وجودة الخدمة';
+
+  @override
+  String get analyticsTabTeam => 'إنتاجية الفريق';
+
+  @override
+  String get analyticsFunnel => 'قمع تحويل المبيعات';
+
+  @override
+  String get analyticsFunnelWon => 'الصفقات الرابحة';
+
+  @override
+  String get analyticsLossReasons => 'أسباب خسارة الصفقات';
+
+  @override
+  String get analyticsNoReason => 'بدون سبب محدد';
+
+  @override
+  String get analyticsSources => 'قنوات استقطاب المهتمين';
+
+  @override
+  String get analyticsTopCities => 'أهم المدن';
+
+  @override
+  String get analyticsUnknown => 'غير محدد';
+
+  @override
+  String get analyticsAvgCycle => 'متوسط دورة البيع';
+
+  @override
+  String get analyticsUnitDays => 'يوم';
+
+  @override
+  String get analyticsUnitHours => 'ساعة';
+
+  @override
+  String get analyticsNoData => 'لا توجد بيانات لهذه الفترة';
+
+  @override
+  String get analyticsTotalCustomers => 'العملاء';
+
+  @override
+  String get analyticsActiveMaintenance => 'صيانة سارية';
+
+  @override
+  String get analyticsExpiredMaintenance => 'صيانة منتهية';
+
+  @override
+  String get analyticsAvgPcs => 'منتجات لكل عميل';
+
+  @override
+  String get analyticsRetention => 'معدل تجديد الصيانة السنوية';
+
+  @override
+  String get analyticsRetentionShort => 'التجديد';
+
+  @override
+  String get analyticsProductPopularity => 'المنتجات الأكثر مبيعًا';
+
+  @override
+  String get analyticsExpiringTitle => 'صيانة تنتهي خلال 60 يومًا';
+
+  @override
+  String get analyticsExpiringNone => 'لا توجد صيانة تنتهي قريبًا.';
+
+  @override
+  String get analyticsExpiringAction => 'فتح الفوترة';
+
+  @override
+  String get analyticsTotalTickets => 'التذاكر';
+
+  @override
+  String get analyticsResolvedTickets => 'تذاكر محلولة';
+
+  @override
+  String get analyticsResolutionRate => 'معدل الحل';
+
+  @override
+  String get analyticsResolutionSpeed => 'متوسط سرعة حل التذاكر';
+
+  @override
+  String get analyticsTicketsByCategory => 'التذاكر حسب الفئة';
+
+  @override
+  String get analyticsDemoConversion => 'معدل تحويل الديمو إلى شراء';
+
+  @override
+  String get analyticsDemoConverted => 'تحولوا إلى عملاء';
+
+  @override
+  String get analyticsDemoNotConverted => 'بدون شراء';
+
+  @override
+  String get analyticsLeaderboard => 'ترتيب الفريق';
+
+  @override
+  String get analyticsColEmployee => 'الموظف';
+
+  @override
+  String get analyticsColActivities => 'الأنشطة';
+
+  @override
+  String get analyticsColInterventions => 'التدخلات';
+
+  @override
+  String get analyticsColDeals => 'صفقات مغلقة';
+
+  @override
+  String analyticsExpiringCount(int count) {
+    return '$count صيانة تحتاج إلى تجديد قريبًا';
+  }
 }
