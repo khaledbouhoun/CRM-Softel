@@ -92,6 +92,58 @@ class ProductFormController extends GetxController {
   late final demoUrl = TextEditingController(text: initial?.demoUrl);
   late final isActiveOnWeb = (initial?.isActiveOnWeb ?? false).obs;
 
+  // Catalog & web.
+  static const languages = ['ar', 'fr', 'en'];
+  static const maxFeatures = 50;
+  static const maxImageBytes = 5 * 1024 * 1024;
+
+  late final slug = TextEditingController(text: initial?.slug);
+  late final sortOrder = TextEditingController(
+    text: (initial?.sortOrder ?? 0).toString(),
+  );
+  late final imagePath = RxnString(initial?.imagePath);
+  late final imageUrl = TextEditingController(text: initial?.imagePath);
+  final isUploadingImage = false.obs;
+  final imageUploadProgress = 0.0.obs;
+
+  /// Public summary / description per language (`ar`, `fr`, `en`).
+  late final summaryI18n = {
+    for (final l in languages)
+      l: TextEditingController(text: initial?.summaryI18n?[l]),
+  };
+  late final descriptionI18n = {
+    for (final l in languages)
+      l: TextEditingController(text: initial?.descriptionI18n?[l]),
+  };
+
+  late final features = <String>[...?initial?.features].obs;
+  final featureInput = TextEditingController();
+
+  /// Selected form tab: 0 basic info, 1 catalog & web, 2 demo.
+  final tab = 0.obs;
+
+  static const _tabOfField = {
+    'name': 0,
+    'description': 0,
+    'pack_id': 0,
+    'slug': 0,
+    'sort_order': 0,
+    'image_path': 0,
+    'summary_i18n': 1,
+    'description_i18n': 1,
+    'features': 1,
+    'demo_url': 2,
+  };
+
+  /// Switches to the first tab holding a field in error so the user sees it.
+  void revealFirstError() {
+    final fields = {...validateAll().keys, ...serverErrors.keys};
+    final tabs = [
+      for (final f in fields) _tabOfField[f.split('.').first] ?? 0,
+    ]..sort();
+    if (tabs.isNotEmpty) tab.value = tabs.first;
+  }
+
   final isSubmitting = false.obs;
   final isUploadingDemo = false.obs;
   final demoUploadProgress = 0.0.obs;
@@ -132,6 +184,95 @@ class ProductFormController extends GetxController {
     }
   }
 
+  /// Picks an image, uploads it and shows it as the product image.
+  Future<void> pickAndUploadImage() async {
+    if (isUploadingImage.value || isSubmitting.value) return;
+    try {
+      final picked = await FileAccess.pick(
+        extensions: FileAccess.productImageExtensions,
+        multiple: false,
+      );
+      if (picked.isEmpty) return;
+      final file = picked.first;
+      if (file.size > maxImageBytes) {
+        AppFeedback.error(tr.productImageTooLarge);
+        return;
+      }
+      isUploadingImage.value = true;
+      imageUploadProgress.value = 0.0;
+
+      final url = await _repository.uploadProductImage(
+        file,
+        productId: initial?.id,
+        onProgress: (sent, total) {
+          if (total > 0) imageUploadProgress.value = sent / total;
+        },
+      );
+
+      setImage(url);
+      AppFeedback.success(tr.productImageUploaded);
+    } catch (e) {
+      AppFeedback.error(ApiException.from(e).message);
+    } finally {
+      isUploadingImage.value = false;
+    }
+  }
+
+  /// Sets (or clears, when blank) the product image URL.
+  void setImage(String? url) {
+    final value = url?.trim();
+    final next = (value == null || value.isEmpty) ? null : value;
+    imagePath.value = next;
+    if (imageUrl.text != (next ?? '')) imageUrl.text = next ?? '';
+    serverErrors.remove('image_path');
+  }
+
+  void clearImage() => setImage(null);
+
+  void addFeature() {
+    final text = featureInput.text.trim();
+    if (text.isEmpty || features.length >= maxFeatures) return;
+    if (!features.contains(text)) features.add(text);
+    featureInput.clear();
+  }
+
+  void removeFeature(String feature) => features.remove(feature);
+
+  String? validateSlug(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return serverErrors['slug'];
+    final ok =
+        text.length <= 170 && RegExp(r'^[a-z0-9]+(?:-[a-z0-9]+)*$').hasMatch(text);
+    return ok ? serverErrors['slug'] : tr.productSlugInvalid;
+  }
+
+  String? validateSortOrder(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final n = int.tryParse(text);
+    return (n != null && n >= 0 && n <= 100000)
+        ? serverErrors['sort_order']
+        : tr.productSortOrderInvalid;
+  }
+
+  String? validateImageUrl(String? v) {
+    final text = v?.trim() ?? '';
+    if (text.isEmpty) return serverErrors['image_path'];
+    if (text.length > 500) return tr.productImageUrlInvalid;
+    final uri = Uri.tryParse(text);
+    final ok =
+        uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https') &&
+        uri.host.isNotEmpty;
+    return ok ? serverErrors['image_path'] : tr.productImageUrlInvalid;
+  }
+
+  String? validateSummary(String? v) =>
+      Validators.maxLength(v, 1000);
+
+  String? validateWebDescription(String? v) =>
+      Validators.maxLength(v, 20000);
+
   String? validateName(String? v) =>
       serverErrors['name'] ??
       Validators.combine([
@@ -161,6 +302,12 @@ class ProductFormController extends GetxController {
     if (d != null) errors['description'] = d;
     final u = validateDemoUrl(demoUrl.text);
     if (u != null) errors['demo_url'] = u;
+    final sl = validateSlug(slug.text);
+    if (sl != null) errors['slug'] = sl;
+    final so = validateSortOrder(sortOrder.text);
+    if (so != null) errors['sort_order'] = so;
+    final im = validateImageUrl(imageUrl.text);
+    if (im != null) errors['image_path'] = im;
     return errors;
   }
 
@@ -179,6 +326,15 @@ class ProductFormController extends GetxController {
         packId: packId.value,
         demoUrl: demoUrl.text,
         isActiveOnWeb: isActiveOnWeb.value,
+        slug: slug.text.trim().isEmpty ? null : slug.text,
+        // Always sent so that clearing the image really removes it.
+        imagePath: imagePath.value ?? '',
+        features: features.toList(),
+        summaryI18n: {for (final e in summaryI18n.entries) e.key: e.value.text},
+        descriptionI18n: {
+          for (final e in descriptionI18n.entries) e.key: e.value.text,
+        },
+        sortOrder: int.tryParse(sortOrder.text.trim()) ?? 0,
       );
       return isEdit
           ? await _repository.updateProduct(initial!.id, payload)
@@ -193,6 +349,12 @@ class ProductFormController extends GetxController {
         'pack_id',
         'demo_url',
         'is_active_on_web',
+        'slug',
+        'image_path',
+        'sort_order',
+        'features',
+        'summary_i18n',
+        'description_i18n',
       });
       formKey.currentState?.validate();
       return null;
@@ -209,6 +371,13 @@ class ProductFormController extends GetxController {
     name.dispose();
     description.dispose();
     demoUrl.dispose();
+    slug.dispose();
+    sortOrder.dispose();
+    imageUrl.dispose();
+    featureInput.dispose();
+    for (final c in [...summaryI18n.values, ...descriptionI18n.values]) {
+      c.dispose();
+    }
     super.onClose();
   }
 }

@@ -9,6 +9,15 @@ abstract interface class ProductsRepository {
     int? productId,
     void Function(int sent, int total)? onProgress,
   });
+
+  /// Uploads a product image (PNG/JPG/WEBP/SVG, 5 MB max) and returns its
+  /// public URL.
+  Future<String> uploadProductImage(
+    PickedFile file, {
+    int? productId,
+    void Function(int sent, int total)? onProgress,
+  });
+
   /// Products sorted by name.
   ///
   /// [prospectId] keeps only the products linked to that prospect/customer

@@ -31,6 +31,25 @@ class ProductsRemoteDataSource {
     return data['url'] as String;
   }
 
+  Future<String> uploadImage(
+    PickedFile file, {
+    int? productId,
+    void Function(int sent, int total)? onProgress,
+  }) async {
+    final form = FormData.fromMap({
+      'image': await MultipartFile.fromFile(file.path, filename: file.name),
+      if (productId != null) 'product_id': productId.toString(),
+    });
+    final body = await _api.postForm(
+      ApiEndpoints.uploadProductImage,
+      data: form,
+      timeout: const Duration(minutes: 2),
+      onProgress: onProgress,
+    );
+    final data = ApiResponse.object(body);
+    return data['url'] as String;
+  }
+
   Future<List<Product>> fetchAll({
     bool includeInactive = false,
     String? search,

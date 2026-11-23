@@ -17,6 +17,13 @@ class ProductsRepositoryImpl implements ProductsRepository {
   }) => _remote.uploadDemoFile(file, productId: productId, onProgress: onProgress);
 
   @override
+  Future<String> uploadProductImage(
+    PickedFile file, {
+    int? productId,
+    void Function(int sent, int total)? onProgress,
+  }) => _remote.uploadImage(file, productId: productId, onProgress: onProgress);
+
+  @override
   Future<List<Product>> getProducts({
     bool includeInactive = false,
     String? search,
