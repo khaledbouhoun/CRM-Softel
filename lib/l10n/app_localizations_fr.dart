@@ -1739,6 +1739,72 @@ class AppLocalizationsFr extends AppLocalizations {
   String get navGroupTeam => 'Équipe';
 
   @override
+  String get navWorkspaceAgenda => 'Agenda et vue d\'ensemble';
+
+  @override
+  String get navWorkspaceSales => 'Ventes et clients';
+
+  @override
+  String get navWorkspaceSupport => 'Support et opérations';
+
+  @override
+  String get navWorkspaceBilling => 'Facturation et versions';
+
+  @override
+  String get navToggleSidebar => 'Réduire / agrandir le menu';
+
+  @override
+  String get settingsGroupGeneral => 'Général et serveur';
+
+  @override
+  String get settingsGroupSales => 'Ventes et prospects';
+
+  @override
+  String get settingsGroupSchedule => 'Rendez-vous et horaires';
+
+  @override
+  String get settingsGroupCatalog => 'Catalogue et ressources';
+
+  @override
+  String get settingsGroupAfterSales => 'Support et interventions';
+
+  @override
+  String get hoursOpen => 'Ouvert';
+
+  @override
+  String get hoursClosed => 'Fermé';
+
+  @override
+  String get hoursDailySpan => 'Amplitude journalière';
+
+  @override
+  String get hoursPickTime => 'Choisir l\'heure';
+
+  @override
+  String get hoursSlotsPerDay => 'créneaux par jour';
+
+  @override
+  String get unitMinutes => 'min';
+
+  @override
+  String get unitHours => 'h';
+
+  @override
+  String get unitDays => 'jours';
+
+  @override
+  String get hoursBookingHorizonHint =>
+      'Jusqu\'à combien de jours à l\'avance un client peut réserver.';
+
+  @override
+  String get hoursMinNoticeHint =>
+      'Délai minimum entre la réservation et le rendez-vous, pour préparer l\'équipe.';
+
+  @override
+  String get hoursHoldHint =>
+      'Un créneau demandé reste réservé ce temps avant d\'être libéré.';
+
+  @override
   String get navRequests => 'Demandes et réservations';
 
   @override
@@ -3047,4 +3113,353 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wfFixedTypesNote =>
       'Les 4 types (Démo, Réunion, Formation, Accompagnement) sont fixes. Vous pouvez seulement ajuster la durée, la couleur et la réservation en ligne.';
+
+  @override
+  String get navBilling => 'Facturation';
+
+  @override
+  String get blTitle => 'Abonnements et facturation';
+
+  @override
+  String get blSubtitle =>
+      'Maintenance et support de chaque client, paiements en espèces à confirmer.';
+
+  @override
+  String get blStatusAll => 'Tous les statuts';
+
+  @override
+  String get blStatusActive => 'Actif';
+
+  @override
+  String get blStatusExpiringSoon => 'Expire bientôt';
+
+  @override
+  String get blStatusExpired => 'Expiré';
+
+  @override
+  String get blStatusNone => 'Aucun abonnement';
+
+  @override
+  String get blFilterStatus => 'Statut';
+
+  @override
+  String get blSortBy => 'Trier par';
+
+  @override
+  String get blSortName => 'Nom du client';
+
+  @override
+  String get blSortExpiry => 'Date d\'expiration';
+
+  @override
+  String get blSortConverted => 'Date de conversion';
+
+  @override
+  String get blSortDirection => 'Inverser l\'ordre';
+
+  @override
+  String get blPendingOnly => 'Renouvellements en attente';
+
+  @override
+  String get blSearchHint => 'Rechercher un client...';
+
+  @override
+  String get blColCustomer => 'Client';
+
+  @override
+  String get blColExpiry => 'Expiration';
+
+  @override
+  String get blColDaysLeft => 'Jours restants';
+
+  @override
+  String get blColPending => 'En attente';
+
+  @override
+  String get blNoCustomers => 'Aucun client';
+
+  @override
+  String get blNoCustomersHint => 'Aucun client ne correspond aux filtres.';
+
+  @override
+  String get blDetailTitle => 'Facturation du client';
+
+  @override
+  String get blBack => 'Retour aux abonnements';
+
+  @override
+  String get blLicense => 'Licence';
+
+  @override
+  String get blLicenseLifetime => 'Licence à vie (n\'expire jamais)';
+
+  @override
+  String get blLicenseSince => 'Depuis';
+
+  @override
+  String get blMaintenance => 'Maintenance et support';
+
+  @override
+  String get blMaintenanceStarts => 'Début';
+
+  @override
+  String get blMaintenanceExpires => 'Expiration';
+
+  @override
+  String get blPricePerYear => 'Prix par année';
+
+  @override
+  String get blCurrency => 'DA';
+
+  @override
+  String get blDaysUnit => 'jours';
+
+  @override
+  String get blSetMaintenance => 'Définir la période';
+
+  @override
+  String get blSetMaintenanceTitle => 'Période de maintenance';
+
+  @override
+  String get blSaved => 'Enregistré.';
+
+  @override
+  String get blRenewals => 'Demandes de renouvellement';
+
+  @override
+  String get blNoRenewals => 'Aucune demande de renouvellement.';
+
+  @override
+  String get blRenewalReference => 'Référence proforma';
+
+  @override
+  String get blRenewalYears => 'Années';
+
+  @override
+  String get blRenewalAmount => 'Montant';
+
+  @override
+  String get blRenewalPending => 'En attente de paiement';
+
+  @override
+  String get blRenewalConfirmed => 'Confirmée';
+
+  @override
+  String get blRequestedOn => 'Demandée le';
+
+  @override
+  String get blConfirmedOn => 'Confirmée le';
+
+  @override
+  String get blMarkPaid => 'Marquer comme payé';
+
+  @override
+  String get blMarkPaidTitle => 'Confirmer le paiement en espèces';
+
+  @override
+  String get blMarkPaidHint =>
+      'Confirmez que les espèces ont été reçues. La période de maintenance du client sera prolongée automatiquement.';
+
+  @override
+  String get blPaidAt => 'Date du paiement';
+
+  @override
+  String get blMarkedPaid => 'Paiement confirmé : maintenance prolongée.';
+
+  @override
+  String get blInvoices => 'Factures et reçus';
+
+  @override
+  String get blNoInvoices => 'Aucune facture.';
+
+  @override
+  String get blColInvoice => 'Référence';
+
+  @override
+  String get blColType => 'Type';
+
+  @override
+  String get blColAmount => 'Montant (DA)';
+
+  @override
+  String get blColIssued => 'Émise le';
+
+  @override
+  String get blColPaid => 'Payée le';
+
+  @override
+  String get blInvoiceTypeLicense => 'Licence';
+
+  @override
+  String get blInvoiceTypeRenewal => 'Renouvellement de maintenance';
+
+  @override
+  String get blInvoicePaid => 'Payée en espèces';
+
+  @override
+  String get blInvoicePending => 'En attente d\'encaissement';
+
+  @override
+  String get blInvoiceDetails => 'Détails de la facture';
+
+  @override
+  String get blReceipt => 'Reçu scanné';
+
+  @override
+  String get blReceiptNone => 'Aucun reçu joint.';
+
+  @override
+  String get blUploadReceipt => 'Joindre un reçu (PDF ou image)';
+
+  @override
+  String get blReplaceReceipt => 'Remplacer le reçu';
+
+  @override
+  String get blRemoveReceipt => 'Retirer le reçu';
+
+  @override
+  String get blViewReceipt => 'Télécharger le reçu';
+
+  @override
+  String get blReceiptUploaded => 'Reçu enregistré.';
+
+  @override
+  String get blReceiptRemoved => 'Reçu retiré.';
+
+  @override
+  String get blNewInvoice => 'Nouvelle facture';
+
+  @override
+  String get blInvoiceType => 'Type de facture';
+
+  @override
+  String get blInvoiceAmount => 'Montant (DA)';
+
+  @override
+  String get blInvoiceAlreadyPaid => 'Déjà payée en espèces';
+
+  @override
+  String get blInvoiceCreated => 'Facture créée.';
+
+  @override
+  String get blAmountInvalid => 'Entrez un montant valide.';
+
+  @override
+  String get blPeriodInvalid => 'La fin doit être après le début.';
+
+  @override
+  String get blRenewalPendingQuote => 'En attente de tarification';
+
+  @override
+  String get blRenewalQuoted => 'Tarifée, en attente de paiement';
+
+  @override
+  String get blRenewalRejected => 'Refusée';
+
+  @override
+  String get blQuotePrice => 'Tarifer';
+
+  @override
+  String get blQuoteTitle => 'Tarifer le renouvellement';
+
+  @override
+  String get blQuoteHint =>
+      'Entrez le montant total que le client paiera en espèces. Un proforma sera émis.';
+
+  @override
+  String get blQuoteAmount => 'Montant total (DA)';
+
+  @override
+  String get blQuoteIssue => 'Émettre le proforma';
+
+  @override
+  String get blQuoted => 'Proforma émis.';
+
+  @override
+  String get blWorkstations => 'postes';
+
+  @override
+  String get blDossiers => 'dossiers';
+
+  @override
+  String get blNotesLabel => 'Remarques';
+
+  @override
+  String get ivHotfixLabel => 'Correctif privé (Hotfix)';
+
+  @override
+  String get ivHotfixHint =>
+      'Le client verra ce fichier comme un correctif privé.';
+
+  @override
+  String get productImage => 'Image du produit';
+
+  @override
+  String get productUploadImage => 'Téléverser l\'image';
+
+  @override
+  String get productUploadingImage => 'Téléversement de l\'image...';
+
+  @override
+  String get productRemoveImage => 'Supprimer l\'image';
+
+  @override
+  String get productTabsBasic => 'Informations de base';
+
+  @override
+  String get productTabsWeb => 'Catalogue et web';
+
+  @override
+  String get productTabsDemo => 'Version de démonstration';
+
+  @override
+  String get productImageUploaded => 'Image du produit téléversée avec succès.';
+
+  @override
+  String get productImageTooLarge => 'L\'image dépasse 5 Mo.';
+
+  @override
+  String get productImageUrl => 'Ou collez l\'URL d\'une image';
+
+  @override
+  String get productImageUrlInvalid => 'URL d\'image invalide (http/https).';
+
+  @override
+  String get productImageHint => 'PNG, JPG, WEBP ou SVG — 5 Mo maximum.';
+
+  @override
+  String get productImageSvgPreview =>
+      'Aperçu SVG indisponible, le fichier est bien enregistré.';
+
+  @override
+  String get productSlug => 'Slug (URL courte)';
+
+  @override
+  String get productSlugHint =>
+      'Généré automatiquement à partir du nom si vide.';
+
+  @override
+  String get productSlugInvalid => 'Minuscules, chiffres et tirets uniquement.';
+
+  @override
+  String get productSortOrder => 'Ordre d\'affichage';
+
+  @override
+  String get productSortOrderInvalid =>
+      'Saisissez un nombre entre 0 et 100000.';
+
+  @override
+  String get productSummaryLabel => 'Résumé court';
+
+  @override
+  String get productWebDescriptionLabel => 'Description complète';
+
+  @override
+  String get productFeatures => 'Fonctionnalités';
+
+  @override
+  String get productFeatureHint => 'Ajoutez une fonctionnalité puis validez';
+
+  @override
+  String get productAddFeature => 'Ajouter la fonctionnalité';
 }

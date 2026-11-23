@@ -1731,6 +1731,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navGroupTeam => 'Team';
 
   @override
+  String get navWorkspaceAgenda => 'Agenda & Overview';
+
+  @override
+  String get navWorkspaceSales => 'Sales & Clients';
+
+  @override
+  String get navWorkspaceSupport => 'Support & Operations';
+
+  @override
+  String get navWorkspaceBilling => 'Billing & Releases';
+
+  @override
+  String get navToggleSidebar => 'Collapse / expand menu';
+
+  @override
+  String get settingsGroupGeneral => 'General & Server';
+
+  @override
+  String get settingsGroupSales => 'Business & Sales Pipeline';
+
+  @override
+  String get settingsGroupSchedule => 'Schedule & Working Hours';
+
+  @override
+  String get settingsGroupCatalog => 'Catalog & Product Resources';
+
+  @override
+  String get settingsGroupAfterSales => 'After-Sales & Interventions';
+
+  @override
+  String get hoursOpen => 'Open';
+
+  @override
+  String get hoursClosed => 'Closed';
+
+  @override
+  String get hoursDailySpan => 'Daily opening span';
+
+  @override
+  String get hoursPickTime => 'Pick a time';
+
+  @override
+  String get hoursSlotsPerDay => 'slots per day';
+
+  @override
+  String get unitMinutes => 'min';
+
+  @override
+  String get unitHours => 'h';
+
+  @override
+  String get unitDays => 'days';
+
+  @override
+  String get hoursBookingHorizonHint =>
+      'How many days ahead a customer may book.';
+
+  @override
+  String get hoursMinNoticeHint =>
+      'Minimum time between booking and appointment, so the team can prepare.';
+
+  @override
+  String get hoursHoldHint =>
+      'A requested slot stays reserved this long before it is released.';
+
+  @override
   String get navRequests => 'Requests and holds';
 
   @override
@@ -3036,4 +3102,352 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wfFixedTypesNote =>
       'The 4 types (Demo, Meeting, Training, Accompaniment) are fixed. You can only adjust duration, color and online booking.';
+
+  @override
+  String get navBilling => 'Billing';
+
+  @override
+  String get blTitle => 'Subscriptions & billing';
+
+  @override
+  String get blSubtitle =>
+      'Maintenance & support of every customer, cash payments to confirm.';
+
+  @override
+  String get blStatusAll => 'All statuses';
+
+  @override
+  String get blStatusActive => 'Active';
+
+  @override
+  String get blStatusExpiringSoon => 'Expiring soon';
+
+  @override
+  String get blStatusExpired => 'Expired';
+
+  @override
+  String get blStatusNone => 'No plan';
+
+  @override
+  String get blFilterStatus => 'Status';
+
+  @override
+  String get blSortBy => 'Sort by';
+
+  @override
+  String get blSortName => 'Customer name';
+
+  @override
+  String get blSortExpiry => 'Expiry date';
+
+  @override
+  String get blSortConverted => 'Customer since';
+
+  @override
+  String get blSortDirection => 'Reverse order';
+
+  @override
+  String get blPendingOnly => 'Pending renewals';
+
+  @override
+  String get blSearchHint => 'Search customers...';
+
+  @override
+  String get blColCustomer => 'Customer';
+
+  @override
+  String get blColExpiry => 'Expires';
+
+  @override
+  String get blColDaysLeft => 'Days left';
+
+  @override
+  String get blColPending => 'Pending';
+
+  @override
+  String get blNoCustomers => 'No customers';
+
+  @override
+  String get blNoCustomersHint => 'No customer matches the filters.';
+
+  @override
+  String get blDetailTitle => 'Customer billing';
+
+  @override
+  String get blBack => 'Back to subscriptions';
+
+  @override
+  String get blLicense => 'License';
+
+  @override
+  String get blLicenseLifetime => 'Lifetime license (never expires)';
+
+  @override
+  String get blLicenseSince => 'Since';
+
+  @override
+  String get blMaintenance => 'Maintenance & support';
+
+  @override
+  String get blMaintenanceStarts => 'Starts';
+
+  @override
+  String get blMaintenanceExpires => 'Expires';
+
+  @override
+  String get blPricePerYear => 'Price per year';
+
+  @override
+  String get blCurrency => 'DZD';
+
+  @override
+  String get blDaysUnit => 'days';
+
+  @override
+  String get blSetMaintenance => 'Set period';
+
+  @override
+  String get blSetMaintenanceTitle => 'Maintenance period';
+
+  @override
+  String get blSaved => 'Saved.';
+
+  @override
+  String get blRenewals => 'Renewal requests';
+
+  @override
+  String get blNoRenewals => 'No renewal requests.';
+
+  @override
+  String get blRenewalReference => 'Proforma reference';
+
+  @override
+  String get blRenewalYears => 'Years';
+
+  @override
+  String get blRenewalAmount => 'Amount';
+
+  @override
+  String get blRenewalPending => 'Awaiting payment';
+
+  @override
+  String get blRenewalConfirmed => 'Confirmed';
+
+  @override
+  String get blRequestedOn => 'Requested on';
+
+  @override
+  String get blConfirmedOn => 'Confirmed on';
+
+  @override
+  String get blMarkPaid => 'Mark as paid';
+
+  @override
+  String get blMarkPaidTitle => 'Confirm cash payment';
+
+  @override
+  String get blMarkPaidHint =>
+      'Confirm the cash was received. The customer\'s maintenance period is extended automatically.';
+
+  @override
+  String get blPaidAt => 'Payment date';
+
+  @override
+  String get blMarkedPaid => 'Payment confirmed: maintenance extended.';
+
+  @override
+  String get blInvoices => 'Invoices & receipts';
+
+  @override
+  String get blNoInvoices => 'No invoices.';
+
+  @override
+  String get blColInvoice => 'Reference';
+
+  @override
+  String get blColType => 'Type';
+
+  @override
+  String get blColAmount => 'Amount (DZD)';
+
+  @override
+  String get blColIssued => 'Issued';
+
+  @override
+  String get blColPaid => 'Paid on';
+
+  @override
+  String get blInvoiceTypeLicense => 'License';
+
+  @override
+  String get blInvoiceTypeRenewal => 'Maintenance renewal';
+
+  @override
+  String get blInvoicePaid => 'Paid in cash';
+
+  @override
+  String get blInvoicePending => 'Awaiting cash';
+
+  @override
+  String get blInvoiceDetails => 'Invoice details';
+
+  @override
+  String get blReceipt => 'Scanned receipt';
+
+  @override
+  String get blReceiptNone => 'No receipt attached.';
+
+  @override
+  String get blUploadReceipt => 'Attach a receipt (PDF or image)';
+
+  @override
+  String get blReplaceReceipt => 'Replace receipt';
+
+  @override
+  String get blRemoveReceipt => 'Remove receipt';
+
+  @override
+  String get blViewReceipt => 'Download receipt';
+
+  @override
+  String get blReceiptUploaded => 'Receipt saved.';
+
+  @override
+  String get blReceiptRemoved => 'Receipt removed.';
+
+  @override
+  String get blNewInvoice => 'New invoice';
+
+  @override
+  String get blInvoiceType => 'Invoice type';
+
+  @override
+  String get blInvoiceAmount => 'Amount (DZD)';
+
+  @override
+  String get blInvoiceAlreadyPaid => 'Already paid in cash';
+
+  @override
+  String get blInvoiceCreated => 'Invoice created.';
+
+  @override
+  String get blAmountInvalid => 'Enter a valid amount.';
+
+  @override
+  String get blPeriodInvalid => 'The end must be after the start.';
+
+  @override
+  String get blRenewalPendingQuote => 'Awaiting quote';
+
+  @override
+  String get blRenewalQuoted => 'Quoted, awaiting cash';
+
+  @override
+  String get blRenewalRejected => 'Rejected';
+
+  @override
+  String get blQuotePrice => 'Quote price';
+
+  @override
+  String get blQuoteTitle => 'Quote renewal price';
+
+  @override
+  String get blQuoteHint =>
+      'Enter the total amount the customer will pay in cash. A proforma is issued.';
+
+  @override
+  String get blQuoteAmount => 'Total amount (DZD)';
+
+  @override
+  String get blQuoteIssue => 'Issue proforma';
+
+  @override
+  String get blQuoted => 'Proforma issued.';
+
+  @override
+  String get blWorkstations => 'workstations';
+
+  @override
+  String get blDossiers => 'databases';
+
+  @override
+  String get blNotesLabel => 'Notes';
+
+  @override
+  String get ivHotfixLabel => 'Hotfix / Patch';
+
+  @override
+  String get ivHotfixHint =>
+      'The customer will see this file as a private hotfix patch.';
+
+  @override
+  String get productImage => 'Product image';
+
+  @override
+  String get productUploadImage => 'Upload image';
+
+  @override
+  String get productUploadingImage => 'Uploading image...';
+
+  @override
+  String get productRemoveImage => 'Remove image';
+
+  @override
+  String get productTabsBasic => 'Basic info';
+
+  @override
+  String get productTabsWeb => 'Catalog & web';
+
+  @override
+  String get productTabsDemo => 'Demo version';
+
+  @override
+  String get productImageUploaded => 'Product image uploaded successfully.';
+
+  @override
+  String get productImageTooLarge => 'The image exceeds 5 MB.';
+
+  @override
+  String get productImageUrl => 'Or paste an image URL';
+
+  @override
+  String get productImageUrlInvalid => 'Invalid image URL (http/https).';
+
+  @override
+  String get productImageHint => 'PNG, JPG, WEBP or SVG — 5 MB max.';
+
+  @override
+  String get productImageSvgPreview =>
+      'SVG preview unavailable, the file is saved.';
+
+  @override
+  String get productSlug => 'Slug (short URL)';
+
+  @override
+  String get productSlugHint => 'Generated from the name when left empty.';
+
+  @override
+  String get productSlugInvalid =>
+      'Lowercase letters, digits and hyphens only.';
+
+  @override
+  String get productSortOrder => 'Sort order';
+
+  @override
+  String get productSortOrderInvalid => 'Enter a number between 0 and 100000.';
+
+  @override
+  String get productSummaryLabel => 'Short summary';
+
+  @override
+  String get productWebDescriptionLabel => 'Full description';
+
+  @override
+  String get productFeatures => 'Features';
+
+  @override
+  String get productFeatureHint => 'Type a feature and press add';
+
+  @override
+  String get productAddFeature => 'Add feature';
 }

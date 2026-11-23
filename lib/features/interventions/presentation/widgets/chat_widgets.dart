@@ -93,7 +93,7 @@ class ChatBubble extends StatelessWidget {
     final Color foreground;
     final BorderSide border;
     if (!employee) {
-      background = scheme.surfaceContainerHighest.withValues(alpha: 0.55);
+      background = scheme.surfaceContainerLowest;
       foreground = scheme.onSurface;
       border = BorderSide(color: scheme.outlineVariant);
     } else if (internal) {
@@ -116,7 +116,12 @@ class ChatBubble extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: const Radius.circular(AppRadius.lg),
+          topEnd: const Radius.circular(AppRadius.lg),
+          bottomStart: Radius.circular(employee ? AppRadius.lg : 4),
+          bottomEnd: Radius.circular(employee ? 4 : AppRadius.lg),
+        ),
         border: Border.fromBorderSide(border),
       ),
       child: Column(
@@ -352,58 +357,140 @@ class AttachmentTile extends StatelessWidget {
       return _ImageThumb(attachment: attachment, controller: controller);
     }
     final scheme = context.colors;
+    final crm = context.crm;
+    final hotfix = attachment.isHotfix;
+    final accent = hotfix ? crm.warning : scheme.primary;
+    final meta = [
+      FileAccess.extensionOf(attachment.name).toUpperCase(),
+      Formatters.fileSize(attachment.size),
+    ].where((e) => e.isNotEmpty).join(' · ');
     return Container(
-      constraints: const BoxConstraints(minWidth: 220, maxWidth: 300),
-      padding: const EdgeInsets.all(10),
+      constraints: const BoxConstraints(minWidth: 240, maxWidth: 320),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: scheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: scheme.outlineVariant),
+        color: hotfix ? crm.warningContainer : scheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(
+          color: hotfix ? crm.warning.withValues(alpha: 0.6) : scheme.outlineVariant,
+          width: hotfix ? 1.5 : 1,
+        ),
       ),
       child: DefaultTextStyle.merge(
         style: TextStyle(color: scheme.onSurface),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(_iconFor(attachment.name), size: 30, color: scheme.primary),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    attachment.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.labelLarge,
+            if (hotfix) ...[
+              HotfixChip(label: tr.ivHotfixLabel),
+              const SizedBox(height: 8),
+            ],
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
-                  Text(
-                    [
-                      FileAccess.extensionOf(attachment.name).toUpperCase(),
-                      Formatters.fileSize(attachment.size),
-                    ].where((e) => e.isNotEmpty).join(' · '),
-                    style: context.text.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
+                  child: Icon(_iconFor(attachment.name), size: 24, color: accent),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        attachment.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.text.labelLarge,
+                      ),
+                      if (meta.isNotEmpty)
+                        Text(
+                          meta,
+                          style: context.text.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(width: 6),
-            if (_isPdf)
-              IconButton(
-                tooltip: tr.ivViewPdf,
-                icon: const Icon(Icons.visibility_outlined, size: 20),
-                onPressed: _openPdf,
-              ),
-            IconButton(
-              tooltip: tr.ivDownload,
-              icon: const Icon(Icons.download_outlined, size: 20),
-              onPressed: _save,
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                if (_isPdf)
+                  OutlinedButton.icon(
+                    style: _compactButton,
+                    icon: const Icon(Icons.visibility_outlined, size: 16),
+                    label: Text(tr.ivViewPdf),
+                    onPressed: _openPdf,
+                  ),
+                FilledButton.icon(
+                  style: _compactButton,
+                  icon: const Icon(Icons.download_outlined, size: 16),
+                  label: Text(tr.ivDownload),
+                  onPressed: _save,
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+const _compactButton = ButtonStyle(
+  visualDensity: VisualDensity.compact,
+  padding: WidgetStatePropertyAll(
+    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  ),
+  textStyle: WidgetStatePropertyAll(
+    TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+  ),
+);
+
+/// Distinct chip marking a private hotfix / patch file.
+class HotfixChip extends StatelessWidget {
+  const HotfixChip({super.key, required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final warning = context.crm.warning;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: warning.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        border: Border.all(color: warning.withValues(alpha: 0.6)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.healing_outlined, size: 14, color: warning),
+          const SizedBox(width: 5),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.text.labelSmall?.copyWith(
+                color: warning,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

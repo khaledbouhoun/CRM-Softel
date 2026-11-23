@@ -1739,6 +1739,72 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navGroupTeam => 'الفريق';
 
   @override
+  String get navWorkspaceAgenda => 'الرئيسية والأجندة';
+
+  @override
+  String get navWorkspaceSales => 'المبيعات والزبائن';
+
+  @override
+  String get navWorkspaceSupport => 'العمليات والدعم الفني';
+
+  @override
+  String get navWorkspaceBilling => 'المالية والاشتراكات';
+
+  @override
+  String get navToggleSidebar => 'طي / توسيع القائمة';
+
+  @override
+  String get settingsGroupGeneral => 'عام وخادم الاتصال';
+
+  @override
+  String get settingsGroupSales => 'إعدادات المبيعات والعملاء المحتملين';
+
+  @override
+  String get settingsGroupSchedule => 'المواعيد وساعات العمل';
+
+  @override
+  String get settingsGroupCatalog => 'المنتجات والباقات والمصادر';
+
+  @override
+  String get settingsGroupAfterSales => 'الدعم الفني والتدخلات';
+
+  @override
+  String get hoursOpen => 'مفتوح';
+
+  @override
+  String get hoursClosed => 'مغلق';
+
+  @override
+  String get hoursDailySpan => 'مدة العمل اليومية';
+
+  @override
+  String get hoursPickTime => 'اختر الوقت';
+
+  @override
+  String get hoursSlotsPerDay => 'فترات في اليوم';
+
+  @override
+  String get unitMinutes => 'دقيقة';
+
+  @override
+  String get unitHours => 'س';
+
+  @override
+  String get unitDays => 'يوم';
+
+  @override
+  String get hoursBookingHorizonHint =>
+      'إلى أي عدد من الأيام المسبقة يمكن للعميل أن يحجز.';
+
+  @override
+  String get hoursMinNoticeHint =>
+      'أقل مدة بين الحجز والموعد حتى يتمكن الفريق من التحضير.';
+
+  @override
+  String get hoursHoldHint =>
+      'تبقى الفترة المطلوبة محجوزة لهذه المدة قبل أن يتم تحريرها.';
+
+  @override
   String get navRequests => 'الطلبات والحجوزات';
 
   @override
@@ -3021,4 +3087,351 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get wfFixedTypesNote =>
       'الأنواع الأربعة (عرض تجريبي، اجتماع، تدريب، مرافقة) ثابتة. يمكنك فقط تعديل المدة واللون والحجز عبر الإنترنت.';
+
+  @override
+  String get navBilling => 'الفوترة';
+
+  @override
+  String get blTitle => 'الاشتراكات والفوترة';
+
+  @override
+  String get blSubtitle =>
+      'الصيانة والدعم لكل زبون، ودفعات نقدية بانتظار التأكيد.';
+
+  @override
+  String get blStatusAll => 'كل الحالات';
+
+  @override
+  String get blStatusActive => 'نشط';
+
+  @override
+  String get blStatusExpiringSoon => 'ينتهي قريباً';
+
+  @override
+  String get blStatusExpired => 'منتهي';
+
+  @override
+  String get blStatusNone => 'بدون اشتراك';
+
+  @override
+  String get blFilterStatus => 'الحالة';
+
+  @override
+  String get blSortBy => 'ترتيب حسب';
+
+  @override
+  String get blSortName => 'اسم الزبون';
+
+  @override
+  String get blSortExpiry => 'تاريخ الانتهاء';
+
+  @override
+  String get blSortConverted => 'تاريخ التحول إلى زبون';
+
+  @override
+  String get blSortDirection => 'عكس الترتيب';
+
+  @override
+  String get blPendingOnly => 'تجديدات بانتظار التأكيد';
+
+  @override
+  String get blSearchHint => 'ابحث عن زبون...';
+
+  @override
+  String get blColCustomer => 'الزبون';
+
+  @override
+  String get blColExpiry => 'الانتهاء';
+
+  @override
+  String get blColDaysLeft => 'الأيام المتبقية';
+
+  @override
+  String get blColPending => 'بانتظار التأكيد';
+
+  @override
+  String get blNoCustomers => 'لا يوجد زبائن';
+
+  @override
+  String get blNoCustomersHint => 'لا يوجد زبون يطابق عوامل التصفية.';
+
+  @override
+  String get blDetailTitle => 'فوترة الزبون';
+
+  @override
+  String get blBack => 'العودة إلى الاشتراكات';
+
+  @override
+  String get blLicense => 'الترخيص';
+
+  @override
+  String get blLicenseLifetime => 'ترخيص دائم مدى الحياة (لا ينتهي)';
+
+  @override
+  String get blLicenseSince => 'منذ';
+
+  @override
+  String get blMaintenance => 'الصيانة والدعم';
+
+  @override
+  String get blMaintenanceStarts => 'البداية';
+
+  @override
+  String get blMaintenanceExpires => 'الانتهاء';
+
+  @override
+  String get blPricePerYear => 'السعر للسنة';
+
+  @override
+  String get blCurrency => 'دج';
+
+  @override
+  String get blDaysUnit => 'يوم';
+
+  @override
+  String get blSetMaintenance => 'تحديد الفترة';
+
+  @override
+  String get blSetMaintenanceTitle => 'فترة الصيانة';
+
+  @override
+  String get blSaved => 'تم الحفظ.';
+
+  @override
+  String get blRenewals => 'طلبات التجديد';
+
+  @override
+  String get blNoRenewals => 'لا توجد طلبات تجديد.';
+
+  @override
+  String get blRenewalReference => 'مرجع الفاتورة الأولية';
+
+  @override
+  String get blRenewalYears => 'السنوات';
+
+  @override
+  String get blRenewalAmount => 'المبلغ';
+
+  @override
+  String get blRenewalPending => 'بانتظار الدفع';
+
+  @override
+  String get blRenewalConfirmed => 'مؤكد';
+
+  @override
+  String get blRequestedOn => 'تاريخ الطلب';
+
+  @override
+  String get blConfirmedOn => 'تاريخ التأكيد';
+
+  @override
+  String get blMarkPaid => 'تأكيد الدفع';
+
+  @override
+  String get blMarkPaidTitle => 'تأكيد الدفع نقداً';
+
+  @override
+  String get blMarkPaidHint =>
+      'أكّد استلام المبلغ نقداً. ستُمدَّد فترة صيانة الزبون تلقائياً.';
+
+  @override
+  String get blPaidAt => 'تاريخ الدفع';
+
+  @override
+  String get blMarkedPaid => 'تم تأكيد الدفع: تم تمديد الصيانة.';
+
+  @override
+  String get blInvoices => 'الفواتير والسندات';
+
+  @override
+  String get blNoInvoices => 'لا توجد فواتير.';
+
+  @override
+  String get blColInvoice => 'المرجع';
+
+  @override
+  String get blColType => 'النوع';
+
+  @override
+  String get blColAmount => 'المبلغ (دج)';
+
+  @override
+  String get blColIssued => 'تاريخ الإصدار';
+
+  @override
+  String get blColPaid => 'تاريخ الدفع';
+
+  @override
+  String get blInvoiceTypeLicense => 'ترخيص';
+
+  @override
+  String get blInvoiceTypeRenewal => 'تجديد صيانة';
+
+  @override
+  String get blInvoicePaid => 'مدفوعة نقداً';
+
+  @override
+  String get blInvoicePending => 'بانتظار التحصيل';
+
+  @override
+  String get blInvoiceDetails => 'تفاصيل الفاتورة';
+
+  @override
+  String get blReceipt => 'السند الممسوح';
+
+  @override
+  String get blReceiptNone => 'لا يوجد سند مرفق.';
+
+  @override
+  String get blUploadReceipt => 'إرفاق سند (PDF أو صورة)';
+
+  @override
+  String get blReplaceReceipt => 'استبدال السند';
+
+  @override
+  String get blRemoveReceipt => 'حذف السند';
+
+  @override
+  String get blViewReceipt => 'تنزيل السند';
+
+  @override
+  String get blReceiptUploaded => 'تم حفظ السند.';
+
+  @override
+  String get blReceiptRemoved => 'تم حذف السند.';
+
+  @override
+  String get blNewInvoice => 'فاتورة جديدة';
+
+  @override
+  String get blInvoiceType => 'نوع الفاتورة';
+
+  @override
+  String get blInvoiceAmount => 'المبلغ (دج)';
+
+  @override
+  String get blInvoiceAlreadyPaid => 'مدفوعة نقداً مسبقاً';
+
+  @override
+  String get blInvoiceCreated => 'تم إنشاء الفاتورة.';
+
+  @override
+  String get blAmountInvalid => 'أدخل مبلغاً صحيحاً.';
+
+  @override
+  String get blPeriodInvalid => 'يجب أن تكون النهاية بعد البداية.';
+
+  @override
+  String get blRenewalPendingQuote => 'بانتظار التسعير';
+
+  @override
+  String get blRenewalQuoted => 'تم التسعير، بانتظار الدفع';
+
+  @override
+  String get blRenewalRejected => 'مرفوض';
+
+  @override
+  String get blQuotePrice => 'تسعير';
+
+  @override
+  String get blQuoteTitle => 'تسعير طلب التجديد';
+
+  @override
+  String get blQuoteHint =>
+      'أدخل المبلغ الإجمالي الذي سيدفعه الزبون نقداً. سيتم إصدار فاتورة أولية.';
+
+  @override
+  String get blQuoteAmount => 'المبلغ الإجمالي (دج)';
+
+  @override
+  String get blQuoteIssue => 'إصدار الفاتورة الأولية';
+
+  @override
+  String get blQuoted => 'تم إصدار الفاتورة الأولية.';
+
+  @override
+  String get blWorkstations => 'أجهزة';
+
+  @override
+  String get blDossiers => 'ملفات';
+
+  @override
+  String get blNotesLabel => 'ملاحظات';
+
+  @override
+  String get ivHotfixLabel => 'نسخة خاصة (Hotfix)';
+
+  @override
+  String get ivHotfixHint => 'سيرى الزبون هذا الملف كنسخة خاصة (Hotfix).';
+
+  @override
+  String get productImage => 'صورة المنتج';
+
+  @override
+  String get productUploadImage => 'رفع صورة المنتج';
+
+  @override
+  String get productUploadingImage => 'جاري رفع الصورة...';
+
+  @override
+  String get productRemoveImage => 'حذف الصورة';
+
+  @override
+  String get productTabsBasic => 'المعلومات الأساسية';
+
+  @override
+  String get productTabsWeb => 'بيانات الموقع والكتالوج';
+
+  @override
+  String get productTabsDemo => 'النسخة التجريبية';
+
+  @override
+  String get productImageUploaded => 'تم رفع صورة المنتج بنجاح.';
+
+  @override
+  String get productImageTooLarge => 'حجم الصورة يتجاوز 5 ميغابايت.';
+
+  @override
+  String get productImageUrl => 'أو الصق رابط صورة';
+
+  @override
+  String get productImageUrlInvalid => 'رابط الصورة غير صالح (http/https).';
+
+  @override
+  String get productImageHint =>
+      'PNG أو JPG أو WEBP أو SVG — 5 ميغابايت كحد أقصى.';
+
+  @override
+  String get productImageSvgPreview =>
+      'معاينة SVG غير متوفرة، لكن الملف محفوظ.';
+
+  @override
+  String get productSlug => 'الرابط المختصر (Slug)';
+
+  @override
+  String get productSlugHint => 'يُولَّد تلقائيًا من الاسم إذا ترك فارغًا.';
+
+  @override
+  String get productSlugInvalid => 'أحرف لاتينية صغيرة وأرقام وشرطات فقط.';
+
+  @override
+  String get productSortOrder => 'ترتيب العرض';
+
+  @override
+  String get productSortOrderInvalid => 'أدخل رقمًا بين 0 و 100000.';
+
+  @override
+  String get productSummaryLabel => 'ملخص قصير';
+
+  @override
+  String get productWebDescriptionLabel => 'الوصف الكامل';
+
+  @override
+  String get productFeatures => 'المميزات';
+
+  @override
+  String get productFeatureHint => 'أضف ميزة ثم اضغط إضافة';
+
+  @override
+  String get productAddFeature => 'إضافة ميزة';
 }

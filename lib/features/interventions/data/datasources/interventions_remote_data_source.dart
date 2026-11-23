@@ -50,9 +50,11 @@ class InterventionsRemoteDataSource {
     required String visibility,
     required String body,
     required List<PickedFile> files,
+    bool hotfix = false,
   }) async {
     final form = FormData();
     form.fields.add(MapEntry('visibility', visibility));
+    if (hotfix) form.fields.add(const MapEntry('is_hotfix', '1'));
     if (body.isNotEmpty) form.fields.add(MapEntry('body', body));
     for (final file in files) {
       form.files.add(

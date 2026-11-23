@@ -176,6 +176,7 @@ class InterventionAttachment {
     this.downloadUrl,
     this.previewUrl,
     this.uploadedByName,
+    this.isHotfix = false,
   });
 
   final int id;
@@ -194,6 +195,9 @@ class InterventionAttachment {
   final String? previewUrl;
   final String? uploadedByName;
 
+  /// A private patch built for this customer (shown as a "Custom Hotfix").
+  final bool isHotfix;
+
   factory InterventionAttachment.fromJson(JsonMap json) =>
       InterventionAttachment(
         id: asInt(json['id']),
@@ -206,6 +210,7 @@ class InterventionAttachment {
         downloadUrl: asStringOrNull(json['download_url']),
         previewUrl: asStringOrNull(json['preview_url']),
         uploadedByName: asStringOrNull(json['uploaded_by_name']),
+        isHotfix: asBool(json['is_hotfix']),
       );
 }
 

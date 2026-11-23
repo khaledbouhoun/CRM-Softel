@@ -5,6 +5,7 @@ import '../../../../app/config/app_config.dart';
 import '../../../../app/config/app_settings_service.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
+import '../../../../app/shell/settings_nav.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/layout_widgets.dart';
@@ -32,6 +33,7 @@ class ConnectionSettingsPage extends GetView<ConnectionSettingsController> {
       padding: const EdgeInsets.only(bottom: 28),
       children: [
         PageHeader(title: tr.navServerDisplay, subtitle: tr.settingsSubtitle),
+        const SettingsSubNav(route: Routes.settings),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Align(

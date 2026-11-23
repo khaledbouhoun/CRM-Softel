@@ -85,6 +85,9 @@ class InterventionDetailController extends GetxController {
   final message = TextEditingController();
   final customerVisible = false.obs;
 
+  /// Label the files of the next customer reply as a private hotfix patch.
+  final isHotfix = false.obs;
+
   /// Files waiting to be sent with the next reply (max [maxFiles]).
   final pendingFiles = <PickedFile>[].obs;
   static const maxFiles = 5;
@@ -208,11 +211,13 @@ class InterventionDetailController extends GetxController {
         customerVisible: customerVisible.value,
         body: body,
         files: files,
+        hotfix: isHotfix.value && files.isNotEmpty,
       ),
     );
     if (result.isSuccess) {
       message.clear();
       pendingFiles.clear();
+      isHotfix.value = false;
     }
     return result;
   }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../app/routes/app_routes.dart';
 import '../../../../app/shell/app_shell.dart';
+import '../../../../app/shell/settings_nav.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
@@ -98,6 +99,7 @@ class StagesSettingsPage extends GetView<StagesSettingsController> {
             ),
           ],
         ),
+        const SettingsSubNav(route: Routes.stagesSettings),
         Expanded(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 24),

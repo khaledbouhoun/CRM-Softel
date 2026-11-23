@@ -69,6 +69,7 @@ class InterventionsRepositoryImpl implements InterventionsRepository {
     required bool customerVisible,
     required String body,
     List<PickedFile> files = const [],
+    bool hotfix = false,
   }) {
     final visibility = customerVisible ? 'customer' : 'internal';
     if (files.isEmpty) {
@@ -82,6 +83,7 @@ class InterventionsRepositoryImpl implements InterventionsRepository {
       visibility: visibility,
       body: body.trim(),
       files: files,
+      hotfix: hotfix && customerVisible,
     );
   }
 

@@ -315,10 +315,10 @@ class _KpiCard extends StatelessWidget {
   Widget build(BuildContext context) => Card(
     color: emphasize ? context.crm.dangerContainer : null,
     child: InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.lg),
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -328,7 +328,7 @@ class _KpiCard extends StatelessWidget {
                   padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppRadius.lg - 2),
                   ),
                   child: Icon(icon, color: color, size: 20),
                 ),
@@ -345,7 +345,7 @@ class _KpiCard extends StatelessWidget {
             Text(
               Formatters.number(value),
               style: context.text.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 color: emphasize ? context.crm.danger : null,
               ),
             ),

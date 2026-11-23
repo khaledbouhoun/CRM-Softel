@@ -176,7 +176,7 @@ class StatusPill extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(
       color: background ?? color.withValues(alpha: 0.12),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppRadius.pill),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -196,4 +196,38 @@ class StatusPill extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// Meaning of a status badge.
+enum StatusTone { success, warning, danger, info, neutral }
+
+/// [StatusPill] colored by meaning: pastel background, strong foreground,
+/// in both light and dark themes.
+class ToneBadge extends StatelessWidget {
+  const ToneBadge({
+    super.key,
+    required this.label,
+    required this.tone,
+    this.icon,
+  });
+
+  final String label;
+  final StatusTone tone;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final crm = context.crm;
+    final (fg, bg) = switch (tone) {
+      StatusTone.success => (crm.success, crm.successContainer),
+      StatusTone.warning => (crm.warning, crm.warningContainer),
+      StatusTone.danger => (crm.danger, crm.dangerContainer),
+      StatusTone.info => (crm.info, crm.infoContainer),
+      StatusTone.neutral => (
+        context.colors.onSurfaceVariant,
+        context.colors.surfaceContainer,
+      ),
+    };
+    return StatusPill(label: label, color: fg, background: bg, icon: icon);
+  }
 }

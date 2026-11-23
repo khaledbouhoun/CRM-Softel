@@ -580,6 +580,16 @@ class _Composer extends StatelessWidget {
                 label: Text(tr.ivAttachFiles),
               ),
             ),
+            if (visible && c.pendingFiles.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              FilterChip(
+                avatar: const Icon(Icons.healing_outlined, size: 16),
+                label: Text(tr.ivHotfixLabel),
+                tooltip: tr.ivHotfixHint,
+                selected: c.isHotfix.value,
+                onSelected: c.isBusy.value ? null : (v) => c.isHotfix.value = v,
+              ),
+            ],
             const Spacer(),
             FilledButton.icon(
               onPressed: c.isBusy.value ? null : send,

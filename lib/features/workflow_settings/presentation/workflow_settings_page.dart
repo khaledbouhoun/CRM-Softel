@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/l10n/l10n.dart';
@@ -7,6 +8,7 @@ import '../../../app/routes/app_routes.dart';
 import '../../../app/services/lookup_service.dart';
 import '../../../app/services/workflow_lookup_service.dart';
 import '../../../app/shell/app_shell.dart';
+import '../../../app/shell/settings_nav.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/utils/json_utils.dart';
@@ -34,57 +36,69 @@ class WorkflowSettingsPage extends StatefulWidget {
 }
 
 class _WorkflowSettingsPageState extends State<WorkflowSettingsPage> {
-  /// -1 = scheduling policy, otherwise index into [ConfigSchemas.all].
-  int _section = -1;
+  /// [SettingsNav.scheduling] or the entity of a [ConfigSchemas.all] list.
+  String _section = SettingsNav.scheduling;
+
+  @override
+  void initState() {
+    super.initState();
+    _apply(SettingsNav.takeRequest());
+    SettingsNav.request.addListener(_onRequest);
+  }
+
+  @override
+  void dispose() {
+    SettingsNav.request.removeListener(_onRequest);
+    super.dispose();
+  }
+
+  bool _valid(String? section) =>
+      section == SettingsNav.scheduling ||
+      ConfigSchemas.all.any((s) => s.entity == section);
+
+  void _apply(String? section) {
+    if (section != null && _valid(section)) _section = section;
+  }
+
+  /// A sidebar / sub-navigation entry asked for another section.
+  void _onRequest() {
+    final requested = SettingsNav.takeRequest();
+    if (requested != null && _valid(requested) && requested != _section) {
+      setState(() => _section = requested);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final schemas = ConfigSchemas.all;
+    final schema = ConfigSchemas.all
+        .where((s) => s.entity == _section)
+        .firstOrNull;
+    final group = SettingsNav.groupOf(Routes.workflowSettings, _section);
     return AppShell(
       route: Routes.workflowSettings,
+      settingsSection: _section,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PageHeader(
-            title: tr.navWorkflowSettings,
+            title: group?.label() ?? tr.navWorkflowSettings,
             subtitle: tr.wfSettingsSubtitle,
+            actions: [
+              SettingsHelpButton(
+                key: ValueKey('help-$_section'),
+                section: schema == null
+                    ? 'scheduling'
+                    : SettingsHelp.sectionKey(schema.entity),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                ChoiceChip(
-                  label: Text(tr.wfCfgScheduling),
-                  selected: _section == -1,
-                  onSelected: (_) => setState(() => _section = -1),
-                ),
-                for (var i = 0; i < schemas.length; i++)
-                  ChoiceChip(
-                    label: Text(schemas[i].title()),
-                    selected: _section == i,
-                    onSelected: (_) => setState(() => _section = i),
-                  ),
-                SettingsHelpButton(
-                  key: ValueKey('help-$_section'),
-                  section: _section == -1
-                      ? 'scheduling'
-                      : SettingsHelp.sectionKey(schemas[_section].entity),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
+          SettingsSubNav(route: Routes.workflowSettings, section: _section),
           Expanded(
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 24),
-              child: _section == -1
+              child: schema == null
                   ? const _SchedulingForm()
-                  : _ConfigListView(
-                      key: ValueKey(schemas[_section].entity),
-                      schema: schemas[_section],
-                    ),
+                  : _ConfigListView(key: ValueKey(schema.entity), schema: schema),
             ),
           ),
         ],
@@ -147,181 +161,637 @@ class _SchedulingFormState extends State<_SchedulingForm> {
     return text.isEmpty ? text : text[0].toUpperCase() + text.substring(1);
   }
 
+  static String _two(int n) => n.toString().padLeft(2, '0');
+
+  /// Minutes since midnight of an `HH:mm` value, or null when malformed.
+  static int? _minutes(String text) {
+    final m = RegExp(r'^(\d{1,2}):(\d{2})$').firstMatch(text.trim());
+    if (m == null) return null;
+    final h = int.parse(m.group(1)!);
+    final min = int.parse(m.group(2)!);
+    return h > 23 || min > 59 ? null : h * 60 + min;
+  }
+
+  Future<void> _pickTime(TextEditingController controller, String key) async {
+    final current = _minutes(controller.text) ?? 9 * 60;
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: current ~/ 60, minute: current % 60),
+      helpText: tr.hoursPickTime,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
+    );
+    if (picked == null) return;
+    controller.text = '${_two(picked.hour)}:${_two(picked.minute)}';
+    c.serverErrors.remove(key);
+  }
+
+  /// Sets [controller] to [value] (clamped), clearing the server error.
+  void _set(TextEditingController controller, String key, int value, int min, int max) {
+    controller.text = '${value.clamp(min, max)}';
+    c.serverErrors.remove(key);
+  }
+
+  String _duration(int minutes) =>
+      '${minutes ~/ 60} ${tr.unitHours} ${_two(minutes % 60)}';
+
+  Widget _timeCard(
+    String label,
+    TextEditingController controller,
+    String key, {
+    String? extraError,
+  }) => ListenableBuilder(
+    listenable: controller,
+    builder: (context, _) {
+      final error = c.validateTime(key, controller) ?? extraError;
+      final shown = controller.text.trim().isEmpty ? '--:--' : controller.text.trim();
+      return _SettingTile(
+        label: label,
+        error: error,
+        onTap: () => _pickTime(controller, key),
+        child: Row(
+          children: [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedClock01,
+              size: 22,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              shown,
+              style: context.text.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+
+  Widget _hoursSection(BuildContext context) => SectionCard(
+    title: tr.wfWorkingDays,
+    subtitle: tr.wfCfgSchedulingHint,
+    padding: const EdgeInsetsDirectional.fromSTEB(18, 4, 18, 18),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            for (var d = 0; d < 7; d++)
+              _DayPill(
+                label: _weekday(d),
+                open: c.workingDays.contains(d),
+                onChanged: (v) =>
+                    v ? c.workingDays.add(d) : c.workingDays.remove(d),
+              ),
+          ],
+        ),
+        if (c.daysError != null && c.showValidation.value)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(c.daysError!, style: TextStyle(color: context.crm.danger)),
+          ),
+        const SizedBox(height: 18),
+        Wrap(
+          spacing: 14,
+          runSpacing: 14,
+          children: [
+            SizedBox(
+              width: 220,
+              child: _timeCard(tr.wfWorkStart, c.workStart, 'work_start'),
+            ),
+            SizedBox(
+              width: 220,
+              child: _timeCard(
+                tr.wfWorkEnd,
+                c.workEnd,
+                'work_end',
+                extraError: c.endError,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        ListenableBuilder(
+          listenable: Listenable.merge([c.workStart, c.workEnd, c.slotMinutes]),
+          builder: (context, _) {
+            final start = _minutes(c.workStart.text);
+            final end = _minutes(c.workEnd.text);
+            final valid = start != null && end != null && end > start;
+            final span = valid ? end - start : 0;
+            final slot = int.tryParse(c.slotMinutes.text.trim()) ?? 0;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SpanBar(
+                  startMinutes: valid ? start : 0,
+                  endMinutes: valid ? end : 0,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  [
+                    '${tr.hoursDailySpan} : ${valid ? _duration(span) : '—'}',
+                    if (valid && slot > 0) '${span ~/ slot} ${tr.hoursSlotsPerDay}',
+                  ].join('  ·  '),
+                  style: context.text.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    ),
+  );
+
+  Widget _slotSection(BuildContext context) => SectionCard(
+    title: tr.wfSlotMinutes,
+    child: ListenableBuilder(
+      listenable: c.slotMinutes,
+      builder: (context, _) {
+        final current = int.tryParse(c.slotMinutes.text.trim());
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final m in const [15, 30, 45, 60, 90, 120])
+                  ChoiceChip(
+                    label: Text('$m ${tr.unitMinutes}'),
+                    selected: current == m,
+                    showCheckmark: false,
+                    onSelected: (_) => _set(c.slotMinutes, 'slot_minutes', m, 5, 480),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: 200,
+              child: _number(tr.wfSlotMinutes, c.slotMinutes, 'slot_minutes', 5, 480),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+
+  Widget _stepper({
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+    required String key,
+    required int min,
+    required int max,
+    required int step,
+    required String unit,
+    List<int> presets = const [],
+    String Function(int value)? presetLabel,
+    String Function(int value)? approx,
+  }) => ListenableBuilder(
+    listenable: controller,
+    builder: (context, _) {
+      final value = int.tryParse(controller.text.trim());
+      final error = c.validateRange(key, controller, min, max);
+      final scheme = context.colors;
+      return _SettingTile(
+        label: label,
+        error: error,
+        hint: hint,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton.outlined(
+                  key: ValueKey('$key-minus'),
+                  tooltip: '-',
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedMinusSign,
+                    size: 18,
+                    color: scheme.onSurface,
+                  ),
+                  onPressed: () => _set(controller, key, (value ?? min) - step, min, max),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Column(
+                    children: [
+                      Text(
+                        value == null ? '—' : '$value',
+                        style: context.text.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      Text(
+                        unit,
+                        style: context.text.bodySmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton.outlined(
+                  key: ValueKey('$key-plus'),
+                  tooltip: '+',
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedPlusSign,
+                    size: 18,
+                    color: scheme.onSurface,
+                  ),
+                  onPressed: () => _set(controller, key, (value ?? min) + step, min, max),
+                ),
+                if (approx != null && value != null) ...[
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: Text(
+                      approx(value),
+                      style: context.text.bodyMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            if (presets.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final p in presets)
+                    ChoiceChip(
+                      label: Text(presetLabel?.call(p) ?? '$p'),
+                      selected: value == p,
+                      showCheckmark: false,
+                      visualDensity: VisualDensity.compact,
+                      onSelected: (_) => _set(controller, key, p, min, max),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      );
+    },
+  );
+
   @override
   Widget build(BuildContext context) => LoadStateView(
     state: c.state,
     isEmpty: false,
     onRetry: c.load,
     builder: (_) => Obx(
-      () => Card(
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Text(tr.wfCfgSchedulingHint, style: context.text.bodyMedium),
-            const SizedBox(height: 16),
-            FormSectionLabel(tr.wfWorkingDays),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+      () => ListView(
+        padding: const EdgeInsets.only(bottom: 8),
+        children: [
+          _hoursSection(context),
+          const SizedBox(height: 14),
+          _slotSection(context),
+          const SizedBox(height: 14),
+          SectionCard(
+            title: tr.wfBookingHorizon,
+            subtitle: tr.hoursBookingHorizonHint,
+            child: Wrap(
+              spacing: 14,
+              runSpacing: 14,
               children: [
-                for (var d = 0; d < 7; d++)
-                  FilterChip(
-                    label: Text(_weekday(d)),
-                    selected: c.workingDays.contains(d),
-                    onSelected: (v) =>
-                        v ? c.workingDays.add(d) : c.workingDays.remove(d),
+                SizedBox(
+                  width: 300,
+                  child: _stepper(
+                    label: tr.wfBookingHorizon,
+                    hint: tr.hoursBookingHorizonHint,
+                    controller: c.bookingHorizonDays,
+                    key: 'booking_horizon_days',
+                    min: 1,
+                    max: 365,
+                    step: 1,
+                    unit: tr.unitDays,
+                    presets: const [7, 14, 30, 60, 90],
+                    presetLabel: (v) => '$v ${tr.unitDays}',
                   ),
-              ],
-            ),
-            if (c.daysError != null && c.showValidation.value)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  c.daysError!,
-                  style: TextStyle(color: context.crm.danger),
                 ),
-              ),
-            const SizedBox(height: 16),
-            FormRow(
-              children: [
-                TextFormField(
-                  controller: c.workStart,
-                  decoration: InputDecoration(
-                    labelText: tr.wfWorkStart,
-                    hintText: 'HH:mm',
+                SizedBox(
+                  width: 300,
+                  child: _stepper(
+                    label: tr.wfMinNotice,
+                    hint: tr.hoursMinNoticeHint,
+                    controller: c.minNoticeHours,
+                    key: 'min_notice_hours',
+                    min: 0,
+                    max: 720,
+                    step: 1,
+                    unit: tr.unitHours,
+                    presets: const [0, 2, 6, 12, 24, 48],
+                    presetLabel: (v) => '$v ${tr.unitHours}',
                   ),
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (_) => c.validateTime('work_start', c.workStart),
                 ),
-                TextFormField(
-                  controller: c.workEnd,
-                  decoration: InputDecoration(
-                    labelText: tr.wfWorkEnd,
-                    hintText: 'HH:mm',
+                SizedBox(
+                  width: 300,
+                  child: _stepper(
+                    label: tr.wfHoldExpiryMinutes,
+                    hint: tr.hoursHoldHint,
+                    controller: c.holdExpiryMinutes,
+                    key: 'hold_expiry_minutes',
+                    min: 5,
+                    max: 43200,
+                    step: 60,
+                    unit: tr.unitMinutes,
+                    presets: const [60, 360, 720, 1440, 2880],
+                    presetLabel: (v) => '${v ~/ 60} ${tr.unitHours}',
+                    approx: (v) => v % 60 == 0
+                        ? '≈ ${v ~/ 60} ${tr.unitHours}'
+                        : '≈ ${_duration(v)}',
                   ),
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (_) =>
-                      c.validateTime('work_end', c.workEnd) ?? c.endError,
                 ),
               ],
             ),
-            const SizedBox(height: 14),
-            FormRow(
+          ),
+          const SizedBox(height: 14),
+          SectionCard(
+            title: tr.wfCfgScheduling,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _number(
-                  tr.wfSlotMinutes,
-                  c.slotMinutes,
-                  'slot_minutes',
-                  5,
-                  480,
+                FormRow(
+                  children: [
+                    _number(
+                      tr.wfDemoCapacity,
+                      c.demoCapacity,
+                      'demo_capacity',
+                      1,
+                      50,
+                      helper: tr.wfDemoCapacityHint,
+                    ),
+                    _number(
+                      tr.wfAccompanimentOccurrences,
+                      c.accompanimentOccurrences,
+                      'accompaniment_occurrences',
+                      1,
+                      52,
+                    ),
+                  ],
                 ),
-                _number(
-                  tr.wfHoldExpiryMinutes,
-                  c.holdExpiryMinutes,
-                  'hold_expiry_minutes',
-                  5,
-                  43200,
-                  helper: tr.wfHoldExpiryHint,
+                const SizedBox(height: 14),
+                FormRow(
+                  children: [
+                    _number(
+                      tr.wfAccompanimentInterval,
+                      c.accompanimentIntervalDays,
+                      'accompaniment_interval_days',
+                      1,
+                      365,
+                    ),
+                    _number(
+                      tr.wfTrialDays,
+                      c.trialDefaultDays,
+                      'trial_default_days',
+                      1,
+                      365,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            FormRow(
-              children: [
-                _number(
-                  tr.wfBookingHorizon,
-                  c.bookingHorizonDays,
-                  'booking_horizon_days',
-                  1,
-                  365,
-                ),
-                _number(
-                  tr.wfMinNotice,
-                  c.minNoticeHours,
-                  'min_notice_hours',
-                  0,
-                  720,
-                ),
-                _number(
-                  tr.wfDemoCapacity,
-                  c.demoCapacity,
-                  'demo_capacity',
-                  1,
-                  50,
-                  helper: tr.wfDemoCapacityHint,
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            FormRow(
-              children: [
-                _number(
-                  tr.wfAccompanimentOccurrences,
-                  c.accompanimentOccurrences,
-                  'accompaniment_occurrences',
-                  1,
-                  52,
-                ),
-                _number(
-                  tr.wfAccompanimentInterval,
-                  c.accompanimentIntervalDays,
-                  'accompaniment_interval_days',
-                  1,
-                  365,
-                ),
-                _number(
-                  tr.wfTrialDays,
-                  c.trialDefaultDays,
-                  'trial_default_days',
-                  1,
-                  365,
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: 260,
+                  child: TextFormField(
+                    controller: c.whatsappCountryCode,
+                    decoration: InputDecoration(
+                      labelText: tr.wfWhatsappCountryCode,
+                      helperText: tr.wfWhatsappCountryCodeHint,
+                      helperMaxLines: 2,
+                    ),
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: c.validateCountryCode,
+                  ),
                 ),
               ],
             ),
+          ),
+          if (c.errorMessage.value != null) ...[
             const SizedBox(height: 14),
-            SizedBox(
-              width: 260,
-              child: TextFormField(
-                controller: c.whatsappCountryCode,
-                decoration: InputDecoration(
-                  labelText: tr.wfWhatsappCountryCode,
-                  helperText: tr.wfWhatsappCountryCodeHint,
-                  helperMaxLines: 2,
-                ),
-                autovalidateMode: AutovalidateMode.always,
-                validator: c.validateCountryCode,
-              ),
-            ),
-            if (c.errorMessage.value != null) ...[
-              const SizedBox(height: 14),
-              ErrorBanner(message: c.errorMessage.value!),
-            ],
-            const SizedBox(height: 18),
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: FilledButton.icon(
-                onPressed: c.isSaving.value
-                    ? null
-                    : () async {
-                        if (await c.save()) {
-                          AppFeedback.success(tr.wfSettingsSaved);
-                        }
-                      },
-                icon: c.isSaving.value
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.check, size: 18),
-                label: Text(c.isSaving.value ? tr.actionSaving : tr.actionSave),
-              ),
-            ),
+            ErrorBanner(message: c.errorMessage.value!),
           ],
-        ),
+          const SizedBox(height: 18),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: FilledButton.icon(
+              onPressed: c.isSaving.value
+                  ? null
+                  : () async {
+                      if (await c.save()) {
+                        AppFeedback.success(tr.wfSettingsSaved);
+                      }
+                    },
+              icon: c.isSaving.value
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.check, size: 18),
+              label: Text(c.isSaving.value ? tr.actionSaving : tr.actionSave),
+            ),
+          ),
+        ],
       ),
     ),
   );
+}
+
+/// A weekday toggle: card with the day name, a switch and Open / Closed.
+class _DayPill extends StatelessWidget {
+  const _DayPill({required this.label, required this.open, required this.onChanged});
+
+  final String label;
+  final bool open;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colors;
+    final crm = context.crm;
+    return Semantics(
+      toggled: open,
+      label: label,
+      child: Material(
+        color: open ? scheme.primaryContainer : scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          onTap: () => onChanged(!open),
+          child: Container(
+            width: 132,
+            padding: const EdgeInsets.fromLTRB(12, 10, 8, 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(
+                color: open ? scheme.primary : scheme.outlineVariant,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: open ? scheme.onPrimaryContainer : scheme.onSurface,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        open ? tr.hoursOpen : tr.hoursClosed,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.text.bodySmall?.copyWith(
+                          color: open ? crm.success : scheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(value: open, onChanged: onChanged),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A bordered tile with a small label, a value area and an optional hint /
+/// validation message.
+class _SettingTile extends StatelessWidget {
+  const _SettingTile({
+    required this.label,
+    required this.child,
+    this.error,
+    this.hint,
+    this.onTap,
+  });
+
+  final String label;
+  final Widget child;
+  final String? error;
+  final String? hint;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colors;
+    return Material(
+      color: scheme.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(
+              color: error != null ? context.crm.danger : scheme.outlineVariant,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: context.text.labelMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              child,
+              if (error != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  error!,
+                  style: context.text.bodySmall?.copyWith(color: context.crm.danger),
+                ),
+              ] else if (hint != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  hint!,
+                  style: context.text.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 24-hour bar with the opening span highlighted.
+class _SpanBar extends StatelessWidget {
+  const _SpanBar({required this.startMinutes, required this.endMinutes});
+
+  final int startMinutes;
+  final int endMinutes;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colors;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth.isFinite ? constraints.maxWidth : 400.0;
+        final start = width * startMinutes / 1440;
+        final length = width * (endMinutes - startMinutes).clamp(0, 1440) / 1440;
+        return SizedBox(
+          height: 10,
+          width: width,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: scheme.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                ),
+              ),
+              PositionedDirectional(
+                start: start,
+                width: length,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: scheme.primary,
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------

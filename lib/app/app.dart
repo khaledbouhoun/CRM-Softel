@@ -16,11 +16,13 @@ class SoftelCrmApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = Get.find<AppSettingsService>();
-    return GetMaterialApp(
+    // Obx: the theme (font per language) and mode follow the settings live.
+    return Obx(
+      () => GetMaterialApp(
       title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(languageCode: settings.locale.value.languageCode),
+      darkTheme: AppTheme.dark(languageCode: settings.locale.value.languageCode),
       themeMode: settings.themeMode.value,
       locale: settings.locale.value,
       fallbackLocale: AppLocales.fallback,
@@ -38,6 +40,7 @@ class SoftelCrmApp extends StatelessWidget {
       getPages: AppPages.pages,
       unknownRoute: AppPages.pages.first,
       defaultTransition: Transition.fadeIn,
+      ),
     );
   }
 }

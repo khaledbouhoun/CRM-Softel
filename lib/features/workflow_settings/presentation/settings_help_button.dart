@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../../app/l10n/l10n.dart';
 import '../../../app/theme/app_theme.dart';
@@ -19,14 +20,22 @@ class SettingsHelpButton extends StatelessWidget {
 
   static Future<SettingsHelp> _fetch(String section) async => SettingsHelp.fromJson(
     ApiResponse.object(
-      await Get.find<ApiClient>().get(ApiEndpoints.settingsHelp(section)),
+      await Get.find<ApiClient>().get(
+        ApiEndpoints.settingsHelp(section),
+        // The help texts come from the CRM in the language of the app.
+        query: {'locale': L10n.current.languageCode},
+      ),
     ),
   );
 
   @override
   Widget build(BuildContext context) => IconButton(
     tooltip: tr.helpTooltip,
-    icon: const Icon(Icons.info_outline),
+    icon: HugeIcon(
+      icon: HugeIcons.strokeRoundedInformationCircle,
+      color: context.colors.onSurfaceVariant,
+      size: 22,
+    ),
     onPressed: () => Get.dialog<void>(_HelpDialog(future: _fetch(section))),
   );
 }
@@ -72,7 +81,11 @@ class _HelpDialog extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 12, 0),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: context.colors.primary),
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedInformationCircle,
+                      color: context.colors.primary,
+                      size: 24,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(

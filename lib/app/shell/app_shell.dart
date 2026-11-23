@@ -1,336 +1,339 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../core/utils/formatters.dart';
-import '../config/app_config.dart';
 import '../../features/prospects/presentation/dialogs/prospect_search_dialog.dart';
+import '../config/app_config.dart';
 import '../config/app_settings_service.dart';
-import 'language_menu.dart';
+import '../l10n/l10n.dart';
 import '../routes/app_routes.dart';
 import '../services/connection_service.dart';
+import '../services/employee_identity.dart';
 import '../theme/app_theme.dart';
+import 'language_menu.dart';
 import 'navigation.dart';
-import '../l10n/l10n.dart';
+import 'settings_nav.dart';
 
 class _NavItem {
-  const _NavItem(this.route, this.label, this.icon, this.selectedIcon);
+  const _NavItem(this.route, this.label, this.icon, [HugeData? selectedIcon])
+    : selectedIcon = selectedIcon ?? icon;
 
   final String route;
   final String label;
-  final IconData icon;
-  final IconData selectedIcon;
+  final HugeData icon;
+  final HugeData selectedIcon;
 }
 
-class _NavGroup {
-  const _NavGroup(this.label, this.items);
+/// One of the four sidebar workspaces.
+class _Workspace {
+  const _Workspace(this.label, this.items);
 
-  /// Null for the first, unlabeled group.
-  final String? label;
+  final String label;
   final List<_NavItem> items;
 }
 
-/// Sidebar sections. Employees all share the same access level, so every
+/// Sidebar workspaces. Employees all share the same access level, so every
 /// entry is always visible (no role checks).
-List<_NavGroup> get _mainGroups => [
-  _NavGroup(null, [
+List<_Workspace> get _workspaces => [
+  // 1. Agenda & overview.
+  _Workspace(tr.navWorkspaceAgenda, [
     _NavItem(
       Routes.dashboard,
       tr.navDashboard,
-      Icons.space_dashboard_outlined,
-      Icons.space_dashboard,
-    ),
-  ]),
-  _NavGroup(tr.navGroupCrm, [
-    _NavItem(
-      Routes.prospects,
-      tr.navProspects,
-      Icons.people_alt_outlined,
-      Icons.people_alt,
-    ),
-    _NavItem(
-      Routes.pipeline,
-      tr.navPipeline,
-      Icons.view_kanban_outlined,
-      Icons.view_kanban,
-    ),
-    _NavItem(
-      Routes.activities,
-      tr.navActivities,
-      Icons.history_outlined,
-      Icons.history,
-    ),
-    _NavItem(
-      Routes.followUps,
-      tr.navFollowUps,
-      Icons.event_note_outlined,
-      Icons.event_note,
+      HugeIcons.strokeRoundedDashboardSquare01,
+      HugeIcons.strokeRoundedDashboardSquare02,
     ),
     _NavItem(
       Routes.calendar,
       tr.navCalendar,
-      Icons.calendar_month_outlined,
-      Icons.calendar_month,
+      HugeIcons.strokeRoundedCalendar03,
+      HugeIcons.strokeRoundedCalendarFavorite01,
     ),
+    _NavItem(Routes.followUps, tr.navFollowUps, HugeIcons.strokeRoundedNote01),
+    _NavItem(Routes.activities, tr.navActivities, HugeIcons.strokeRoundedTime02),
   ]),
-  _NavGroup(tr.navGroupCustomers, [
+  // 2. Sales & clients.
+  _Workspace(tr.navWorkspaceSales, [
+    _NavItem(Routes.prospects, tr.navProspects, HugeIcons.strokeRoundedUserGroup),
+    _NavItem(Routes.pipeline, tr.navPipeline, HugeIcons.strokeRoundedUserAdd01),
     _NavItem(
       Routes.customers,
       tr.navCustomers,
-      Icons.verified_user_outlined,
-      Icons.verified_user,
+      HugeIcons.strokeRoundedBuilding02,
+      HugeIcons.strokeRoundedUserCheck01,
     ),
+    _NavItem(Routes.products, tr.navProducts, HugeIcons.strokeRoundedPackage),
+  ]),
+  // 3. Support & operations.
+  _Workspace(tr.navWorkspaceSupport, [
     _NavItem(
-      Routes.products,
-      tr.navProducts,
-      Icons.inventory_2_outlined,
-      Icons.inventory_2,
-    ),
-    _NavItem(
-      Routes.releases,
-      tr.navReleases,
-      Icons.system_update_alt_outlined,
-      Icons.system_update_alt,
+      Routes.afterSales,
+      tr.navAfterSales,
+      HugeIcons.strokeRoundedHeadset,
+      HugeIcons.strokeRoundedCustomerService,
     ),
     _NavItem(
       Routes.training,
       tr.navTraining,
-      Icons.school_outlined,
-      Icons.school,
+      HugeIcons.strokeRoundedMortarboard01,
     ),
-  ]),
-  _NavGroup(tr.navGroupService, [
     _NavItem(
       Routes.requests,
       tr.navRequests,
-      Icons.hourglass_empty_outlined,
-      Icons.hourglass_top,
+      HugeIcons.strokeRoundedFile01,
+      HugeIcons.strokeRoundedInvoice01,
     ),
-    _NavItem(
-      Routes.afterSales,
-      tr.navAfterSales,
-      Icons.support_agent_outlined,
-      Icons.support_agent,
-    ),
-  ]),
-  _NavGroup(tr.navGroupTeam, [
     _NavItem(
       Routes.employees,
       tr.navEmployees,
-      Icons.badge_outlined,
-      Icons.badge,
+      HugeIcons.strokeRoundedUserSettings01,
+    ),
+  ]),
+  // 4. Billing & releases.
+  _Workspace(tr.navWorkspaceBilling, [
+    _NavItem(Routes.billing, tr.navBilling, HugeIcons.strokeRoundedCreditCard),
+    _NavItem(
+      Routes.releases,
+      tr.navReleases,
+      HugeIcons.strokeRoundedDownload04,
+      HugeIcons.strokeRoundedSoftwareLicense,
     ),
   ]),
 ];
-List<_NavItem> get _settingsItems => [
-  _NavItem(
-    Routes.stagesSettings,
-    tr.navSalesStages,
-    Icons.linear_scale_outlined,
-    Icons.linear_scale,
-  ),
-  _NavItem(
-    Routes.lossReasonsSettings,
-    tr.navLossReasons,
-    Icons.report_gmailerrorred_outlined,
-    Icons.report,
-  ),
-  _NavItem(
-    Routes.prospectListsSettings,
-    switch (L10n.current.languageCode) {
-      'ar' => 'قوائم النماذج',
-      'fr' => 'Listes prospect',
-      _ => 'Prospect Lists',
-    },
-    Icons.list_alt_outlined,
-    Icons.list_alt,
-  ),
-  _NavItem(
-    Routes.workflowSettings,
-    tr.navWorkflowSettings,
-    Icons.tune_outlined,
-    Icons.tune,
-  ),
-  _NavItem(
-    Routes.settings,
-    tr.navServerDisplay,
-    Icons.settings_ethernet_outlined,
-    Icons.settings_ethernet,
-  ),
-];
+
+/// Sidebar collapsed by hand. Global so the choice survives page changes
+/// (every page builds its own [AppShell]).
+final _sidebarCollapsed = ValueNotifier<bool>(false);
+
+/// Narrow windows collapse the sidebar on their own.
+const _autoCompactWidth = 1180.0;
 
 /// Desktop layout: sidebar navigation + top bar + page content.
 class AppShell extends StatelessWidget {
-  const AppShell({super.key, required this.route, required this.child});
+  const AppShell({
+    super.key,
+    required this.route,
+    required this.child,
+    this.crumb,
+    this.settingsSection,
+  });
 
   /// Top-level route this page belongs to (selects the sidebar item).
   final String route;
   final Widget child;
 
+  /// Optional last breadcrumb for detail pages (e.g. a customer name).
+  final String? crumb;
+
+  /// Section of the workflow settings page being shown (breadcrumb only).
+  final String? settingsSection;
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final compact = width < 1180;
+    final autoCompact = MediaQuery.sizeOf(context).width < _autoCompactWidth;
     return Scaffold(
-      body: Row(
-        children: [
-          _Sidebar(selected: route, compact: compact),
-          Expanded(
-            child: Column(
-              children: [
-                const _TopBar(),
-                Expanded(child: child),
-              ],
+      body: ValueListenableBuilder<bool>(
+        valueListenable: _sidebarCollapsed,
+        builder: (context, collapsed, _) => Row(
+          children: [
+            _Sidebar(
+              selected: route,
+              compact: autoCompact || collapsed,
+              canToggle: !autoCompact,
             ),
-          ),
-        ],
+            Expanded(
+              child: Column(
+                children: [
+                  _TopBar(route: route, crumb: crumb, settingsSection: settingsSection),
+                  Expanded(child: child),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({required this.selected, required this.compact});
+  const _Sidebar({
+    required this.selected,
+    required this.compact,
+    required this.canToggle,
+  });
 
   final String selected;
   final bool compact;
+  final bool canToggle;
 
   @override
   Widget build(BuildContext context) {
     final crm = context.crm;
     return Container(
-      width: compact ? 72 : 236,
-      color: crm.sidebarBackground,
+      width: compact ? 72 : 256,
+      decoration: BoxDecoration(
+        color: crm.sidebarBackground,
+        border: BorderDirectional(
+          end: BorderSide(color: context.colors.outlineVariant),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: compact
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
-              children: [
-                if (!compact) const SizedBox(width: 20),
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: crm.sidebarAccent,
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  child: const Icon(
-                    Icons.handshake_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                if (!compact) ...[
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: Text(
-                      AppConfig.appName,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: crm.sidebarForeground,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
+          _header(context),
+          const SizedBox(height: 4),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               children: [
-                for (final group in _mainGroups) ...[
-                  if (group.label != null)
-                    _groupHeader(context, group.label!),
-                  for (final item in group.items) _tile(context, item),
+                for (final workspace in _workspaces) ...[
+                  _workspaceHeader(context, workspace.label),
+                  for (final item in workspace.items) _tile(context, item),
                 ],
-                const SizedBox(height: 18),
-                if (!compact)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 8),
-                    child: Text(
-                      tr.navSettingsSection,
-                      style: TextStyle(
-                        color: crm.sidebarMuted,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  )
-                else
-                  Divider(color: crm.sidebarMuted.withValues(alpha: 0.3)),
-                for (final item in _settingsItems) _tile(context, item),
+                const SizedBox(height: 12),
               ],
             ),
           ),
+          _footer(context),
         ],
       ),
     );
   }
 
-  Widget _groupHeader(BuildContext context, String label) {
+  Widget _header(BuildContext context) {
+    final crm = context.crm;
+    final logo = Container(
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        color: BrandColors.primary,
+        borderRadius: BorderRadius.circular(AppRadius.md + 1),
+      ),
+      child: const Icon(
+        Icons.handshake_outlined,
+        color: BrandColors.navy,
+        size: 20,
+      ),
+    );
+    final toggle = canToggle
+        ? IconButton(
+            tooltip: tr.navToggleSidebar,
+            iconSize: 20,
+            color: crm.sidebarMuted,
+            onPressed: () => _sidebarCollapsed.value = !_sidebarCollapsed.value,
+            icon: HugeIcon(
+              // The sidebar sits on the right in RTL, so the arrows flip.
+              icon: (compact == (Directionality.of(context) == TextDirection.ltr))
+                  ? HugeIcons.strokeRoundedArrowRightDouble
+                  : HugeIcons.strokeRoundedArrowLeftDouble,
+              color: crm.sidebarMuted,
+              size: 20,
+            ),
+          )
+        : null;
+    if (compact) {
+      return SizedBox(
+        height: canToggle ? 108 : 64,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [logo, if (toggle != null) toggle],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 64,
+      child: Row(
+        children: [
+          const SizedBox(width: 18),
+          logo,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppConfig.appName,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: crm.sidebarForeground,
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+          if (toggle != null) toggle,
+          const SizedBox(width: 6),
+        ],
+      ),
+    );
+  }
+
+  Widget _workspaceHeader(BuildContext context, String label) {
     final crm = context.crm;
     if (compact) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Divider(color: crm.sidebarMuted.withValues(alpha: 0.3)),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Divider(color: context.colors.outlineVariant),
       );
     }
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(12, 14, 0, 6),
+      padding: const EdgeInsetsDirectional.fromSTEB(12, 18, 0, 6),
       child: Text(
         label.toUpperCase(),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: crm.sidebarMuted,
           fontSize: 11,
           fontWeight: FontWeight.w700,
-          letterSpacing: 1,
+          letterSpacing: 0.8,
         ),
       ),
     );
   }
 
-  Widget _tile(BuildContext context, _NavItem item) {
+  /// Pinned bottom entry: the settings hub (groups live in its sub-navigation).
+  Widget _footer(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(10, 6, 10, 10),
+    decoration: BoxDecoration(
+      border: Border(top: BorderSide(color: context.colors.outlineVariant)),
+    ),
+    child: _tile(
+      context,
+      _NavItem(
+        Routes.settings,
+        tr.navSettingsSection,
+        HugeIcons.strokeRoundedSettings02,
+        HugeIcons.strokeRoundedConfiguration01,
+      ),
+      selectedOverride: SettingsNav.isSettingsRoute(selected),
+    ),
+  );
+
+  Widget _tile(BuildContext context, _NavItem item, {bool? selectedOverride}) {
     final crm = context.crm;
-    final isSelected = selected == item.route;
-    final color = isSelected
-        ? Colors.white
-        : crm.sidebarForeground.withValues(alpha: 0.82);
+    final isSelected = selectedOverride ?? selected == item.route;
+    final color = isSelected ? crm.sidebarForeground : crm.sidebarMuted;
     final tile = Material(
       color: isSelected ? crm.sidebarSelected : Colors.transparent,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(AppRadius.md),
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        hoverColor: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        hoverColor: context.colors.onSurface.withValues(alpha: 0.05),
         onTap: () => AppNavigation.goTo(item.route),
         child: Container(
-          height: 42,
+          height: 40,
           padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 12),
-          decoration: isSelected
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: BorderDirectional(
-                    start: BorderSide(color: crm.sidebarAccent, width: 3),
-                  ),
-                )
-              : null,
           child: Row(
             mainAxisAlignment: compact
                 ? MainAxisAlignment.center
                 : MainAxisAlignment.start,
             children: [
-              Icon(
-                isSelected ? item.selectedIcon : item.icon,
-                size: 20,
+              HugeIcon(
+                icon: isSelected ? item.selectedIcon : item.icon,
+                size: 21,
+                strokeWidth: isSelected ? 2 : 1.6,
                 color: isSelected ? crm.sidebarAccent : color,
               ),
               if (!compact) ...[
@@ -340,10 +343,8 @@ class _Sidebar extends StatelessWidget {
                     item.label,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: color,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w500,
+                      color: isSelected ? crm.sidebarForeground : color,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       fontSize: 13.5,
                     ),
                   ),
@@ -362,11 +363,33 @@ class _Sidebar extends StatelessWidget {
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar();
+  const _TopBar({required this.route, this.crumb, this.settingsSection});
+
+  final String route;
+  final String? crumb;
+  final String? settingsSection;
+
+  /// `Workspace › Page [› detail]` for the current route, or null.
+  String? get _trail {
+    for (final w in _workspaces) {
+      for (final i in w.items) {
+        if (i.route == route) {
+          return [w.label, i.label, if (crumb != null) crumb!].join('  ›  ');
+        }
+      }
+    }
+    final settingsTrail = SettingsNav.trail(route, settingsSection);
+    if (settingsTrail != null) {
+      return crumb == null ? settingsTrail : '$settingsTrail  ›  $crumb';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     final settings = Get.find<AppSettingsService>();
+    final wide = MediaQuery.sizeOf(context).width >= 1500;
+    final trail = _trail;
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -378,15 +401,40 @@ class _TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const _GlobalSearch(),
-          const Spacer(),
-          Text(
-            Formatters.longDate(DateTime.now()),
-            style: context.text.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
+          Expanded(
+            flex: 4,
+            // One Text so a crumb never duplicates a label elsewhere.
+            child: trail == null
+                ? const SizedBox.shrink()
+                : Text(
+                    trail,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.bodyMedium?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
+          const Flexible(flex: 5, child: _GlobalSearch()),
+          const SizedBox(width: 12),
+          if (wide)
+            Flexible(
+              flex: 3,
+              child: Text(
+                Formatters.longDate(DateTime.now()),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: context.text.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            )
+          else
+            const Spacer(flex: 1),
+          const SizedBox(width: 12),
           const _ConnectionIndicator(),
           const SizedBox(width: 4),
           const LanguageMenuButton(),
@@ -394,8 +442,12 @@ class _TopBar extends StatelessWidget {
             final dark = settings.themeMode.value == ThemeMode.dark;
             return IconButton(
               tooltip: dark ? tr.themeToggleToLight : tr.themeToggleToDark,
-              icon: Icon(
-                dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+              icon: HugeIcon(
+                icon: dark
+                    ? HugeIcons.strokeRoundedSun03
+                    : HugeIcons.strokeRoundedMoon02,
+                color: context.colors.onSurfaceVariant,
+                size: 21,
               ),
               onPressed: () {
                 final mode = dark ? ThemeMode.light : ThemeMode.dark;
@@ -404,7 +456,40 @@ class _TopBar extends StatelessWidget {
               },
             );
           }),
+          const SizedBox(width: 6),
+          const _UserAvatar(),
         ],
+      ),
+    );
+  }
+}
+
+/// The staff member using this workstation (Windows user name; the CRM has
+/// no per-employee login or roles).
+class _UserAvatar extends StatelessWidget {
+  const _UserAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    final name = Get.isRegistered<EmployeeIdentity>()
+        ? Get.find<EmployeeIdentity>().username
+        : '';
+    final scheme = context.colors;
+    return Tooltip(
+      message: name,
+      child: CircleAvatar(
+        radius: 16,
+        backgroundColor: scheme.primaryContainer,
+        child: name.isEmpty
+            ? Icon(Icons.person_outline, size: 18, color: scheme.onPrimaryContainer)
+            : Text(
+                name.characters.first.toUpperCase(),
+                style: TextStyle(
+                  color: scheme.onPrimaryContainer,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
       ),
     );
   }
@@ -419,41 +504,97 @@ class _GlobalSearch extends StatefulWidget {
 
 class _GlobalSearchState extends State<_GlobalSearch> {
   final _controller = TextEditingController();
+  final _focus = FocusNode();
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(_onKey);
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 380,
-    child: TextField(
-      controller: _controller,
-      textInputAction: TextInputAction.search,
-      decoration: InputDecoration(
-        hintText: tr.globalSearchHint,
-        prefixIcon: const Icon(Icons.search, size: 20),
-        fillColor: context.colors.surfaceContainerHigh.withValues(alpha: 0.5),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_onKey);
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  /// Ctrl+K focuses the search, unless a dialog is open on top of the page.
+  bool _onKey(KeyEvent event) {
+    if (event is! KeyDownEvent ||
+        event.logicalKey != LogicalKeyboardKey.keyK ||
+        !HardwareKeyboard.instance.isControlPressed) {
+      return false;
+    }
+    if (ModalRoute.of(context)?.isCurrent != true) return false;
+    _focus.requestFocus();
+    _controller.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: _controller.text.length,
+    );
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colors;
+    OutlineInputBorder border(Color c, [double w = 1]) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      borderSide: BorderSide(color: c, width: w),
+    );
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 420),
+      child: TextField(
+        controller: _controller,
+        focusNode: _focus,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: tr.globalSearchHint,
+          hintMaxLines: 1,
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(12),
+            child: HugeIcon(
+              icon: HugeIcons.strokeRoundedSearch01,
+              color: scheme.onSurfaceVariant,
+              size: 18,
+            ),
+          ),
+          suffixIcon: Padding(
+            padding: const EdgeInsetsDirectional.only(end: 8),
+            child: Center(
+              widthFactor: 1,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: scheme.outlineVariant),
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                ),
+                child: Text(
+                  'Ctrl K',
+                  style: context.text.labelSmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          fillColor: scheme.surfaceContainerLow,
+          border: border(scheme.outlineVariant),
+          enabledBorder: border(scheme.outlineVariant),
+          focusedBorder: border(BrandColors.primary, 2),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
+        onSubmitted: (value) async {
+          final query = value.trim();
+          _controller.clear();
+          // Same lookup as everywhere else: all stages, with each stage shown.
+          final prospect = await showProspectSearchDialog(initialQuery: query);
+          if (prospect != null) AppNavigation.openProspect(prospect.id);
+        },
       ),
-      onSubmitted: (value) async {
-        final query = value.trim();
-        _controller.clear();
-        // Same lookup as everywhere else: all stages, with each stage shown.
-        final prospect = await showProspectSearchDialog(initialQuery: query);
-        if (prospect != null) AppNavigation.openProspect(prospect.id);
-      },
-    ),
-  );
+    );
+  }
 }
 
 class _ConnectionIndicator extends StatelessWidget {
@@ -483,13 +624,13 @@ class _ConnectionIndicator extends StatelessWidget {
       return Tooltip(
         message: tooltip.toString(),
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppRadius.pill),
           onTap: service.checkNow,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppRadius.pill),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -503,12 +644,16 @@ class _ConnectionIndicator extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
+                Flexible(
+                  child: Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: color,
                     fontWeight: FontWeight.w600,
                     fontSize: 12.5,
+                  ),
                   ),
                 ),
               ],

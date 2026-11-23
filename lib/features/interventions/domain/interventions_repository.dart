@@ -44,6 +44,10 @@ abstract interface class InterventionsRepository {
     required bool customerVisible,
     required String body,
     List<PickedFile> files = const [],
+
+    /// Flags the attached file(s) as a private hotfix patch for the customer
+    /// (only meaningful for customer-visible replies with files).
+    bool hotfix = false,
   });
 
   /// Reopens a closed intervention (replies are enabled again).

@@ -3100,6 +3100,132 @@ abstract class AppLocalizations {
   /// **'Équipe'**
   String get navGroupTeam;
 
+  /// No description provided for @navWorkspaceAgenda.
+  ///
+  /// In fr, this message translates to:
+  /// **'Agenda et vue d\'ensemble'**
+  String get navWorkspaceAgenda;
+
+  /// No description provided for @navWorkspaceSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes et clients'**
+  String get navWorkspaceSales;
+
+  /// No description provided for @navWorkspaceSupport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support et opérations'**
+  String get navWorkspaceSupport;
+
+  /// No description provided for @navWorkspaceBilling.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facturation et versions'**
+  String get navWorkspaceBilling;
+
+  /// No description provided for @navToggleSidebar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réduire / agrandir le menu'**
+  String get navToggleSidebar;
+
+  /// No description provided for @settingsGroupGeneral.
+  ///
+  /// In fr, this message translates to:
+  /// **'Général et serveur'**
+  String get settingsGroupGeneral;
+
+  /// No description provided for @settingsGroupSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes et prospects'**
+  String get settingsGroupSales;
+
+  /// No description provided for @settingsGroupSchedule.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendez-vous et horaires'**
+  String get settingsGroupSchedule;
+
+  /// No description provided for @settingsGroupCatalog.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue et ressources'**
+  String get settingsGroupCatalog;
+
+  /// No description provided for @settingsGroupAfterSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support et interventions'**
+  String get settingsGroupAfterSales;
+
+  /// No description provided for @hoursOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvert'**
+  String get hoursOpen;
+
+  /// No description provided for @hoursClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get hoursClosed;
+
+  /// No description provided for @hoursDailySpan.
+  ///
+  /// In fr, this message translates to:
+  /// **'Amplitude journalière'**
+  String get hoursDailySpan;
+
+  /// No description provided for @hoursPickTime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir l\'heure'**
+  String get hoursPickTime;
+
+  /// No description provided for @hoursSlotsPerDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'créneaux par jour'**
+  String get hoursSlotsPerDay;
+
+  /// No description provided for @unitMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'min'**
+  String get unitMinutes;
+
+  /// No description provided for @unitHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'h'**
+  String get unitHours;
+
+  /// No description provided for @unitDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'jours'**
+  String get unitDays;
+
+  /// No description provided for @hoursBookingHorizonHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'à combien de jours à l\'avance un client peut réserver.'**
+  String get hoursBookingHorizonHint;
+
+  /// No description provided for @hoursMinNoticeHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai minimum entre la réservation et le rendez-vous, pour préparer l\'équipe.'**
+  String get hoursMinNoticeHint;
+
+  /// No description provided for @hoursHoldHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un créneau demandé reste réservé ce temps avant d\'être libéré.'**
+  String get hoursHoldHint;
+
   /// No description provided for @navRequests.
   ///
   /// In fr, this message translates to:
@@ -5481,6 +5607,690 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Les 4 types (Démo, Réunion, Formation, Accompagnement) sont fixes. Vous pouvez seulement ajuster la durée, la couleur et la réservation en ligne.'**
   String get wfFixedTypesNote;
+
+  /// No description provided for @navBilling.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facturation'**
+  String get navBilling;
+
+  /// No description provided for @blTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnements et facturation'**
+  String get blTitle;
+
+  /// No description provided for @blSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance et support de chaque client, paiements en espèces à confirmer.'**
+  String get blSubtitle;
+
+  /// No description provided for @blStatusAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les statuts'**
+  String get blStatusAll;
+
+  /// No description provided for @blStatusActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actif'**
+  String get blStatusActive;
+
+  /// No description provided for @blStatusExpiringSoon.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expire bientôt'**
+  String get blStatusExpiringSoon;
+
+  /// No description provided for @blStatusExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiré'**
+  String get blStatusExpired;
+
+  /// No description provided for @blStatusNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun abonnement'**
+  String get blStatusNone;
+
+  /// No description provided for @blFilterStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut'**
+  String get blFilterStatus;
+
+  /// No description provided for @blSortBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier par'**
+  String get blSortBy;
+
+  /// No description provided for @blSortName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du client'**
+  String get blSortName;
+
+  /// No description provided for @blSortExpiry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date d\'expiration'**
+  String get blSortExpiry;
+
+  /// No description provided for @blSortConverted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de conversion'**
+  String get blSortConverted;
+
+  /// No description provided for @blSortDirection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inverser l\'ordre'**
+  String get blSortDirection;
+
+  /// No description provided for @blPendingOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renouvellements en attente'**
+  String get blPendingOnly;
+
+  /// No description provided for @blSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un client...'**
+  String get blSearchHint;
+
+  /// No description provided for @blColCustomer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Client'**
+  String get blColCustomer;
+
+  /// No description provided for @blColExpiry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiration'**
+  String get blColExpiry;
+
+  /// No description provided for @blColDaysLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jours restants'**
+  String get blColDaysLeft;
+
+  /// No description provided for @blColPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get blColPending;
+
+  /// No description provided for @blNoCustomers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun client'**
+  String get blNoCustomers;
+
+  /// No description provided for @blNoCustomersHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun client ne correspond aux filtres.'**
+  String get blNoCustomersHint;
+
+  /// No description provided for @blDetailTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facturation du client'**
+  String get blDetailTitle;
+
+  /// No description provided for @blBack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour aux abonnements'**
+  String get blBack;
+
+  /// No description provided for @blLicense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence'**
+  String get blLicense;
+
+  /// No description provided for @blLicenseLifetime.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence à vie (n\'expire jamais)'**
+  String get blLicenseLifetime;
+
+  /// No description provided for @blLicenseSince.
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get blLicenseSince;
+
+  /// No description provided for @blMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Maintenance et support'**
+  String get blMaintenance;
+
+  /// No description provided for @blMaintenanceStarts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Début'**
+  String get blMaintenanceStarts;
+
+  /// No description provided for @blMaintenanceExpires.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiration'**
+  String get blMaintenanceExpires;
+
+  /// No description provided for @blPricePerYear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix par année'**
+  String get blPricePerYear;
+
+  /// No description provided for @blCurrency.
+  ///
+  /// In fr, this message translates to:
+  /// **'DA'**
+  String get blCurrency;
+
+  /// No description provided for @blDaysUnit.
+  ///
+  /// In fr, this message translates to:
+  /// **'jours'**
+  String get blDaysUnit;
+
+  /// No description provided for @blSetMaintenance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Définir la période'**
+  String get blSetMaintenance;
+
+  /// No description provided for @blSetMaintenanceTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Période de maintenance'**
+  String get blSetMaintenanceTitle;
+
+  /// No description provided for @blSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistré.'**
+  String get blSaved;
+
+  /// No description provided for @blRenewals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandes de renouvellement'**
+  String get blRenewals;
+
+  /// No description provided for @blNoRenewals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune demande de renouvellement.'**
+  String get blNoRenewals;
+
+  /// No description provided for @blRenewalReference.
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence proforma'**
+  String get blRenewalReference;
+
+  /// No description provided for @blRenewalYears.
+  ///
+  /// In fr, this message translates to:
+  /// **'Années'**
+  String get blRenewalYears;
+
+  /// No description provided for @blRenewalAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get blRenewalAmount;
+
+  /// No description provided for @blRenewalPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de paiement'**
+  String get blRenewalPending;
+
+  /// No description provided for @blRenewalConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmée'**
+  String get blRenewalConfirmed;
+
+  /// No description provided for @blRequestedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandée le'**
+  String get blRequestedOn;
+
+  /// No description provided for @blConfirmedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmée le'**
+  String get blConfirmedOn;
+
+  /// No description provided for @blMarkPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme payé'**
+  String get blMarkPaid;
+
+  /// No description provided for @blMarkPaidTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le paiement en espèces'**
+  String get blMarkPaidTitle;
+
+  /// No description provided for @blMarkPaidHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmez que les espèces ont été reçues. La période de maintenance du client sera prolongée automatiquement.'**
+  String get blMarkPaidHint;
+
+  /// No description provided for @blPaidAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date du paiement'**
+  String get blPaidAt;
+
+  /// No description provided for @blMarkedPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement confirmé : maintenance prolongée.'**
+  String get blMarkedPaid;
+
+  /// No description provided for @blInvoices.
+  ///
+  /// In fr, this message translates to:
+  /// **'Factures et reçus'**
+  String get blInvoices;
+
+  /// No description provided for @blNoInvoices.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune facture.'**
+  String get blNoInvoices;
+
+  /// No description provided for @blColInvoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence'**
+  String get blColInvoice;
+
+  /// No description provided for @blColType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get blColType;
+
+  /// No description provided for @blColAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant (DA)'**
+  String get blColAmount;
+
+  /// No description provided for @blColIssued.
+  ///
+  /// In fr, this message translates to:
+  /// **'Émise le'**
+  String get blColIssued;
+
+  /// No description provided for @blColPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée le'**
+  String get blColPaid;
+
+  /// No description provided for @blInvoiceTypeLicense.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licence'**
+  String get blInvoiceTypeLicense;
+
+  /// No description provided for @blInvoiceTypeRenewal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renouvellement de maintenance'**
+  String get blInvoiceTypeRenewal;
+
+  /// No description provided for @blInvoicePaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée en espèces'**
+  String get blInvoicePaid;
+
+  /// No description provided for @blInvoicePending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente d\'encaissement'**
+  String get blInvoicePending;
+
+  /// No description provided for @blInvoiceDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détails de la facture'**
+  String get blInvoiceDetails;
+
+  /// No description provided for @blReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu scanné'**
+  String get blReceipt;
+
+  /// No description provided for @blReceiptNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun reçu joint.'**
+  String get blReceiptNone;
+
+  /// No description provided for @blUploadReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Joindre un reçu (PDF ou image)'**
+  String get blUploadReceipt;
+
+  /// No description provided for @blReplaceReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplacer le reçu'**
+  String get blReplaceReceipt;
+
+  /// No description provided for @blRemoveReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer le reçu'**
+  String get blRemoveReceipt;
+
+  /// No description provided for @blViewReceipt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger le reçu'**
+  String get blViewReceipt;
+
+  /// No description provided for @blReceiptUploaded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu enregistré.'**
+  String get blReceiptUploaded;
+
+  /// No description provided for @blReceiptRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu retiré.'**
+  String get blReceiptRemoved;
+
+  /// No description provided for @blNewInvoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle facture'**
+  String get blNewInvoice;
+
+  /// No description provided for @blInvoiceType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de facture'**
+  String get blInvoiceType;
+
+  /// No description provided for @blInvoiceAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant (DA)'**
+  String get blInvoiceAmount;
+
+  /// No description provided for @blInvoiceAlreadyPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà payée en espèces'**
+  String get blInvoiceAlreadyPaid;
+
+  /// No description provided for @blInvoiceCreated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Facture créée.'**
+  String get blInvoiceCreated;
+
+  /// No description provided for @blAmountInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrez un montant valide.'**
+  String get blAmountInvalid;
+
+  /// No description provided for @blPeriodInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'La fin doit être après le début.'**
+  String get blPeriodInvalid;
+
+  /// No description provided for @blRenewalPendingQuote.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de tarification'**
+  String get blRenewalPendingQuote;
+
+  /// No description provided for @blRenewalQuoted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifée, en attente de paiement'**
+  String get blRenewalQuoted;
+
+  /// No description provided for @blRenewalRejected.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusée'**
+  String get blRenewalRejected;
+
+  /// No description provided for @blQuotePrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifer'**
+  String get blQuotePrice;
+
+  /// No description provided for @blQuoteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tarifer le renouvellement'**
+  String get blQuoteTitle;
+
+  /// No description provided for @blQuoteHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entrez le montant total que le client paiera en espèces. Un proforma sera émis.'**
+  String get blQuoteHint;
+
+  /// No description provided for @blQuoteAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant total (DA)'**
+  String get blQuoteAmount;
+
+  /// No description provided for @blQuoteIssue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Émettre le proforma'**
+  String get blQuoteIssue;
+
+  /// No description provided for @blQuoted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Proforma émis.'**
+  String get blQuoted;
+
+  /// No description provided for @blWorkstations.
+  ///
+  /// In fr, this message translates to:
+  /// **'postes'**
+  String get blWorkstations;
+
+  /// No description provided for @blDossiers.
+  ///
+  /// In fr, this message translates to:
+  /// **'dossiers'**
+  String get blDossiers;
+
+  /// No description provided for @blNotesLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remarques'**
+  String get blNotesLabel;
+
+  /// No description provided for @ivHotfixLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Correctif privé (Hotfix)'**
+  String get ivHotfixLabel;
+
+  /// No description provided for @ivHotfixHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le client verra ce fichier comme un correctif privé.'**
+  String get ivHotfixHint;
+
+  /// No description provided for @productImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image du produit'**
+  String get productImage;
+
+  /// No description provided for @productUploadImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléverser l\'image'**
+  String get productUploadImage;
+
+  /// No description provided for @productUploadingImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléversement de l\'image...'**
+  String get productUploadingImage;
+
+  /// No description provided for @productRemoveImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer l\'image'**
+  String get productRemoveImage;
+
+  /// No description provided for @productTabsBasic.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations de base'**
+  String get productTabsBasic;
+
+  /// No description provided for @productTabsWeb.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue et web'**
+  String get productTabsWeb;
+
+  /// No description provided for @productTabsDemo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version de démonstration'**
+  String get productTabsDemo;
+
+  /// No description provided for @productImageUploaded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image du produit téléversée avec succès.'**
+  String get productImageUploaded;
+
+  /// No description provided for @productImageTooLarge.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'image dépasse 5 Mo.'**
+  String get productImageTooLarge;
+
+  /// No description provided for @productImageUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ou collez l\'URL d\'une image'**
+  String get productImageUrl;
+
+  /// No description provided for @productImageUrlInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'URL d\'image invalide (http/https).'**
+  String get productImageUrlInvalid;
+
+  /// No description provided for @productImageHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'PNG, JPG, WEBP ou SVG — 5 Mo maximum.'**
+  String get productImageHint;
+
+  /// No description provided for @productImageSvgPreview.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu SVG indisponible, le fichier est bien enregistré.'**
+  String get productImageSvgPreview;
+
+  /// No description provided for @productSlug.
+  ///
+  /// In fr, this message translates to:
+  /// **'Slug (URL courte)'**
+  String get productSlug;
+
+  /// No description provided for @productSlugHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Généré automatiquement à partir du nom si vide.'**
+  String get productSlugHint;
+
+  /// No description provided for @productSlugInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Minuscules, chiffres et tirets uniquement.'**
+  String get productSlugInvalid;
+
+  /// No description provided for @productSortOrder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ordre d\'affichage'**
+  String get productSortOrder;
+
+  /// No description provided for @productSortOrderInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisissez un nombre entre 0 et 100000.'**
+  String get productSortOrderInvalid;
+
+  /// No description provided for @productSummaryLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Résumé court'**
+  String get productSummaryLabel;
+
+  /// No description provided for @productWebDescriptionLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description complète'**
+  String get productWebDescriptionLabel;
+
+  /// No description provided for @productFeatures.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fonctionnalités'**
+  String get productFeatures;
+
+  /// No description provided for @productFeatureHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez une fonctionnalité puis validez'**
+  String get productFeatureHint;
+
+  /// No description provided for @productAddFeature.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter la fonctionnalité'**
+  String get productAddFeature;
 }
 
 class _AppLocalizationsDelegate

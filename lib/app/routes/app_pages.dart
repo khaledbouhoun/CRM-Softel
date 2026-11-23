@@ -32,6 +32,9 @@ import '../../features/scheduling/presentation/pages/training_page.dart';
 import '../../features/workflow_settings/presentation/workflow_settings_page.dart';
 import '../../features/releases/presentation/bindings/releases_binding.dart';
 import '../../features/releases/presentation/pages/releases_page.dart';
+import '../../features/billing/presentation/bindings/billing_binding.dart';
+import '../../features/billing/presentation/pages/billing_customer_page.dart';
+import '../../features/billing/presentation/pages/billing_page.dart';
 import 'app_routes.dart';
 
 abstract final class AppPages {
@@ -133,6 +136,19 @@ abstract final class AppPages {
       page: () => const InterventionDetailPage(),
       transition: Transition.rightToLeftWithFade,
       transitionDuration: const Duration(milliseconds: 180),
+    ),
+    GetPage(
+      name: Routes.billing,
+      page: () => const BillingPage(),
+      binding: BillingBinding(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: Routes.billingDetails,
+      page: () => const BillingCustomerPage(),
+      transition: _transition,
+      transitionDuration: _duration,
     ),
     GetPage(
       name: Routes.releases,

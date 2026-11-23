@@ -59,7 +59,7 @@ void main() {
   });
 
   Future<void> pumpRoute(WidgetTester tester, String route) async {
-    tester.view.physicalSize = const Size(1700, 1000);
+    tester.view.physicalSize = const Size(1700, 1250);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     // The test font (Ahem) is much wider than the app font, so the fixed-width
@@ -82,25 +82,109 @@ void main() {
     await settle(tester);
   }
 
-  testWidgets('sidebar groups the new sections', (tester) async {
+  testWidgets('sidebar groups every page into the four workspaces', (
+    tester,
+  ) async {
     base.adapter.reply(
       'GET',
       '/customers',
       paginated(<Map<String, dynamic>>[]),
     );
     await pumpRoute(tester, Routes.customers);
+    // Workspace headers (rendered upper-case).
+    for (final header in [
+      tr.navWorkspaceAgenda,
+      tr.navWorkspaceSales,
+      tr.navWorkspaceSupport,
+      tr.navWorkspaceBilling,
+    ]) {
+      expect(find.text(header.toUpperCase()), findsOneWidget, reason: header);
+    }
+    // Every page entry is still reachable from the sidebar.
     for (final label in [
       'Tableau de bord',
       'Calendrier',
+      'Relances',
+      'Activités',
+      'Prospects',
+      'Pipeline',
       'Clients',
+      'Produits',
+      'Après-vente',
       'Formation et accompagnement',
       'Demandes et réservations',
-      'Après-vente',
       'Employés',
-      'Rendez-vous et après-vente',
+      'Facturation',
+      'Mises à jour produits',
     ]) {
       expect(find.text(label), findsWidgets, reason: label);
     }
+    // The old flat "Service" / "Équipe" / "CRM" group headers are gone.
+    expect(find.text(tr.navGroupService.toUpperCase()), findsNothing);
+    expect(find.text(tr.navGroupTeam.toUpperCase()), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('breadcrumbs show workspace and page of the current route', (
+    tester,
+  ) async {
+    base.adapter.reply(
+      'GET',
+      '/customers',
+      paginated(<Map<String, dynamic>>[]),
+    );
+    await pumpRoute(tester, Routes.customers);
+    expect(
+      find.text('${tr.navWorkspaceSales}  ›  ${tr.navCustomers}'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('settings are one footer entry; the five groups live in the page', (
+    tester,
+  ) async {
+    await pumpRoute(tester, Routes.workflowSettings);
+
+    // Sidebar: a single Settings tile, no per-section entries any more.
+    expect(find.text(tr.navSettingsSection), findsWidgets);
+
+    // Page: the five group tabs.
+    for (final group in [
+      tr.settingsGroupGeneral,
+      tr.settingsGroupSales,
+      tr.settingsGroupSchedule,
+      tr.settingsGroupCatalog,
+      tr.settingsGroupAfterSales,
+    ]) {
+      expect(find.text(group), findsWidgets, reason: group);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the sidebar can be collapsed to icons and expanded again', (
+    tester,
+  ) async {
+    base.adapter.reply(
+      'GET',
+      '/customers',
+      paginated(<Map<String, dynamic>>[]),
+    );
+    await pumpRoute(tester, Routes.customers);
+    final labelVisibleAtStart = find.text('Calendrier').evaluate().isNotEmpty;
+
+    await tester.tap(find.byTooltip(tr.navToggleSidebar));
+    await tester.pump();
+    final labelVisibleCollapsed = find.text('Calendrier').evaluate().isNotEmpty;
+
+    // Restore the shared (static) state for the other tests.
+    await tester.tap(find.byTooltip(tr.navToggleSidebar));
+    await tester.pump();
+    final labelVisibleAgain = find.text('Calendrier').evaluate().isNotEmpty;
+
+    expect(labelVisibleAtStart, isTrue);
+    expect(labelVisibleCollapsed, isFalse);
+    expect(labelVisibleAgain, isTrue);
     expect(tester.takeException(), isNull);
   });
 
@@ -520,9 +604,23 @@ void main() {
         priorityJson(2, 'Normale', 5)..['is_active'] = false,
       ]),
     );
+    base.adapter.reply('GET', '/config/intervention-types', wrap([]));
     await pumpRoute(tester, Routes.workflowSettings);
     expect(find.text(tr.wfWorkingDays), findsOneWidget);
     expect(find.text('1440'), findsOneWidget); // hold expiry from the CRM
+
+    // Hours editor: a day pill toggles Open/Closed; presets and steppers work.
+    expect(find.text(tr.hoursOpen), findsWidgets);
+    await tester.tap(find.byKey(const ValueKey('hold_expiry_minutes-plus')));
+    await tester.pump();
+    expect(find.text('1500'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('hold_expiry_minutes-minus')));
+    await tester.pump();
+    expect(find.text('1440'), findsOneWidget);
+
+    // Priorities now sit in the After-sales group.
+    await tester.tap(find.text(tr.settingsGroupAfterSales).first);
+    await settle(tester);
     await tester.tap(find.text(tr.wfCfgPriorities));
     await settle(tester);
     expect(find.text('Urgent'), findsOneWidget);

@@ -36,6 +36,7 @@ class ApiEndpoints {
   static const products = '/products';
   static String product(int id) => '/products/$id';
   static const uploadProductDemo = '/products/upload-demo';
+  static const uploadProductImage = '/products/upload-image';
 
   // Packs
   static const packs = '/packs';
@@ -95,6 +96,23 @@ class ApiEndpoints {
       '/product-releases/$id/installer';
   static String productReleaseDownload(int id) =>
       '/product-releases/$id/download';
+
+  // Billing (cash only): subscriptions, renewals, invoices, scanned receipts
+  static const billingSubscriptions = '/billing/subscriptions';
+  static String billingCustomer(int prospectId) =>
+      '/billing/customers/$prospectId';
+  static String billingMaintenance(int prospectId) =>
+      '/billing/customers/$prospectId/maintenance';
+  static String billingCustomerInvoices(int prospectId) =>
+      '/billing/customers/$prospectId/invoices';
+  static String billingRenewalQuote(int id) =>
+      '/billing/renewal-requests/$id/quote';
+  static String billingRenewalMarkPaid(int id) =>
+      '/billing/renewal-requests/$id/mark-paid';
+  static String billingInvoiceMarkPaid(int id) =>
+      '/billing/invoices/$id/mark-paid';
+  static String billingInvoiceReceipt(int id) =>
+      '/billing/invoices/$id/receipt';
 
   // Settings
   static String settingsHelp(String section) => '/settings/help/$section';

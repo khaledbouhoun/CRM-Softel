@@ -34,6 +34,9 @@ class FileAccess {
     'png',
   ];
 
+  /// Extensions accepted for a product image (server limit: 5 MB).
+  static const productImageExtensions = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+
   /// Extensions of a release installer.
   static const installerExtensions = ['exe', 'zip', 'rar'];
 

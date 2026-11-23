@@ -29,6 +29,9 @@ import '../../features/employees/data/employees_repository.dart';
 import '../../features/interventions/data/datasources/interventions_remote_data_source.dart';
 import '../../features/interventions/data/repositories/interventions_repository_impl.dart';
 import '../../features/interventions/domain/interventions_repository.dart';
+import '../../features/billing/data/datasources/billing_remote_data_source.dart';
+import '../../features/billing/data/repositories/billing_repository_impl.dart';
+import '../../features/billing/domain/billing_repository.dart';
 import '../../features/releases/data/datasources/releases_remote_data_source.dart';
 import '../../features/releases/data/repositories/releases_repository_impl.dart';
 import '../../features/releases/domain/releases_repository.dart';
@@ -115,6 +118,10 @@ class InitialBinding extends Bindings {
     );
     Get.put<ReleasesRepository>(
       ReleasesRepositoryImpl(ReleasesRemoteDataSource(api)),
+      permanent: true,
+    );
+    Get.put<BillingRepository>(
+      BillingRepositoryImpl(BillingRemoteDataSource(api)),
       permanent: true,
     );
     Get.put<WorkflowConfigRepository>(

@@ -1,18 +1,46 @@
 import 'package:flutter/material.dart';
 
-/// SOFTEL brand palette (the only hues the UI is built from).
+/// SOFTEL brand palette: Softel Blue + the Slate neutral scales, shared with
+/// the website. Every color in the UI is derived from these tokens.
 class BrandColors {
   const BrandColors._();
 
-  static const black = Color(0xFF000000);
-  static const navy = Color(0xFF14213D);
-  static const accent = Color.fromARGB(255, 13, 194, 240);
-  static const grey = Color(0xFFE5E5E5);
-  static const white = Color(0xFFFFFFFF);
+  // Primary Softel brand.
+  static const primary = Color(0xFF009EE0); // Softel cyan blue
+  static const primaryHover = Color(0xFF0082BA);
+  static const primaryPressed = Color(0xFF006894);
+  static const primarySubtle = Color(0xFFE0F2FE); // light background tints
 
-  /// Accent shades for hover / pressed states.
-  static const accentHover = Color(0xFFE8920A);
-  static const accentPressed = Color(0xFFCC7F06);
+  // Neutral scales (Slate). Light mode canvas:
+  static const lightBg = Color(0xFFF8FAFC); // Slate 50
+  static const lightSurface = Color(0xFFFFFFFF); // card
+  static const lightBorder = Color(0xFFE2E8F0); // Slate 200
+  static const lightTextPrimary = Color(0xFF0F172A);
+  static const lightTextMuted = Color(0xFF64748B);
+
+  // Dark mode canvas:
+  static const darkBg = Color(0xFF0F172A); // Slate 900
+  static const darkSurface = Color(0xFF1E293B); // Slate 800 card
+  static const darkBorder = Color(0xFF334155); // Slate 700
+  static const darkTextPrimary = Color(0xFFF8FAFC);
+  static const darkTextMuted = Color(0xFF94A3B8);
+
+  // Semantic.
+  static const success = Color(0xFF10B981); // emerald
+  static const warning = Color(0xFFF59E0B); // amber
+  static const danger = Color(0xFFEF4444); // rose red
+  static const info = primary;
+
+  // Legacy names kept so existing widgets and tests keep compiling. `navy` is
+  // now the Slate 900 ink used for text on Softel Blue (6:1 contrast; white
+  // on #009EE0 is only 3:1), `accent*` map to the primary scale.
+  static const black = Color(0xFF000000);
+  static const white = Color(0xFFFFFFFF);
+  static const grey = Color(0xFFE2E8F0);
+  static const navy = Color(0xFF0F172A);
+  static const accent = primary;
+  static const accentHover = primaryHover;
+  static const accentPressed = primaryPressed;
 }
 
 /// Spacing scale shared by every screen.
@@ -38,7 +66,9 @@ class AppRadius {
   static const md = 8.0;
   static const lg = 12.0;
   static const xl = 16.0;
-  static const pill = 20.0;
+
+  /// Badges and pills.
+  static const pill = 999.0;
 }
 
 /// Elevation shadows (soft, Fluent-like).
@@ -106,40 +136,40 @@ class CrmColors extends ThemeExtension<CrmColors> {
   final Color onAccent;
 
   static const light = CrmColors(
-    success: Color(0xFF15803D),
-    successContainer: Color(0xFFDCFCE7),
+    success: Color(0xFF047857),
+    successContainer: Color(0xFFD1FAE5),
     warning: Color(0xFFB45309),
     warningContainer: Color(0xFFFEF3C7),
     danger: Color(0xFFB91C1C),
     dangerContainer: Color(0xFFFEE2E2),
-    info: Color(0xFF1D4ED8),
-    infoContainer: Color(0xFFDBEAFE),
-    sidebarBackground: BrandColors.navy,
-    sidebarForeground: BrandColors.grey,
-    sidebarMuted: Color(0xFF9AA3BC),
-    sidebarSelected: Color(0xFF22335C),
-    sidebarAccent: BrandColors.accent,
-    canvas: Color(0xFFF4F5F7),
-    accent: BrandColors.accent,
+    info: Color(0xFF0369A1),
+    infoContainer: BrandColors.primarySubtle,
+    sidebarBackground: BrandColors.lightSurface,
+    sidebarForeground: BrandColors.lightTextPrimary,
+    sidebarMuted: BrandColors.lightTextMuted,
+    sidebarSelected: BrandColors.primarySubtle,
+    sidebarAccent: BrandColors.primaryHover,
+    canvas: BrandColors.lightBg,
+    accent: BrandColors.primary,
     onAccent: BrandColors.navy,
   );
 
   static const dark = CrmColors(
-    success: Color(0xFF4ADE80),
-    successContainer: Color(0xFF123524),
+    success: Color(0xFF34D399),
+    successContainer: Color(0xFF0B3B2E),
     warning: Color(0xFFFBBF24),
     warningContainer: Color(0xFF3A2A0B),
     danger: Color(0xFFF87171),
     dangerContainer: Color(0xFF3B1818),
-    info: Color(0xFF7DB2FF),
-    infoContainer: Color(0xFF16294A),
-    sidebarBackground: Color(0xFF0F1830),
-    sidebarForeground: BrandColors.grey,
-    sidebarMuted: Color(0xFF8590AE),
-    sidebarSelected: Color(0xFF1C2C52),
-    sidebarAccent: BrandColors.accent,
-    canvas: Color(0xFF0B1220),
-    accent: BrandColors.accent,
+    info: Color(0xFF38BDF8),
+    infoContainer: Color(0xFF0C2D48),
+    sidebarBackground: Color(0xFF0B1220),
+    sidebarForeground: BrandColors.darkTextPrimary,
+    sidebarMuted: BrandColors.darkTextMuted,
+    sidebarSelected: BrandColors.darkSurface,
+    sidebarAccent: BrandColors.primary,
+    canvas: BrandColors.darkBg,
+    accent: BrandColors.primary,
     onAccent: BrandColors.navy,
   );
 
@@ -159,44 +189,49 @@ extension CrmThemeX on BuildContext {
 class AppTheme {
   const AppTheme._();
 
-  /// Segoe UI covers Latin and Arabic on Windows; the fallbacks keep other
-  /// machines readable.
-  static const fontFamily = 'Segoe UI';
-  static const fontFallback = ['Segoe UI', 'Tahoma', 'Arial', 'Noto Sans Arabic'];
+  /// Alexandria for Arabic, Readex Pro for French / English. Neither font is
+  /// bundled: when it is not installed (or added under `assets/fonts` and
+  /// declared in pubspec.yaml) the system fonts below keep the UI readable.
+  static const arabicFont = 'Alexandria';
+  static const latinFont = 'Readex Pro';
+  static const _systemFonts = ['Segoe UI', 'Cairo', 'Inter', 'Tahoma', 'Arial', 'Noto Sans Arabic'];
 
-  /// Button label style. It must name the font family itself: a button theme
-  /// replaces (not merges) the default style, and Arabic needs the fallbacks.
-  static const _buttonText = TextStyle(fontFamily: fontFamily, fontFamilyFallback: fontFallback, fontWeight: FontWeight.w600);
+  static String fontFamilyFor(String languageCode) => languageCode == 'ar' ? arabicFont : latinFont;
+
+  static List<String> fontFallbackFor(String languageCode) => [
+    languageCode == 'ar' ? latinFont : arabicFont,
+    ..._systemFonts,
+  ];
 
   static const _lightScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: BrandColors.navy,
-    onPrimary: BrandColors.white,
-    primaryContainer: Color(0xFFFFE6B8),
-    onPrimaryContainer: BrandColors.navy,
-    secondary: BrandColors.accent,
+    primary: BrandColors.primary,
+    onPrimary: BrandColors.navy,
+    primaryContainer: BrandColors.primarySubtle,
+    onPrimaryContainer: Color(0xFF075985),
+    secondary: BrandColors.primary,
     onSecondary: BrandColors.navy,
-    secondaryContainer: Color(0xFFFFEFCF),
-    onSecondaryContainer: BrandColors.navy,
-    tertiary: Color(0xFF3A4A72),
+    secondaryContainer: BrandColors.primarySubtle,
+    onSecondaryContainer: Color(0xFF075985),
+    tertiary: Color(0xFF475569),
     onTertiary: BrandColors.white,
     error: Color(0xFFB91C1C),
     onError: BrandColors.white,
     errorContainer: Color(0xFFFEE2E2),
     onErrorContainer: Color(0xFF7F1D1D),
-    surface: BrandColors.white,
-    onSurface: BrandColors.black,
-    onSurfaceVariant: Color(0xFF4A5068),
-    surfaceContainerLowest: BrandColors.white,
-    surfaceContainerLow: Color(0xFFFAFAFB),
-    surfaceContainer: Color(0xFFF4F4F6),
-    surfaceContainerHigh: Color(0xFFEDEDF0),
-    surfaceContainerHighest: BrandColors.grey,
-    outline: Color(0xFF9399AB),
-    outlineVariant: BrandColors.grey,
-    inverseSurface: BrandColors.navy,
-    onInverseSurface: BrandColors.white,
-    inversePrimary: BrandColors.accent,
+    surface: BrandColors.lightSurface,
+    onSurface: BrandColors.lightTextPrimary,
+    onSurfaceVariant: BrandColors.lightTextMuted,
+    surfaceContainerLowest: BrandColors.lightSurface,
+    surfaceContainerLow: BrandColors.lightBg,
+    surfaceContainer: Color(0xFFF1F5F9),
+    surfaceContainerHigh: Color(0xFFE9EEF5),
+    surfaceContainerHighest: BrandColors.lightBorder,
+    outline: Color(0xFF94A3B8),
+    outlineVariant: BrandColors.lightBorder,
+    inverseSurface: BrandColors.darkBg,
+    onInverseSurface: BrandColors.darkTextPrimary,
+    inversePrimary: BrandColors.primary,
     shadow: BrandColors.black,
     scrim: BrandColors.black,
     surfaceTint: Colors.transparent,
@@ -204,44 +239,55 @@ class AppTheme {
 
   static const _darkScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: BrandColors.accent,
+    primary: BrandColors.primary,
     onPrimary: BrandColors.navy,
-    primaryContainer: Color(0xFF4A3508),
-    onPrimaryContainer: Color(0xFFFFE6B8),
-    secondary: BrandColors.accent,
+    primaryContainer: Color(0xFF0C3A57),
+    onPrimaryContainer: Color(0xFFBAE6FD),
+    secondary: BrandColors.primary,
     onSecondary: BrandColors.navy,
-    secondaryContainer: Color(0xFF3E2F10),
-    onSecondaryContainer: Color(0xFFFFE6B8),
-    tertiary: Color(0xFF9FB0DA),
+    secondaryContainer: Color(0xFF0C3A57),
+    onSecondaryContainer: Color(0xFFBAE6FD),
+    tertiary: Color(0xFFCBD5E1),
     onTertiary: BrandColors.navy,
     error: Color(0xFFF87171),
     onError: Color(0xFF3B0A0A),
     errorContainer: Color(0xFF5B1A1A),
     onErrorContainer: Color(0xFFFFDAD6),
-    surface: Color(0xFF101A30),
-    onSurface: Color(0xFFF5F5F7),
-    onSurfaceVariant: Color(0xFFB7BDCE),
-    surfaceContainerLowest: BrandColors.navy,
-    surfaceContainerLow: Color(0xFF182646),
-    surfaceContainer: Color(0xFF1B2A4D),
-    surfaceContainerHigh: Color(0xFF22335C),
-    surfaceContainerHighest: Color(0xFF2B3E6B),
-    outline: Color(0xFF6E7A9C),
-    outlineVariant: Color(0xFF2E3E66),
-    inverseSurface: BrandColors.grey,
-    onInverseSurface: BrandColors.navy,
-    inversePrimary: BrandColors.navy,
+    surface: BrandColors.darkBg,
+    onSurface: BrandColors.darkTextPrimary,
+    onSurfaceVariant: BrandColors.darkTextMuted,
+    surfaceContainerLowest: BrandColors.darkSurface,
+    surfaceContainerLow: Color(0xFF223047),
+    surfaceContainer: Color(0xFF273449),
+    surfaceContainerHigh: Color(0xFF2F3D54),
+    surfaceContainerHighest: BrandColors.darkBorder,
+    outline: Color(0xFF64748B),
+    outlineVariant: BrandColors.darkBorder,
+    inverseSurface: BrandColors.lightBorder,
+    onInverseSurface: BrandColors.lightTextPrimary,
+    inversePrimary: BrandColors.primaryPressed,
     shadow: BrandColors.black,
     scrim: BrandColors.black,
     surfaceTint: Colors.transparent,
   );
 
-  static ThemeData light() => _build(_lightScheme, CrmColors.light);
+  /// Theme for [locale]: Alexandria for Arabic, Readex Pro for French and
+  /// English.
+  static ThemeData theme(Locale locale, {Brightness brightness = Brightness.light}) => brightness == Brightness.dark
+      ? dark(languageCode: locale.languageCode)
+      : light(languageCode: locale.languageCode);
 
-  static ThemeData dark() => _build(_darkScheme, CrmColors.dark);
+  static ThemeData light({String languageCode = 'fr'}) => _build(_lightScheme, CrmColors.light, languageCode);
 
-  static ThemeData _build(ColorScheme scheme, CrmColors crm) {
+  static ThemeData dark({String languageCode = 'fr'}) => _build(_darkScheme, CrmColors.dark, languageCode);
+
+  static ThemeData _build(ColorScheme scheme, CrmColors crm, String languageCode) {
     final isLight = scheme.brightness == Brightness.light;
+    final fontFamily = fontFamilyFor(languageCode);
+    final fontFallback = fontFallbackFor(languageCode);
+    // A button theme replaces (not merges) the default style, so it names the
+    // font family itself.
+    final buttonText = TextStyle(fontFamily: fontFamily, fontFamilyFallback: fontFallback, fontWeight: FontWeight.w600);
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
@@ -254,7 +300,7 @@ class AppTheme {
       borderRadius: BorderRadius.circular(AppRadius.md),
       borderSide: BorderSide(color: color, width: width),
     );
-    final focusColor = isLight ? BrandColors.navy : BrandColors.accent;
+    final focusColor = BrandColors.primary;
 
     // Interaction states shared by the button styles.
     Color accentFill(Set<WidgetState> s) {
@@ -266,7 +312,8 @@ class AppTheme {
       return BrandColors.accent;
     }
 
-    BorderSide? focusRing(Set<WidgetState> s) => s.contains(WidgetState.focused) ? BorderSide(color: focusColor, width: 2) : null;
+    BorderSide? focusRing(Set<WidgetState> s) =>
+        s.contains(WidgetState.focused) ? BorderSide(color: focusColor, width: 2) : null;
 
     final buttonShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md));
 
@@ -279,7 +326,8 @@ class AppTheme {
       textTheme: base.textTheme
           .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface)
           .copyWith(
-            headlineSmall: base.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, fontSize: 22),
+            headlineMedium: base.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800, fontSize: 28),
+            headlineSmall: base.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700, fontSize: 22),
             titleLarge: base.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 18),
             titleMedium: base.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
             titleSmall: base.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
@@ -301,7 +349,7 @@ class AppTheme {
         hoverColor: scheme.surfaceContainerLow,
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: border(scheme.outlineVariant),
-        enabledBorder: border(isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant),
+        enabledBorder: border(scheme.outlineVariant),
         disabledBorder: border(scheme.outlineVariant.withValues(alpha: 0.6)),
         focusedBorder: border(focusColor, 2),
         errorBorder: border(scheme.error),
@@ -313,7 +361,7 @@ class AppTheme {
         shadowColor: BrandColors.black,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.xl),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           side: BorderSide(color: scheme.outlineVariant),
         ),
       ),
@@ -327,7 +375,7 @@ class AppTheme {
             (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.4) : BrandColors.navy,
           ),
           side: WidgetStateProperty.resolveWith(focusRing),
-          textStyle: const WidgetStatePropertyAll(_buttonText),
+          textStyle: WidgetStatePropertyAll(buttonText),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -335,26 +383,30 @@ class AppTheme {
           padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16, vertical: 14)),
           shape: WidgetStatePropertyAll(buttonShape),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.38) : (isLight ? BrandColors.navy : scheme.onSurface),
+            (s) => s.contains(WidgetState.disabled)
+                ? scheme.onSurface.withValues(alpha: 0.38)
+                : (isLight ? BrandColors.navy : scheme.onSurface),
           ),
           side: WidgetStateProperty.resolveWith(
             (s) =>
                 focusRing(s) ??
-                BorderSide(color: s.contains(WidgetState.hovered) ? scheme.outline : (isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant)),
+                BorderSide(color: s.contains(WidgetState.hovered) ? scheme.outline : scheme.outlineVariant),
           ),
           overlayColor: WidgetStatePropertyAll(scheme.onSurface.withValues(alpha: 0.06)),
-          textStyle: const WidgetStatePropertyAll(_buttonText),
+          textStyle: WidgetStatePropertyAll(buttonText),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           shape: WidgetStatePropertyAll(buttonShape),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (s) => s.contains(WidgetState.disabled) ? scheme.onSurface.withValues(alpha: 0.38) : (isLight ? BrandColors.navy : BrandColors.accent),
+            (s) => s.contains(WidgetState.disabled)
+                ? scheme.onSurface.withValues(alpha: 0.38)
+                : (isLight ? BrandColors.primaryPressed : BrandColors.primary),
           ),
           side: WidgetStateProperty.resolveWith(focusRing),
           overlayColor: WidgetStatePropertyAll(scheme.onSurface.withValues(alpha: 0.06)),
-          textStyle: const WidgetStatePropertyAll(_buttonText),
+          textStyle: WidgetStatePropertyAll(buttonText),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
@@ -367,20 +419,30 @@ class AppTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           shape: WidgetStatePropertyAll(buttonShape),
-          side: WidgetStatePropertyAll(BorderSide(color: isLight ? const Color(0xFFD2D2D8) : scheme.outlineVariant)),
-          backgroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? scheme.primaryContainer : Colors.transparent),
+          side: WidgetStatePropertyAll(BorderSide(color: scheme.outlineVariant)),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? scheme.primaryContainer : Colors.transparent,
+          ),
           foregroundColor: WidgetStateProperty.resolveWith(
             (s) => s.contains(WidgetState.selected) ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
           ),
         ),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.navy : scheme.outline),
-        trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.surfaceContainerHighest),
-        trackOutlineColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.outline),
+        thumbColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? BrandColors.navy : scheme.outline,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.surfaceContainerHighest,
+        ),
+        trackOutlineColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? BrandColors.accent : scheme.outline,
+        ),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? BrandColors.accent : Colors.transparent),
+        fillColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? BrandColors.accent : Colors.transparent,
+        ),
         checkColor: const WidgetStatePropertyAll(BrandColors.navy),
         side: BorderSide(color: scheme.outline, width: 1.5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -417,13 +479,18 @@ class AppTheme {
         selectedColor: scheme.primaryContainer,
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(color: BrandColors.accent),
-      textSelectionTheme: TextSelectionThemeData(cursorColor: focusColor, selectionColor: BrandColors.accent.withValues(alpha: 0.35)),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: focusColor,
+        selectionColor: BrandColors.accent.withValues(alpha: 0.35),
+      ),
       scrollbarTheme: ScrollbarThemeData(
         thumbVisibility: const WidgetStatePropertyAll(true),
         thumbColor: WidgetStatePropertyAll(scheme.outline.withValues(alpha: 0.55)),
         radius: const Radius.circular(8),
       ),
-      listTileTheme: ListTileThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md))),
+      listTileTheme: ListTileThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+      ),
     );
   }
 }

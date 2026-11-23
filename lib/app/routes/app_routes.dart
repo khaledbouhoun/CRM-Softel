@@ -15,6 +15,8 @@ abstract final class Routes {
   static const afterSalesDetails = '/after-sales/:id';
   static const employees = '/employees';
   static const releases = '/releases';
+  static const billing = '/billing';
+  static const billingDetails = '/billing/:id';
   static const workflowSettings = '/settings/workflow';
   static const settings = '/settings';
   static const stagesSettings = '/settings/stages';
@@ -23,5 +25,6 @@ abstract final class Routes {
 
   static String prospect(int id) => '/prospects/$id';
   static String customer(int id) => '/customers/$id';
+  static String billingCustomer(int id) => '/billing/$id';
   static String afterSalesDetail(int id) => '/after-sales/$id';
 }

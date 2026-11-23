@@ -14,6 +14,7 @@ import '../helpers/fixtures.dart';
 import '../helpers/workflow_fixtures.dart';
 
 void main() {
+  hotfixAttachmentTests();
   group('Appointment', () {
     test('parses a held demo with its hold and contact data', () {
       final a = Appointment.fromJson(appointmentJson());
@@ -415,6 +416,17 @@ void main() {
       expect(overview.employees.first.isOnline, isTrue);
       expect(overview.employees.last.isOnline, isFalse);
       expect(EmployeesOverview.fromJson(const {}).employees, isEmpty);
+    });
+  });
+}
+
+void hotfixAttachmentTests() {
+  group('InterventionAttachment hotfix flag', () {
+    test('is_hotfix is parsed and defaults to false', () {
+      final patch = InterventionAttachment.fromJson({'id': 1, 'name': 'patch.zip', 'is_hotfix': true});
+      final plain = InterventionAttachment.fromJson({'id': 2, 'name': 'screen.png'});
+      expect(patch.isHotfix, isTrue);
+      expect(plain.isHotfix, isFalse);
     });
   });
 }

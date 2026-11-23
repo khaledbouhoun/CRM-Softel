@@ -19,12 +19,14 @@ class FormDialog extends StatelessWidget {
     this.busy = false,
     this.errorMessage,
     this.submitLabel,
-    this.width = 560,
+    this.width = 540,
     this.icon,
+    this.subtitle,
     this.submitEnabled = true,
   });
 
   final String title;
+  final String? subtitle;
   final IconData? icon;
   final Widget child;
   final VoidCallback onSubmit;
@@ -54,7 +56,21 @@ class FormDialog extends StatelessWidget {
                   Icon(icon, color: context.colors.primary),
                   const SizedBox(width: 10),
                 ],
-                Expanded(child: Text(title, style: context.text.titleLarge)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: context.text.titleLarge),
+                      if (subtitle != null)
+                        Text(
+                          subtitle!,
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
                 IconButton(
                   tooltip: tr.actionClose,
                   onPressed: busy ? null : onCancel,
@@ -63,9 +79,10 @@ class FormDialog extends StatelessWidget {
               ],
             ),
           ),
+          const Divider(),
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 24, 8),
+              padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 8),
               child: child,
             ),
           ),
@@ -74,8 +91,9 @@ class FormDialog extends StatelessWidget {
               padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 24, 0),
               child: ErrorBanner(message: errorMessage!),
             ),
+          const Divider(),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 20),
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 14, 24, 18),
             // Wraps instead of overflowing with long labels / large fonts.
             child: OverflowBar(
               alignment: MainAxisAlignment.end,

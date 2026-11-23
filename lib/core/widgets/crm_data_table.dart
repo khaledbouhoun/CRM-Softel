@@ -60,8 +60,11 @@ class CrmDataTable<T> extends StatelessWidget {
           height: 42,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: scheme.surfaceContainerHigh.withValues(alpha: 0.6),
-            border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+            color: scheme.surfaceContainerLow,
+            border: Border(
+              top: BorderSide(color: scheme.outlineVariant),
+              bottom: BorderSide(color: scheme.outlineVariant),
+            ),
           ),
           child: Row(children: [for (final c in columns) _header(context, c)]),
         ),
@@ -89,6 +92,7 @@ class CrmDataTable<T> extends StatelessWidget {
     final isSorted = column.sortKey != null && column.sortKey == sortKey;
     final style = context.text.labelMedium?.copyWith(
       fontWeight: FontWeight.w700,
+      fontSize: 11.5,
       color: isSorted
           ? context.colors.primary
           : context.colors.onSurfaceVariant,
@@ -156,7 +160,7 @@ class _DataRowState<T> extends State<_DataRow<T>> {
   Widget build(BuildContext context) {
     final scheme = context.colors;
     final bg = _hover
-        ? scheme.primary.withValues(alpha: 0.05)
+        ? scheme.primary.withValues(alpha: 0.06)
         : (widget.tint ?? Colors.transparent);
     return MouseRegion(
       onEnter: (_) => setState(() => _hover = true),
@@ -167,7 +171,8 @@ class _DataRowState<T> extends State<_DataRow<T>> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: widget.onTap == null ? null : () => widget.onTap!(widget.item),
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 120),
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             color: bg,
