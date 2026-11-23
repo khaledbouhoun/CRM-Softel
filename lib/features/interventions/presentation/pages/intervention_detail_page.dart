@@ -21,6 +21,8 @@ import '../controllers/interventions_controllers.dart';
 import '../dialogs/intervention_dialogs.dart';
 import '../widgets/chat_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 /// Route `/after-sales/:id`.
 class InterventionDetailPage extends StatefulWidget {
   const InterventionDetailPage({super.key});
@@ -105,7 +107,7 @@ class _Body extends StatelessWidget {
         PageHeader(
           leading: IconButton(
             tooltip: tr.actionBack,
-            icon: const Icon(Icons.arrow_back),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
             onPressed: () => Get.back(),
           ),
           title: '${i.reference} · ${i.title}',
@@ -118,14 +120,14 @@ class _Body extends StatelessWidget {
             IconButton(
               tooltip: tr.actionRefresh,
               onPressed: c.load,
-              icon: const Icon(Icons.refresh),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh),
             ),
             InterventionStatusBadge(status: i.status),
             PriorityChip(priority: i.priority),
             if (c.canReopen)
               PopupMenuButton<String>(
                 enabled: !c.isBusy.value,
-                icon: const Icon(Icons.more_vert),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoreVertical),
                 onSelected: (_) => _reopen(c),
                 itemBuilder: (_) => [
                   PopupMenuItem<String>(
@@ -133,7 +135,7 @@ class _Body extends StatelessWidget {
                     child: ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.lock_open_outlined),
+                      leading: const HugeIcon(icon: HugeIcons.strokeRoundedLockOpen),
                       title: Text(tr.ivReopen),
                     ),
                   ),
@@ -203,7 +205,7 @@ class _DetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SectionCard(
     title: tr.sectionInformation,
-    icon: Icons.info_outline,
+    icon: HugeIcons.strokeRoundedInformationCircle,
     child: Column(
       children: [
         InfoRow(
@@ -255,7 +257,7 @@ class _StatusCard extends StatelessWidget {
     return SectionCard(
       title: tr.wfStatusWorkflow,
       subtitle: tr.wfStatusWorkflowHint,
-      icon: Icons.account_tree_outlined,
+      icon: HugeIcons.strokeRoundedStructure01,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -306,7 +308,7 @@ class _TriageCard extends StatelessWidget {
     final workflow = c.workflow;
     return SectionCard(
       title: tr.wfTriage,
-      icon: Icons.tune,
+      icon: HugeIcons.strokeRoundedSettings02,
       child: Column(
         children: [
           DropdownButtonFormField<int?>(
@@ -321,8 +323,8 @@ class _TriageCard extends StatelessWidget {
                   value: p.id,
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.flag,
+                      HugeIcon(icon: 
+                        HugeIcons.strokeRoundedFlag01,
                         size: 16,
                         color: hexColor(p.color, context.colors.primary),
                       ),
@@ -400,7 +402,7 @@ class _PublishCard extends StatelessWidget {
   Widget build(BuildContext context) => SectionCard(
     title: tr.wfReleaseNotes,
     subtitle: tr.wfReleaseNotesHint,
-    icon: Icons.campaign_outlined,
+    icon: HugeIcons.strokeRoundedMegaphone01,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -408,7 +410,7 @@ class _PublishCard extends StatelessWidget {
           StatusBadge(
             label: tr.wfPublishedOn(Formatters.dateTime(i.publishedAt)),
             color: context.crm.success,
-            icon: Icons.check_circle_outline,
+            icon: HugeIcons.strokeRoundedCheckmarkCircle03,
           ),
           if (i.customerResolution != null) ...[
             const SizedBox(height: 8),
@@ -417,7 +419,7 @@ class _PublishCard extends StatelessWidget {
           const SizedBox(height: 10),
           OutlinedButton.icon(
             onPressed: c.isBusy.value ? null : _unpublish,
-            icon: const Icon(Icons.visibility_off_outlined, size: 18),
+            icon: const HugeIcon(icon: HugeIcons.strokeRoundedViewOff, size: 18),
             label: Text(tr.wfUnpublish),
           ),
         ] else ...[
@@ -430,7 +432,7 @@ class _PublishCard extends StatelessWidget {
           const SizedBox(height: 10),
           FilledButton.icon(
             onPressed: c.isBusy.value ? null : _publish,
-            icon: const Icon(Icons.campaign_outlined, size: 18),
+            icon: const HugeIcon(icon: HugeIcons.strokeRoundedMegaphone01, size: 18),
             label: Text(tr.wfPublish),
           ),
         ],
@@ -465,7 +467,7 @@ class _ConversationCard extends StatelessWidget {
     final messages = i.messages;
     return SectionCard(
       title: tr.wfConversation,
-      icon: Icons.forum_outlined,
+      icon: HugeIcons.strokeRoundedBubbleChat,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -507,12 +509,12 @@ class _Composer extends StatelessWidget {
           segments: [
             ButtonSegment(
               value: false,
-              icon: const Icon(Icons.lock_outline, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedLock, size: 18),
               label: Text(tr.wfInternalNote),
             ),
             ButtonSegment(
               value: true,
-              icon: const Icon(Icons.visibility_outlined, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedView, size: 18),
               label: Text(tr.wfCustomerReply),
             ),
           ],
@@ -528,8 +530,8 @@ class _Composer extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                visible ? Icons.visibility_outlined : Icons.lock_outline,
+              HugeIcon(icon: 
+                visible ? HugeIcons.strokeRoundedView : HugeIcons.strokeRoundedLock,
                 size: 18,
                 color: tint,
               ),
@@ -576,14 +578,14 @@ class _Composer extends StatelessWidget {
                           );
                         }
                       },
-                icon: const Icon(Icons.attach_file, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedAttachment, size: 18),
                 label: Text(tr.ivAttachFiles),
               ),
             ),
             if (visible && c.pendingFiles.isNotEmpty) ...[
               const SizedBox(width: 8),
               FilterChip(
-                avatar: const Icon(Icons.healing_outlined, size: 16),
+                avatar: const HugeIcon(icon: HugeIcons.strokeRoundedFirstAidKit, size: 16),
                 label: Text(tr.ivHotfixLabel),
                 tooltip: tr.ivHotfixHint,
                 selected: c.isHotfix.value,
@@ -593,8 +595,8 @@ class _Composer extends StatelessWidget {
             const Spacer(),
             FilledButton.icon(
               onPressed: c.isBusy.value ? null : send,
-              icon: Icon(
-                visible ? Icons.send : Icons.note_add_outlined,
+              icon: HugeIcon(icon: 
+                visible ? HugeIcons.strokeRoundedSent : HugeIcons.strokeRoundedNoteAdd,
                 size: 18,
               ),
               label: Text(visible ? tr.wfSendReply : tr.wfAddNote),

@@ -16,6 +16,7 @@ import '../widgets/reorderable_settings_list.dart';
 import '../widgets/stage_widgets.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class StagesSettingsPage extends GetView<StagesSettingsController> {
   const StagesSettingsPage({super.key});
 
@@ -88,13 +89,13 @@ class StagesSettingsPage extends GetView<StagesSettingsController> {
             Obx(
               () => OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
             ),
             FilledButton.icon(
               onPressed: _openForm,
-              icon: const Icon(Icons.add, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
               label: Text(tr.newStage),
             ),
           ],
@@ -129,7 +130,7 @@ class StagesSettingsPage extends GetView<StagesSettingsController> {
                         isEmpty: controller.stages.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.linear_scale,
+                          icon: HugeIcons.strokeRoundedMenu01,
                           title: tr.noStages,
                           message: tr.createStagesHint,
                           action: FilledButton(
@@ -235,8 +236,8 @@ class _StageRow extends StatelessWidget {
         child: stage.isUsed
             ? Tooltip(
                 message: tr.stageUsedNoDelete,
-                child: Icon(
-                  Icons.lock_outline,
+                child: HugeIcon(icon: 
+                  HugeIcons.strokeRoundedLock,
                   size: 16,
                   color: context.colors.outline,
                 ),
@@ -252,12 +253,12 @@ class _StageRow extends StatelessWidget {
       ),
       IconButton(
         tooltip: tr.actionEdit,
-        icon: const Icon(Icons.edit_outlined, size: 20),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 20),
         onPressed: busy ? null : onEdit,
       ),
       IconButton(
         tooltip: onDelete == null ? tr.deleteImpossibleUsed : tr.actionDelete,
-        icon: const Icon(Icons.delete_outline, size: 20),
+        icon: const HugeIcon(icon: HugeIcons.strokeRoundedDelete02, size: 20),
         onPressed: busy ? null : onDelete,
       ),
     ],
@@ -278,7 +279,7 @@ class _StageFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: c.isEdit ? tr.editStage : tr.newStage,
-      icon: Icons.linear_scale,
+      icon: HugeIcons.strokeRoundedMenu01,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
       onCancel: () => Get.back(),

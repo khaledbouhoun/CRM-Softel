@@ -12,6 +12,7 @@ import '../../../prospects/presentation/dialogs/prospect_search_dialog.dart';
 import '../../data/models/product_release.dart';
 import '../controllers/releases_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Create / edit a release. Resolves with the saved release or null.
 Future<ProductRelease?> showReleaseFormDialog({ProductRelease? release}) =>
     showControllerDialog<ReleaseFormController, ProductRelease>(
@@ -53,7 +54,7 @@ class _ReleaseFormDialog extends StatelessWidget {
     return Obx(
       () => FormDialog(
         title: c.isEdit ? tr.rlEdit : tr.rlNew,
-        icon: Icons.system_update_alt,
+        icon: HugeIcons.strokeRoundedDownload04,
         width: 640,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
@@ -134,7 +135,7 @@ class _ReleaseFormDialog extends StatelessWidget {
                         onDeleted: () => c.removeCustomer(cu),
                       ),
                     ActionChip(
-                      avatar: const Icon(Icons.add, size: 16),
+                      avatar: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 16),
                       label: Text(tr.rlCustomers),
                       onPressed: _addCustomer,
                     ),
@@ -159,7 +160,10 @@ class _ReleaseFormDialog extends StatelessWidget {
                 keyboardType: TextInputType.url,
                 decoration: InputDecoration(
                   labelText: tr.rlExternalUrl,
-                  prefixIcon: const Icon(Icons.link, size: 20),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 18),
+                  ),
                 ),
                 validator: c.validateUrl,
               ),
@@ -208,14 +212,14 @@ class _InstallerPicker extends StatelessWidget {
         const SizedBox(width: 8),
         OutlinedButton.icon(
           onPressed: busy ? null : c.pickInstaller,
-          icon: const Icon(Icons.attach_file, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedAttachment, size: 18),
           label: Text(tr.rlPickInstaller),
         ),
         if (current != null)
           IconButton(
             tooltip: tr.rlRemoveInstaller,
             onPressed: busy ? null : c.clearInstaller,
-            icon: const Icon(Icons.delete_outline),
+            icon: const HugeIcon(icon: HugeIcons.strokeRoundedDelete02),
           ),
       ],
     );

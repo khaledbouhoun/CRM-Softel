@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/phone_cell.dart';
 import 'package:get/get.dart';
 
 import '../../../../app/l10n/l10n.dart';
@@ -14,6 +15,7 @@ import '../../data/models/billing_models.dart';
 import '../controllers/billing_controllers.dart';
 import 'billing_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Subscriptions overview: maintenance status of every customer.
 class BillingPage extends GetView<BillingListController> {
   const BillingPage({super.key});
@@ -70,10 +72,10 @@ class BillingPage extends GetView<BillingListController> {
                 ),
                 IconButton.outlined(
                   tooltip: tr.blSortDirection,
-                  icon: Icon(
+                  icon: HugeIcon(icon: 
                     controller.descending.value
-                        ? Icons.arrow_downward
-                        : Icons.arrow_upward,
+                        ? HugeIcons.strokeRoundedArrowDown01
+                        : HugeIcons.strokeRoundedArrowUp01,
                     size: 18,
                   ),
                   onPressed: controller.toggleDirection,
@@ -95,6 +97,8 @@ class BillingPage extends GetView<BillingListController> {
               clipBehavior: Clip.antiAlias,
               child: Obx(() {
                 final rows = controller.rows;
+                final sortKey = controller.sort.value;
+                final descending = controller.descending.value;
                 return Column(
                   children: [
                     RefreshingBar(
@@ -106,23 +110,34 @@ class BillingPage extends GetView<BillingListController> {
                         isEmpty: rows.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.verified_outlined,
+                          icon: HugeIcons.strokeRoundedCheckmarkBadge01,
                           title: tr.blNoCustomers,
                           message: tr.blNoCustomersHint,
                         ),
                         builder: (_) => CrmDataTable<BillingCustomerRow>(
                           rows: rows,
                           rowHeight: 60,
+                          sortKey: sortKey,
+                          ascending: !descending,
+                          onSort: (key) => key == controller.sort.value
+                              ? controller.toggleDirection()
+                              : controller.setSort(key as String),
                           onRowTap: (r) => Get.toNamed(Routes.billingCustomer(r.id)),
                           columns: [
                             CrmColumn(
                               label: tr.blColCustomer,
                               flex: 3,
+                              sortKey: BillingSort.name,
                               cell: (r) => CellText(
                                 r.name,
                                 bold: true,
                                 secondary: r.contactPerson,
                               ),
+                            ),
+                            CrmColumn(
+                              label: tr.fieldPhone,
+                              flex: 2,
+                              cell: (r) => PhoneCell(r.phone),
                             ),
                             CrmColumn(
                               label: tr.blFilterStatus,
@@ -133,6 +148,7 @@ class BillingPage extends GetView<BillingListController> {
                             CrmColumn(
                               label: tr.blColExpiry,
                               width: 130,
+                              sortKey: BillingSort.expiresAt,
                               cell: (r) =>
                                   CellText(Formatters.date(r.maintenance.expiresAt)),
                             ),

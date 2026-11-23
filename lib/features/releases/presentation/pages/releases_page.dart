@@ -19,6 +19,7 @@ import '../../data/models/product_release.dart';
 import '../controllers/releases_controllers.dart';
 import '../dialogs/release_form_dialog.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Staff management of product releases (versions, installers, audience).
 class ReleasesPage extends GetView<ReleasesController> {
   const ReleasesPage({super.key});
@@ -64,7 +65,7 @@ class ReleasesPage extends GetView<ReleasesController> {
             actions: [
               FilledButton.icon(
                 onPressed: _edit,
-                icon: const Icon(Icons.add, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                 label: Text(tr.rlNew),
               ),
             ],
@@ -108,7 +109,7 @@ class ReleasesPage extends GetView<ReleasesController> {
                           isEmpty: rows.isEmpty,
                           onRetry: controller.load,
                           empty: EmptyView(
-                            icon: Icons.system_update_alt,
+                            icon: HugeIcons.strokeRoundedDownload04,
                             title: tr.rlNoReleases,
                             message: tr.rlNoReleasesHint,
                           ),
@@ -176,16 +177,16 @@ class ReleasesPage extends GetView<ReleasesController> {
                                     if (r.hasInstaller)
                                       IconButton(
                                         tooltip: tr.ivDownload,
-                                        icon: const Icon(
-                                          Icons.download_outlined,
+                                        icon: const HugeIcon(icon: 
+                                          HugeIcons.strokeRoundedDownload04,
                                           size: 20,
                                         ),
                                         onPressed: () => _download(r),
                                       ),
                                     IconButton(
                                       tooltip: tr.actionDelete,
-                                      icon: const Icon(
-                                        Icons.delete_outline,
+                                      icon: const HugeIcon(icon: 
+                                        HugeIcons.strokeRoundedDelete02,
                                         size: 20,
                                       ),
                                       onPressed: controller.busyIds.contains(r.id)

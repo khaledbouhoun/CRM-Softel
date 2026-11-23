@@ -8,6 +8,7 @@ import '../../../../core/widgets/form_widgets.dart';
 import '../../data/models/billing_models.dart';
 import '../controllers/billing_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 String invoiceTypeLabel(String type) => type == InvoiceType.maintenanceRenewal
     ? tr.blInvoiceTypeRenewal
     : tr.blInvoiceTypeLicense;
@@ -54,7 +55,10 @@ class BillingDateField extends StatelessWidget {
         labelText: label,
         errorText: errorText,
         enabled: enabled,
-        prefixIcon: const Icon(Icons.event, size: 20),
+        prefixIcon: const Padding(
+          padding: EdgeInsets.all(8),
+          child: HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 18),
+        ),
       ),
       child: Text(value == null ? '' : Formatters.date(value)),
     ),
@@ -88,7 +92,7 @@ class _QuoteDialog extends StatelessWidget {
     return Obx(
       () => FormDialog(
         title: tr.blQuoteTitle,
-        icon: Icons.request_quote_outlined,
+        icon: HugeIcons.strokeRoundedInvoice01,
         width: 480,
         submitLabel: tr.blQuoteIssue,
         busy: c.isSubmitting.value,
@@ -157,7 +161,7 @@ class _MarkPaidDialog extends StatelessWidget {
     return Obx(
       () => FormDialog(
         title: tr.blMarkPaidTitle,
-        icon: Icons.payments_outlined,
+        icon: HugeIcons.strokeRoundedMoneyBag02,
         width: 480,
         submitLabel: tr.blMarkPaid,
         busy: c.isSubmitting.value,
@@ -214,7 +218,7 @@ class _MaintenanceDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.blSetMaintenanceTitle,
-      icon: Icons.verified_outlined,
+      icon: HugeIcons.strokeRoundedCheckmarkBadge01,
       width: 480,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
@@ -264,7 +268,7 @@ class _InvoiceDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: tr.blNewInvoice,
-      icon: Icons.receipt_long_outlined,
+      icon: HugeIcons.strokeRoundedInvoice03,
       width: 480,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,

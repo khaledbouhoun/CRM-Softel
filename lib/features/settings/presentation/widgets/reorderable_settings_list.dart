@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Reorderable list used by settings screens: drag handle + up/down buttons
 /// (keyboard/mouse friendly alternative to dragging).
 class ReorderableSettingsList<T> extends StatelessWidget {
@@ -54,8 +55,8 @@ class ReorderableSettingsList<T> extends StatelessWidget {
                 cursor: enabled ? SystemMouseCursors.grab : MouseCursor.defer,
                 child: Padding(
                   padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    Icons.drag_indicator,
+                  child: HugeIcon(icon: 
+                    HugeIcons.strokeRoundedDragDropVertical,
                     color: context.colors.outline,
                   ),
                 ),
@@ -74,14 +75,14 @@ class ReorderableSettingsList<T> extends StatelessWidget {
             Expanded(child: itemBuilder(context, item)),
             IconButton(
               tooltip: tr.actionMoveUp,
-              icon: const Icon(Icons.arrow_upward, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowUp01, size: 18),
               onPressed: enabled && index > 0
                   ? () => onMove(index, index - 1)
                   : null,
             ),
             IconButton(
               tooltip: tr.actionMoveDown,
-              icon: const Icon(Icons.arrow_downward, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowDown01, size: 18),
               onPressed: enabled && index < items.length - 1
                   ? () => onMove(index, index + 1)
                   : null,

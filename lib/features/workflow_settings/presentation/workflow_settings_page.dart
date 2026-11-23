@@ -599,7 +599,7 @@ class _SchedulingFormState extends State<_SchedulingForm> {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.check, size: 18),
+                  : const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 18),
               label: Text(c.isSaving.value ? tr.actionSaving : tr.actionSave),
             ),
           ),
@@ -915,7 +915,7 @@ class _ConfigListViewState extends State<_ConfigListView> {
             if (!fixed)
               FilledButton.icon(
                 onPressed: _edit,
-                icon: const Icon(Icons.add, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                 label: Text(tr.actionAdd),
               ),
           ],
@@ -935,7 +935,7 @@ class _ConfigListViewState extends State<_ConfigListView> {
                       isEmpty: rows.isEmpty,
                       onRetry: c.load,
                       empty: EmptyView(
-                        icon: Icons.tune,
+                        icon: HugeIcons.strokeRoundedSettings02,
                         title: tr.wfNoConfigRows,
                         message: tr.wfNoConfigRowsHint,
                       ),
@@ -1004,8 +1004,8 @@ class _ConfigListViewState extends State<_ConfigListView> {
                                   ),
                                 IconButton(
                                   tooltip: tr.actionEdit,
-                                  icon: const Icon(
-                                    Icons.edit_outlined,
+                                  icon: const HugeIcon(icon: 
+                                    HugeIcons.strokeRoundedEdit02,
                                     size: 20,
                                   ),
                                   onPressed: () => _edit(r),
@@ -1112,7 +1112,10 @@ class ConfigFormDialog extends StatelessWidget {
           child: InputDecorator(
             decoration: InputDecoration(
               labelText: field.label(),
-              prefixIcon: const Icon(Icons.event, size: 20),
+              prefixIcon: const Padding(
+                padding: EdgeInsets.all(8),
+                child: HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 18),
+              ),
               errorText: f.showValidation.value ? f.validate(field) : null,
             ),
             child: Text(current == null ? '' : Formatters.date(current)),
@@ -1157,7 +1160,7 @@ class ConfigFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: '${f.isEdit ? tr.actionEdit : tr.actionAdd} · ${f.schema.title()}',
-      icon: Icons.tune,
+      icon: HugeIcons.strokeRoundedSettings02,
       busy: f.isSubmitting.value,
       errorMessage: f.errorMessage.value,
       onCancel: () => Get.back(),

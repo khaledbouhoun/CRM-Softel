@@ -15,6 +15,7 @@ import '../controllers/loss_reasons_settings_controllers.dart';
 import '../widgets/reorderable_settings_list.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class LossReasonsSettingsPage extends GetView<LossReasonsSettingsController> {
   const LossReasonsSettingsPage({super.key});
 
@@ -75,13 +76,13 @@ class LossReasonsSettingsPage extends GetView<LossReasonsSettingsController> {
             actions: [
               OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
               if (!readOnly)
                 FilledButton.icon(
                   onPressed: _openForm,
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                   label: Text(tr.newReason),
                 ),
             ],
@@ -119,7 +120,7 @@ class LossReasonsSettingsPage extends GetView<LossReasonsSettingsController> {
                         isEmpty: controller.reasons.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.report_gmailerrorred_outlined,
+                          icon: HugeIcons.strokeRoundedAlert02,
                           title: tr.noLossReasons,
                           message: tr.noActiveReasonWarning,
                         ),
@@ -181,7 +182,7 @@ class _ReasonRow extends StatelessWidget {
             ? StatusPill(
                 label: tr.detailsRequired,
                 color: context.crm.info,
-                icon: Icons.edit_note,
+                icon: HugeIcons.strokeRoundedEdit01,
               )
             : null,
       ),
@@ -207,7 +208,7 @@ class _ReasonRow extends StatelessWidget {
         ),
         IconButton(
           tooltip: tr.actionEdit,
-          icon: const Icon(Icons.edit_outlined, size: 20),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 20),
           onPressed: busy ? null : onEdit,
         ),
       ],
@@ -229,7 +230,7 @@ class _LossReasonFormDialog extends StatelessWidget {
   Widget build(BuildContext context) => Obx(
     () => FormDialog(
       title: c.isEdit ? tr.editReason : tr.newLossReason,
-      icon: Icons.report_gmailerrorred_outlined,
+      icon: HugeIcons.strokeRoundedAlert02,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
       onCancel: () => Get.back(),

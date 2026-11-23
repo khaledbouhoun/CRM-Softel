@@ -9,8 +9,10 @@ import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../data/models/pack.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 Future<Pack?> showPackFormDialog({BuildContext? context}) =>
-    Get.dialog<Pack>(const _PackFormDialog());
+    showAppDialog<Pack>(const _PackFormDialog());
 
 class _PackFormDialog extends StatefulWidget {
   const _PackFormDialog();
@@ -91,7 +93,7 @@ class _PackFormDialogState extends State<_PackFormDialog> {
   Widget build(BuildContext context) {
     return FormDialog(
       title: tr.productNewPack,
-      icon: Icons.layers_outlined,
+      icon: HugeIcons.strokeRoundedLayers01,
       width: 480,
       busy: _isSubmitting,
       errorMessage: _errorMessage,

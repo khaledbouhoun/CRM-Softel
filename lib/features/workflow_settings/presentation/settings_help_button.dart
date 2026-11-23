@@ -9,6 +9,7 @@ import '../../../core/network/api_endpoints.dart';
 import '../../../core/network/api_exceptions.dart';
 import '../../../core/network/api_response.dart';
 import '../data/models/settings_help.dart';
+import '../../../core/widgets/animated_entrance.dart';
 
 /// Info icon that opens the explanation (with examples) of a settings
 /// section. [section] is the backend key, e.g. `scheduling` or
@@ -36,7 +37,7 @@ class SettingsHelpButton extends StatelessWidget {
       color: context.colors.onSurfaceVariant,
       size: 22,
     ),
-    onPressed: () => Get.dialog<void>(_HelpDialog(future: _fetch(section))),
+    onPressed: () => showAppDialog<void>(_HelpDialog(future: _fetch(section))),
   );
 }
 
@@ -95,7 +96,7 @@ class _HelpDialog extends StatelessWidget {
                     ),
                     IconButton(
                       tooltip: tr.actionClose,
-                      icon: const Icon(Icons.close),
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                       onPressed: () => Get.back<void>(),
                     ),
                   ],

@@ -12,6 +12,9 @@ import '../../../../core/widgets/workflow_widgets.dart';
 import '../../data/models/intervention.dart';
 import '../controllers/interventions_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// Avatar of a chat sender: the account picture when the API gives an https
 /// one, otherwise the initials.
 class ChatAvatar extends StatelessWidget {
@@ -208,7 +211,7 @@ class _SupportBadge extends StatelessWidget {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.support_agent, size: 13, color: color),
+        HugeIcon(icon: HugeIcons.strokeRoundedHeadset, size: 13, color: color),
         const SizedBox(width: 4),
         Text(
           tr.ivSupport,
@@ -260,8 +263,8 @@ class ChatEventPill extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                reopened ? Icons.lock_open_outlined : Icons.sync_alt,
+              HugeIcon(icon: 
+                reopened ? HugeIcons.strokeRoundedLockOpen : HugeIcons.strokeRoundedArrowLeftRight,
                 size: 14,
                 color: scheme.onSurfaceVariant,
               ),
@@ -299,7 +302,7 @@ class ClosedInterventionBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.lock_outline, size: 20, color: warning),
+          HugeIcon(icon: HugeIcons.strokeRoundedLock, size: 20, color: warning),
           const SizedBox(width: 10),
           Expanded(
             child: Text(tr.ivClosedBanner, style: context.text.bodyMedium),
@@ -310,13 +313,13 @@ class ClosedInterventionBanner extends StatelessWidget {
   }
 }
 
-IconData _iconFor(String name) => switch (FileAccess.extensionOf(name)) {
-  'exe' => Icons.settings_applications_outlined,
-  'zip' || 'rar' => Icons.folder_zip_outlined,
-  'docx' || 'doc' => Icons.description_outlined,
-  'txt' => Icons.article_outlined,
-  'pdf' => Icons.picture_as_pdf_outlined,
-  _ => Icons.insert_drive_file_outlined,
+HugeData _iconFor(String name) => switch (FileAccess.extensionOf(name)) {
+  'exe' => HugeIcons.strokeRoundedSettings02,
+  'zip' || 'rar' => HugeIcons.strokeRoundedFileZip,
+  'docx' || 'doc' => HugeIcons.strokeRoundedFile01,
+  'txt' => HugeIcons.strokeRoundedFile01,
+  'pdf' => HugeIcons.strokeRoundedPdf01,
+  _ => HugeIcons.strokeRoundedFile01,
 };
 
 /// An attachment: thumbnail for images, PDF tile (view / download) and a
@@ -394,7 +397,7 @@ class AttachmentTile extends StatelessWidget {
                     color: accent.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
-                  child: Icon(_iconFor(attachment.name), size: 24, color: accent),
+                  child: HugeIcon(icon: _iconFor(attachment.name), size: 24, color: accent),
                 ),
                 const SizedBox(width: 10),
                 Flexible(
@@ -428,13 +431,13 @@ class AttachmentTile extends StatelessWidget {
                 if (_isPdf)
                   OutlinedButton.icon(
                     style: _compactButton,
-                    icon: const Icon(Icons.visibility_outlined, size: 16),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedView, size: 16),
                     label: Text(tr.ivViewPdf),
                     onPressed: _openPdf,
                   ),
                 FilledButton.icon(
                   style: _compactButton,
-                  icon: const Icon(Icons.download_outlined, size: 16),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedDownload04, size: 16),
                   label: Text(tr.ivDownload),
                   onPressed: _save,
                 ),
@@ -476,7 +479,7 @@ class HotfixChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.healing_outlined, size: 14, color: warning),
+          HugeIcon(icon: HugeIcons.strokeRoundedFirstAidKit, size: 14, color: warning),
           const SizedBox(width: 5),
           Flexible(
             child: Text(
@@ -581,7 +584,7 @@ Future<void> showImageViewer({
   required InterventionDetailController controller,
   required InterventionAttachment attachment,
   required Uint8List bytes,
-}) => Get.dialog<void>(
+}) => showAppDialog<void>(
   Dialog.fullscreen(
     backgroundColor: Colors.black,
     child: Stack(
@@ -609,7 +612,7 @@ Future<void> showImageViewer({
               IconButton(
                 tooltip: tr.ivDownload,
                 color: Colors.white,
-                icon: const Icon(Icons.download_outlined),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedDownload04),
                 onPressed: () async {
                   final result = await controller.saveAttachment(attachment);
                   result.isSuccess
@@ -620,7 +623,7 @@ Future<void> showImageViewer({
               IconButton(
                 tooltip: tr.actionClose,
                 color: Colors.white,
-                icon: const Icon(Icons.close),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                 onPressed: () => Get.back<void>(),
               ),
             ],
@@ -649,7 +652,7 @@ class PendingFilesBar extends StatelessWidget {
         children: [
           for (final f in files)
             InputChip(
-              avatar: Icon(_iconFor(f.name), size: 18),
+              avatar: HugeIcon(icon: _iconFor(f.name), size: 18),
               label: Text('${f.name} · ${Formatters.fileSize(f.size)}'),
               deleteButtonTooltipMessage: tr.ivRemoveFile,
               onDeleted: () => controller.removeFile(f),

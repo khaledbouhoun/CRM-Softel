@@ -13,6 +13,8 @@ import '../../../prospects/presentation/dialogs/prospect_search_dialog.dart';
 import '../../data/models/intervention.dart';
 import '../controllers/interventions_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// New employee-originated intervention (fix, release, update ...). The
 /// affected customers see it only once it is published.
 Future<Intervention?> showInterventionFormDialog() async {
@@ -48,7 +50,7 @@ class _FormDialog extends StatelessWidget {
       final types = c.workflow.employeeInterventionTypes;
       return FormDialog(
         title: tr.wfNewIntervention,
-        icon: Icons.build_circle_outlined,
+        icon: HugeIcons.strokeRoundedWrench01,
         width: 640,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
@@ -158,7 +160,7 @@ class _FormDialog extends StatelessWidget {
                       onDeleted: () => c.removeCustomer(customer),
                     ),
                   ActionChip(
-                    avatar: const Icon(Icons.add, size: 16),
+                    avatar: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 16),
                     label: Text(tr.wfAddCustomer),
                     onPressed: () async {
                       final picked = await showProspectSearchDialog(
@@ -192,7 +194,7 @@ Future<String?> showStatusChangeDialog({
   required String customerLabel,
 }) {
   final text = TextEditingController();
-  return Get.dialog<String>(
+  return showAppDialog<String>(
     Dialog(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 520),
@@ -247,7 +249,7 @@ Future<String?> showStatusChangeDialog({
 /// Resolves with the note ('' for none) or null when cancelled.
 Future<String?> showReopenDialog() {
   final text = TextEditingController();
-  return Get.dialog<String>(
+  return showAppDialog<String>(
     Dialog(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 520),
@@ -281,7 +283,7 @@ Future<String?> showReopenDialog() {
                   const SizedBox(width: 8),
                   FilledButton.icon(
                     onPressed: () => Get.back(result: text.text),
-                    icon: const Icon(Icons.lock_open_outlined, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedLockOpen, size: 18),
                     label: Text(tr.ivReopen),
                   ),
                 ],
@@ -298,7 +300,7 @@ Future<String?> showReopenDialog() {
 /// text, or null when cancelled.
 Future<String?> showPublishDialog(Intervention intervention) {
   final text = TextEditingController(text: intervention.customerResolution);
-  return Get.dialog<String>(
+  return showAppDialog<String>(
     Dialog(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560),
@@ -340,7 +342,7 @@ Future<String?> showPublishDialog(Intervention intervention) {
                   const SizedBox(width: 8),
                   FilledButton.icon(
                     onPressed: () => Get.back(result: text.text),
-                    icon: const Icon(Icons.campaign_outlined, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedMegaphone01, size: 18),
                     label: Text(tr.wfPublish),
                   ),
                 ],

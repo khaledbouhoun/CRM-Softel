@@ -4,10 +4,12 @@ import '../../../../app/theme/app_theme.dart';
 import '../../data/models/sales_stage.dart';
 import '../../../../app/l10n/l10n.dart';
 
-IconData stageTypeIcon(StageType type) => switch (type) {
-  StageType.open => Icons.radio_button_unchecked,
-  StageType.won => Icons.emoji_events_outlined,
-  StageType.lost => Icons.do_not_disturb_on_outlined,
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
+HugeData stageTypeIcon(StageType type) => switch (type) {
+  StageType.open => HugeIcons.strokeRoundedCircle,
+  StageType.won => HugeIcons.strokeRoundedAward01,
+  StageType.lost => HugeIcons.strokeRoundedMinusSignCircle,
 };
 
 /// Colored chip showing a stage; won/lost stages get an icon.
@@ -44,7 +46,7 @@ class StageChip extends StatelessWidget {
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             )
           else
-            Icon(stageTypeIcon(s.type), size: 13, color: color),
+            HugeIcon(icon: stageTypeIcon(s.type), size: 13, color: color),
           const SizedBox(width: 6),
           Flexible(
             child: Text(
@@ -61,8 +63,8 @@ class StageChip extends StatelessWidget {
             const SizedBox(width: 4),
             Tooltip(
               message: tr.stageDeactivated,
-              child: Icon(
-                Icons.visibility_off_outlined,
+              child: HugeIcon(icon: 
+                HugeIcons.strokeRoundedViewOff,
                 size: 12,
                 color: context.colors.outline,
               ),
@@ -110,7 +112,7 @@ class StageTypeBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(stageTypeIcon(type), size: 13, color: color),
+          HugeIcon(icon: stageTypeIcon(type), size: 13, color: color),
           const SizedBox(width: 4),
           Text(
             type.label,

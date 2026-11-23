@@ -15,6 +15,7 @@ import '../../data/models/prospect_form_option.dart';
 import '../controllers/prospect_form_options_settings_controllers.dart';
 import '../widgets/reorderable_settings_list.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class ProspectFormOptionsSettingsPage
     extends GetView<ProspectFormOptionsSettingsController> {
   const ProspectFormOptionsSettingsPage({super.key});
@@ -28,6 +29,7 @@ class ProspectFormOptionsSettingsPage
       'fr' => 'Profession',
       _ => 'Profession',
     },
+    ProspectFormOption.typeCity => tr.navOptionCities,
     _ => type,
   };
 
@@ -103,22 +105,19 @@ class ProspectFormOptionsSettingsPage
   }
 
   @override
-  Widget build(BuildContext context) => AppShell(
-    route: Routes.prospectListsSettings,
-    child: Obx(() {
+  Widget build(BuildContext context) => Obx(() {
       final readOnly = controller.isReadOnly.value;
       final currentType = controller.selectedType.value;
       final currentItems = controller.currentOptions;
 
-      return Column(
+      return AppShell(
+        route: Routes.prospectListsSettings,
+        settingsSection: currentType,
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PageHeader(
-            title: switch (L10n.current.languageCode) {
-              'ar' => 'قوائم نماذج العملاء المحتملين',
-              'fr' => 'Listes du formulaire prospect',
-              _ => 'Prospect Form Lists',
-            },
+            title: _typeLabel(currentType),
             subtitle: switch (L10n.current.languageCode) {
               'ar' => 'إدارة خيارات القوائم المنسدلة في نموذج العميل المحتمل وتحديد الحقول التي تتطلب تفاصيل إضافية.',
               'fr' => 'Gérer les options des listes déroulantes du formulaire prospect et configurer les précisions requises.',
@@ -127,18 +126,18 @@ class ProspectFormOptionsSettingsPage
             actions: [
               OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
               if (!readOnly)
                 FilledButton.icon(
                   onPressed: () => _openForm(),
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                   label: Text('New ${_typeLabel(currentType)}'),
                 ),
             ],
           ),
-        const SettingsSubNav(route: Routes.prospectListsSettings),
+        SettingsSubNav(route: Routes.prospectListsSettings, section: currentType),
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(28, 0, 28, 12),
             child: SingleChildScrollView(
@@ -150,12 +149,13 @@ class ProspectFormOptionsSettingsPage
                     ButtonSegment(
                       value: t,
                       label: Text(_typeLabel(t)),
-                      icon: Icon(switch (t) {
-                        ProspectFormOption.typeSource => Icons.campaign_outlined,
-                        ProspectFormOption.typePreviousSoftware => Icons.apps_outlined,
-                        ProspectFormOption.typeBusinessActivity => Icons.storefront_outlined,
-                        ProspectFormOption.typeProfession => Icons.work_outline,
-                        _ => Icons.list,
+                      icon: HugeIcon(icon: switch (t) {
+                        ProspectFormOption.typeSource => HugeIcons.strokeRoundedMegaphone01,
+                        ProspectFormOption.typePreviousSoftware => HugeIcons.strokeRoundedGridView,
+                        ProspectFormOption.typeBusinessActivity => HugeIcons.strokeRoundedStore01,
+                        ProspectFormOption.typeCity => HugeIcons.strokeRoundedCity01,
+                        ProspectFormOption.typeProfession => HugeIcons.strokeRoundedBriefcase01,
+                        _ => HugeIcons.strokeRoundedListView,
                       }, size: 18),
                     ),
                 ],
@@ -188,7 +188,7 @@ class ProspectFormOptionsSettingsPage
                   isEmpty: currentItems.isEmpty,
                   onRetry: controller.load,
                   empty: EmptyView(
-                    icon: Icons.list_alt,
+                    icon: HugeIcons.strokeRoundedListView,
                     title: 'No options found for ${_typeLabel(currentType)}.',
                   ),
                   builder: (_) => ReorderableSettingsList<ProspectFormOption>(
@@ -228,8 +228,8 @@ class ProspectFormOptionsSettingsPage
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(
-                                            Icons.edit_note,
+                                          HugeIcon(icon: 
+                                            HugeIcons.strokeRoundedEdit01,
                                             size: 14,
                                             color: context.colors.onSecondaryContainer,
                                           ),
@@ -275,13 +275,13 @@ class ProspectFormOptionsSettingsPage
                         if (!readOnly) ...[
                           IconButton(
                             tooltip: tr.actionEdit,
-                            icon: const Icon(Icons.edit_outlined, size: 18),
+                            icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 18),
                             onPressed: () => _openForm(opt),
                           ),
                           IconButton(
                             tooltip: tr.actionDelete,
-                            icon: Icon(
-                              Icons.delete_outline,
+                            icon: HugeIcon(icon: 
+                              HugeIcons.strokeRoundedDelete02,
                               size: 18,
                               color: context.colors.error,
                             ),
@@ -296,9 +296,9 @@ class ProspectFormOptionsSettingsPage
             ),
           ),
         ],
+        ),
       );
-    }),
-  );
+    });
 }
 
 class _ProspectFormOptionFormDialog extends StatelessWidget {
@@ -317,7 +317,7 @@ class _ProspectFormOptionFormDialog extends StatelessWidget {
       title: c.isEdit
           ? 'Edit Option'
           : 'New ${ProspectFormOptionsSettingsPage._typeLabel(c.type)} Option',
-      icon: Icons.list_alt,
+      icon: HugeIcons.strokeRoundedListView,
       busy: c.isSubmitting.value,
       errorMessage: c.errorMessage.value,
       onCancel: () => Get.back(),
@@ -334,7 +334,10 @@ class _ProspectFormOptionFormDialog extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: tr.validFieldName,
                 errorText: c.serverErrors['name'],
-                prefixIcon: const Icon(Icons.label_outline),
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedTag01, size: 18),
+                ),
               ),
               validator: c.validateName,
               onChanged: (_) => c.serverErrors.remove('name'),

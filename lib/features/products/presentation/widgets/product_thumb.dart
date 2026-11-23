@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_theme.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Square product image (or a clean placeholder when there is none / it
 /// cannot be displayed, e.g. an SVG or an unreachable URL).
 class ProductThumb extends StatelessWidget {
@@ -16,8 +17,8 @@ class ProductThumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(size > 60 ? 12 : 8);
-    final placeholder = Icon(
-      Icons.inventory_2_outlined,
+    final placeholder = HugeIcon(icon: 
+      HugeIcons.strokeRoundedPackageOpen,
       size: size * 0.5,
       color: context.colors.outline,
     );

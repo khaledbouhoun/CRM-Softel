@@ -1,7 +1,7 @@
 import '../../../../core/utils/json_utils.dart';
 
 /// A configurable option for prospect form dropdowns (source, previous software,
-/// business activity, profession). Managed through CRM settings.
+/// business activity, profession, city). Managed through CRM settings.
 class ProspectFormOption {
   const ProspectFormOption({
     required this.id,
@@ -18,12 +18,14 @@ class ProspectFormOption {
   static const typePreviousSoftware = 'previous_software';
   static const typeBusinessActivity = 'business_activity';
   static const typeProfession = 'profession';
+  static const typeCity = 'city';
 
   static const allTypes = [
     typeSource,
     typePreviousSoftware,
     typeBusinessActivity,
     typeProfession,
+    typeCity,
   ];
 
   final int id;

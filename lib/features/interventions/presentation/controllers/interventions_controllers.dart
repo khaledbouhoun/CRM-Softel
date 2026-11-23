@@ -32,13 +32,39 @@ class InterventionsController extends GetxController {
 
   /// Items of the current page, most urgent first. Unprioritised items come
   /// last; ties are broken by newest first.
+  ///
+  /// A clicked column ([sortKey]) overrides the default urgency order; the
+  /// sort applies to the loaded page only.
+  final sortKey = RxnString();
+  final ascending = true.obs;
+
+  void sortBy(String key) {
+    ascending.value = sortKey.value == key ? !ascending.value : true;
+    sortKey.value = key;
+  }
+
   List<Intervention> get sorted {
     final list = page.value.items.toList();
     int rank(Intervention i) => i.priority?.sortOrder ?? 1 << 30;
-    list.sort((a, b) {
-      final byPriority = rank(a).compareTo(rank(b));
-      return byPriority != 0 ? byPriority : b.id.compareTo(a.id);
-    });
+    final key = sortKey.value;
+    if (key == null) {
+      list.sort((a, b) {
+        final byPriority = rank(a).compareTo(rank(b));
+        return byPriority != 0 ? byPriority : b.id.compareTo(a.id);
+      });
+      return list;
+    }
+    Comparable<Object> value(Intervention i) => switch (key) {
+      'priority' => rank(i),
+      'reference' => i.reference.toLowerCase(),
+      'title' => i.title.toLowerCase(),
+      'type' => (i.type?.name ?? '').toLowerCase(),
+      'status' => (i.status?.name ?? '').toLowerCase(),
+      'assigned' => (i.assignedEmployee ?? '').toLowerCase(),
+      _ => i.id,
+    };
+    final dir = ascending.value ? 1 : -1;
+    list.sort((a, b) => dir * value(a).compareTo(value(b)));
     return list;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../app/l10n/l10n.dart';
@@ -10,8 +11,10 @@ import '../../../../app/shell/app_shell.dart';
 import '../../../../app/shell/navigation.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/filter_widgets.dart';
+import '../../../../core/widgets/huge_data.dart';
 import '../../../../core/widgets/layout_widgets.dart';
 import '../../../../core/widgets/state_views.dart';
 import '../../../../core/widgets/workflow_widgets.dart';
@@ -21,6 +24,7 @@ import '../../data/models/calendar_item.dart';
 import '../../domain/scheduling_repository.dart';
 import '../controllers/calendar_controller.dart';
 import '../dialogs/appointment_dialogs.dart';
+import '../dialogs/schedule_session_dialog.dart';
 
 /// Unified calendar (month / week / day) of appointments, follow-ups,
 /// interventions and completed activities.
@@ -31,8 +35,7 @@ class CalendarPage extends GetView<CalendarController> {
     switch (item.kind) {
       case CalendarKind.appointment:
         try {
-          final appointment = await Get.find<SchedulingRepository>()
-              .getAppointment(item.id);
+          final appointment = await Get.find<SchedulingRepository>().getAppointment(item.id);
           final changed = await showAppointmentDetailDialog(appointment);
           if (changed) await controller.load();
         } catch (e) {
@@ -46,6 +49,12 @@ class CalendarPage extends GetView<CalendarController> {
     }
   }
 
+  /// Opens the scheduling dialog with [day] pre-selected, then reloads.
+  Future<void> _newAppointment(DateTime? day) async {
+    final result = await showScheduleSessionDialog(mode: SessionMode.training, initialDate: day);
+    if (result != null) await controller.load();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppShell(
@@ -57,12 +66,15 @@ class CalendarPage extends GetView<CalendarController> {
             title: tr.navCalendar,
             subtitle: tr.wfCalendarSubtitle,
             actions: [
+              FilledButton.icon(
+                onPressed: () => _newAppointment(null),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18, color: BrandColors.white),
+                label: Text(tr.calNewAppointment, style: const TextStyle(color: BrandColors.white)),
+              ),
               Obx(
                 () => OutlinedButton.icon(
-                  onPressed: controller.state.isLoading
-                      ? null
-                      : controller.load,
-                  icon: const Icon(Icons.refresh, size: 18),
+                  onPressed: controller.state.isLoading ? null : controller.load,
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                   label: Text(tr.actionRefresh),
                 ),
               ),
@@ -88,13 +100,8 @@ class CalendarPage extends GetView<CalendarController> {
                   final view = controller.view.value;
                   return Column(
                     children: [
-                      RefreshingBar(
-                        visible:
-                            controller.state.isLoading &&
-                            controller.items.isNotEmpty,
-                      ),
-                      if (controller.state.hasError &&
-                          controller.items.isNotEmpty)
+                      RefreshingBar(visible: controller.state.isLoading && controller.items.isNotEmpty),
+                      if (controller.state.hasError && controller.items.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: ErrorBanner(
@@ -106,23 +113,12 @@ class CalendarPage extends GetView<CalendarController> {
                         child: LoadStateView(
                           state: controller.state,
                           // The grid itself is the content, even when empty.
-                          isEmpty:
-                              controller.items.isEmpty &&
-                              controller.state.hasError,
+                          isEmpty: controller.items.isEmpty && controller.state.hasError,
                           onRetry: controller.load,
                           builder: (_) => switch (view) {
-                            CalendarView.month => _MonthGrid(
-                              controller,
-                              onOpen: _open,
-                            ),
-                            CalendarView.week => _WeekView(
-                              controller,
-                              onOpen: _open,
-                            ),
-                            CalendarView.day => _DayView(
-                              controller,
-                              onOpen: _open,
-                            ),
+                            CalendarView.month => _MonthGrid(controller, onOpen: _open, onCreate: _newAppointment),
+                            CalendarView.week => _WeekView(controller, onOpen: _open),
+                            CalendarView.day => _DayView(controller, onOpen: _open),
                           },
                         ),
                       ),
@@ -169,30 +165,37 @@ class _Toolbar extends StatelessWidget {
         children: [
           IconButton.outlined(
             tooltip: tr.wfPrevious,
-            icon: const Icon(Icons.chevron_left),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
             onPressed: c.previous,
           ),
           OutlinedButton(onPressed: c.goToday, child: Text(tr.wfToday)),
           IconButton.outlined(
             tooltip: tr.wfNext,
-            icon: const Icon(Icons.chevron_right),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowRight01),
             onPressed: c.next,
           ),
           const SizedBox(width: 8),
-          Text(_rangeTitle(c), style: context.text.titleMedium),
+          Text(_rangeTitle(c), style: context.text.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(width: 16),
           SegmentedButton<CalendarView>(
             showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(shape: const StadiumBorder()),
             segments: [
               ButtonSegment(
                 value: CalendarView.month,
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 16),
                 label: Text(tr.wfViewMonth),
               ),
               ButtonSegment(
                 value: CalendarView.week,
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedViewAgenda, size: 16),
                 label: Text(tr.wfViewWeek),
               ),
-              ButtonSegment(value: CalendarView.day, label: Text(tr.wfViewDay)),
+              ButtonSegment(
+                value: CalendarView.day,
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarCheck01, size: 16),
+                label: Text(tr.wfViewDay),
+              ),
             ],
             selected: {c.view.value},
             onSelectionChanged: (s) => c.setView(s.first),
@@ -218,15 +221,11 @@ class _Legend extends StatelessWidget {
           width: 14,
           height: 14,
           decoration: BoxDecoration(
-            color: done
-                ? context.colors.surfaceContainerHigh
-                : color.withValues(alpha: 0.2),
-            border: BorderDirectional(
-              start: BorderSide(color: done ? crm.success : color, width: 3),
-            ),
+            color: done ? context.colors.surfaceContainerHigh : color.withValues(alpha: 0.2),
+            border: BorderDirectional(start: BorderSide(color: done ? crm.success : color, width: 3)),
             borderRadius: BorderRadius.circular(3),
           ),
-          child: done ? Icon(Icons.check, size: 10, color: crm.success) : null,
+          child: done ? HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 10, color: crm.success) : null,
         ),
         const SizedBox(width: 4),
         Text(label, style: context.text.bodySmall),
@@ -243,6 +242,37 @@ class _Legend extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Colour-coded quick filters (client-side, no reload).
+/// Lifts a child with a shadow while the pointer hovers it.
+class _HoverLift extends StatefulWidget {
+  const _HoverLift({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_HoverLift> createState() => _HoverLiftState();
+}
+
+class _HoverLiftState extends State<_HoverLift> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) => MouseRegion(
+    onEnter: (_) => setState(() => _hover = true),
+    onExit: (_) => setState(() => _hover = false),
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 120),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: _hover
+            ? [BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 6, offset: const Offset(0, 2))]
+            : const [],
+      ),
+      child: widget.child,
+    ),
+  );
 }
 
 class _FilterBar extends StatelessWidget {
@@ -277,9 +307,7 @@ class _FilterBar extends StatelessWidget {
               width: 170,
               value: f.productId,
               items: lookups.activeProducts.map((p) => p.id).toList(),
-              itemLabel: (id) =>
-                  lookups.products.firstWhereOrNull((p) => p.id == id)?.name ??
-                  '$id',
+              itemLabel: (id) => lookups.products.firstWhereOrNull((p) => p.id == id)?.name ?? '$id',
               onChanged: (v) => c.setFilter(f.copyWith(productId: v)),
             ),
             FilterDropdown<String>(
@@ -287,8 +315,7 @@ class _FilterBar extends StatelessWidget {
               width: 170,
               value: f.type,
               items: types.map((t) => t.code).toList(),
-              itemLabel: (code) =>
-                  types.firstWhereOrNull((t) => t.code == code)?.name ?? code,
+              itemLabel: (code) => types.firstWhereOrNull((t) => t.code == code)?.name ?? code,
               onChanged: (v) => c.setFilter(f.copyWith(type: v)),
             ),
             FilterDropdown<String>(
@@ -305,29 +332,22 @@ class _FilterBar extends StatelessWidget {
             if (f.prospectId == null)
               OutlinedButton.icon(
                 onPressed: () async {
-                  final picked = await showProspectSearchDialog(
-                    title: tr.wfFilterCustomer,
-                    excludeStageIds: const [],
-                  );
+                  final picked = await showProspectSearchDialog(title: tr.wfFilterCustomer, excludeStageIds: const []);
                   if (picked != null) {
                     await c.setFilter(f.copyWith(prospectId: picked.id));
                   }
                 },
-                icon: const Icon(Icons.business_outlined, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedBuilding03, size: 18),
                 label: Text(tr.wfFilterCustomer),
               )
             else
               InputChip(
-                avatar: const Icon(Icons.business_outlined, size: 16),
+                avatar: const HugeIcon(icon: HugeIcons.strokeRoundedBuilding03, size: 16),
                 label: Text('#${f.prospectId}'),
                 onDeleted: () => c.setFilter(f.copyWith(prospectId: null)),
               ),
             for (final k in CalendarKind.serverKinds)
-              FilterChip(
-                label: Text(k.label),
-                selected: f.kinds.contains(k),
-                onSelected: (v) => c.toggleKind(k, v),
-              ),
+              FilterChip(label: Text(k.label), selected: f.kinds.contains(k), onSelected: (v) => c.toggleKind(k, v)),
             FilterChip(
               label: Text(tr.wfKindActivity),
               selected: c.showActivities.value,
@@ -336,7 +356,7 @@ class _FilterBar extends StatelessWidget {
             if (f.hasActiveFilters)
               TextButton.icon(
                 onPressed: () => c.setFilter(CalendarFilter(kinds: f.kinds)),
-                icon: const Icon(Icons.filter_alt_off_outlined, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedFilterRemove, size: 18),
                 label: Text(tr.wfClearFilters),
               ),
           ],
@@ -351,16 +371,16 @@ List<String> _weekdayNames(CalendarController c) {
   final start = c.weekStartsOn;
   return [
     for (var i = 0; i < 7; i++)
-      DateFormat.E(Formatters.locale)
-          .format(base.add(Duration(days: (start - DateTime.monday + i) % 7))),
+      DateFormat.E(Formatters.locale).format(base.add(Duration(days: (start - DateTime.monday + i) % 7))),
   ];
 }
 
 class _MonthGrid extends StatelessWidget {
-  const _MonthGrid(this.c, {required this.onOpen});
+  const _MonthGrid(this.c, {required this.onOpen, required this.onCreate});
 
   final CalendarController c;
   final ValueChanged<CalendarItem> onOpen;
+  final ValueChanged<DateTime> onCreate;
 
   @override
   Widget build(BuildContext context) {
@@ -374,17 +394,13 @@ class _MonthGrid extends StatelessWidget {
           height: 36,
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHigh.withValues(alpha: 0.6),
-            border: Border(
-              bottom: BorderSide(color: context.colors.outlineVariant),
-            ),
+            border: Border(bottom: BorderSide(color: context.colors.outlineVariant)),
           ),
           child: Row(
             children: [
               for (final n in names)
                 Expanded(
-                  child: Center(
-                    child: Text(n, style: context.text.labelMedium),
-                  ),
+                  child: Center(child: Text(n, style: context.text.labelMedium)),
                 ),
             ],
           ),
@@ -404,6 +420,7 @@ class _MonthGrid extends StatelessWidget {
                             inMonth: days[w * 7 + d].month == month,
                             isToday: days[w * 7 + d] == today,
                             onOpen: onOpen,
+                            onCreate: onCreate,
                           ),
                         ),
                     ],
@@ -424,6 +441,7 @@ class _DayCell extends StatelessWidget {
     required this.inMonth,
     required this.isToday,
     required this.onOpen,
+    required this.onCreate,
   });
 
   final CalendarController controller;
@@ -431,69 +449,133 @@ class _DayCell extends StatelessWidget {
   final bool inMonth;
   final bool isToday;
   final ValueChanged<CalendarItem> onOpen;
+  final ValueChanged<DateTime> onCreate;
+
+  bool get _weekend => L10n.isRtl
+      ? (day.weekday == DateTime.friday || day.weekday == DateTime.saturday)
+      : (day.weekday == DateTime.saturday || day.weekday == DateTime.sunday);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Obx(() => _cell(context));
+
+  Widget _cell(BuildContext context) {
     final items = controller.itemsOn(day);
     const maxShown = 3;
     final scheme = context.colors;
-    return Container(
-      decoration: BoxDecoration(
-        color: inMonth
-            ? null
-            : scheme.surfaceContainerHigh.withValues(alpha: 0.25),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.5),
-          width: 0.5,
+    return InkWell(
+      onTap: () => onCreate(day),
+      child: Container(
+        decoration: BoxDecoration(
+          color: !inMonth
+              ? scheme.surfaceContainerHigh.withValues(alpha: 0.25)
+              : (_weekend ? scheme.surfaceContainerHigh.withValues(alpha: 0.4) : null),
+          border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.7), width: 0.5),
         ),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          InkWell(
-            onTap: () => controller.openDay(day),
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: isToday
-                    ? BoxDecoration(
-                        color: scheme.primary,
-                        borderRadius: BorderRadius.circular(10),
-                      )
-                    : null,
-                child: Text(
-                  '${day.day}',
-                  style: context.text.labelMedium?.copyWith(
-                    color: isToday
-                        ? scheme.onPrimary
-                        : (inMonth ? null : scheme.onSurfaceVariant),
-                    fontWeight: isToday ? FontWeight.w700 : null,
+        padding: const EdgeInsets.all(6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            InkWell(
+              onTap: () => controller.openDay(day),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: isToday ? BoxDecoration(color: scheme.primary, shape: BoxShape.circle) : null,
+                  child: Text(
+                    '${day.day}',
+                    style: context.text.labelMedium?.copyWith(
+                      color: isToday ? scheme.onPrimary : (inMonth ? null : scheme.onSurfaceVariant),
+                      fontWeight: isToday ? FontWeight.w700 : null,
+                    ),
                   ),
                 ),
               ),
             ),
+            const SizedBox(height: 2),
+            Expanded(
+              child: ClipRect(
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final item in items.take(maxShown))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: _HoverLift(
+                            child: CalendarEventCard(item: item, compact: true, onTap: () => onOpen(item)),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (items.length > maxShown)
+              InkWell(
+                onTap: () => _showDayEvents(context, items),
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: scheme.primary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    tr.wfMoreItems(items.length - maxShown),
+                    style: context.text.labelSmall?.copyWith(color: scheme.primary, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Full list of the day's events, opened from the "+N more" chip.
+  void _showDayEvents(BuildContext context, List<CalendarItem> items) {
+    showAppDialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480, maxHeight: 560),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: Text(Formatters.longDate(day), style: context.text.titleLarge)),
+                    IconButton(
+                      tooltip: tr.actionClose,
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01, size: 18),
+                      onPressed: () => Get.back(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 6),
+                    itemBuilder: (_, i) => CalendarEventCard(
+                      item: items[i],
+                      onTap: () {
+                        Get.back();
+                        onOpen(items[i]);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 2),
-          for (final item in items.take(maxShown))
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: CalendarEventCard(
-                item: item,
-                compact: true,
-                onTap: () => onOpen(item),
-              ),
-            ),
-          if (items.length > maxShown)
-            InkWell(
-              onTap: () => controller.openDay(day),
-              child: Text(
-                tr.wfMoreItems(items.length - maxShown),
-                style: context.text.labelSmall?.copyWith(color: scheme.primary),
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -516,12 +598,7 @@ class _WeekView extends StatelessWidget {
           Expanded(
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: BorderDirectional(
-                  end: BorderSide(
-                    color: context.colors.outlineVariant,
-                    width: 0.5,
-                  ),
-                ),
+                border: BorderDirectional(end: BorderSide(color: context.colors.outlineVariant, width: 0.5)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -532,15 +609,10 @@ class _WeekView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       color: day == today
                           ? context.colors.primary.withValues(alpha: 0.12)
-                          : context.colors.surfaceContainerHigh.withValues(
-                              alpha: 0.6,
-                            ),
+                          : context.colors.surfaceContainerHigh.withValues(alpha: 0.6),
                       child: Column(
                         children: [
-                          Text(
-                            DateFormat.E(Formatters.locale).format(day),
-                            style: context.text.labelMedium,
-                          ),
+                          Text(DateFormat.E(Formatters.locale).format(day), style: context.text.labelMedium),
                           Text('${day.day}', style: context.text.titleSmall),
                         ],
                       ),
@@ -553,10 +625,7 @@ class _WeekView extends StatelessWidget {
                         for (final item in c.itemsOn(day))
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
-                            child: CalendarEventCard(
-                              item: item,
-                              onTap: () => onOpen(item),
-                            ),
+                            child: CalendarEventCard(item: item, onTap: () => onOpen(item)),
                           ),
                       ],
                     ),
@@ -581,7 +650,7 @@ class _DayView extends StatelessWidget {
     final items = c.itemsOn(c.anchor.value);
     if (items.isEmpty) {
       return EmptyView(
-        icon: Icons.event_available_outlined,
+        icon: HugeIcons.strokeRoundedCalendarCheck01,
         title: tr.wfNothingScheduled,
         message: tr.wfNothingScheduledHint,
       );
@@ -593,10 +662,7 @@ class _DayView extends StatelessWidget {
       itemBuilder: (_, i) => Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
-          child: CalendarEventCard(
-            item: items[i],
-            onTap: () => onOpen(items[i]),
-          ),
+          child: CalendarEventCard(item: items[i], onTap: () => onOpen(items[i])),
         ),
       ),
     );

@@ -12,6 +12,9 @@ import '../../domain/scheduling_repository.dart';
 
 enum CalendarView { month, week, day }
 
+/// Client-side quick filter chips over the loaded items (no reload).
+enum CalendarQuick { all, demos, trainings, support, followUps }
+
 /// Unified calendar: scheduled appointments, follow-ups and interventions
 /// from the CRM, plus (optionally) the *completed* activities already
 /// recorded, drawn differently so plans and history are never confused.
@@ -41,6 +44,7 @@ class CalendarController extends GetxController {
   final anchor = Rx<DateTime>(DateTime.now());
   final filter = const CalendarFilter().obs;
   final showActivities = true.obs;
+  final quick = CalendarQuick.all.obs;
   final items = <CalendarItem>[].obs;
   final state = LoadState();
 
@@ -87,10 +91,21 @@ class CalendarController extends GetxController {
   }
 
   List<CalendarItem> itemsOn(DateTime day) {
-    final list = items.where((i) => i.overlapsDay(day)).toList()
+    final list = items.where((i) => i.overlapsDay(day) && _matchesQuick(i)).toList()
       ..sort((a, b) => a.startsAt.compareTo(b.startsAt));
     return list;
   }
+
+  bool _matchesQuick(CalendarItem i) => switch (quick.value) {
+    CalendarQuick.all => true,
+    CalendarQuick.demos => i.kind == CalendarKind.appointment && i.group == 'demo',
+    CalendarQuick.trainings =>
+      i.kind == CalendarKind.appointment && (i.group == 'training' || i.group == 'accompaniment'),
+    CalendarQuick.support => i.kind == CalendarKind.intervention,
+    CalendarQuick.followUps => i.kind == CalendarKind.followUp,
+  };
+
+  void setQuick(CalendarQuick value) => quick.value = value;
 
   @override
   void onInit() {

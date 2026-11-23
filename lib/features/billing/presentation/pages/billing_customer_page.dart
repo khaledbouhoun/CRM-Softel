@@ -17,6 +17,8 @@ import '../controllers/billing_controllers.dart';
 import '../dialogs/billing_dialogs.dart';
 import 'billing_widgets.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 String _money(int amount) => '${Formatters.number(amount)} ${tr.blCurrency}';
 
 /// Route `/billing/:id`: license, maintenance, renewal requests and invoices
@@ -99,7 +101,7 @@ class _Body extends StatelessWidget {
         PageHeader(
           leading: IconButton(
             tooltip: tr.blBack,
-            icon: const Icon(Icons.arrow_back),
+            icon: const MirroredHugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
             onPressed: () => Get.back(),
           ),
           title: b.customerName,
@@ -108,16 +110,16 @@ class _Body extends StatelessWidget {
             IconButton(
               tooltip: tr.actionRefresh,
               onPressed: c.load,
-              icon: const Icon(Icons.refresh),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh),
             ),
             OutlinedButton.icon(
               onPressed: () => _newInvoice(b),
-              icon: const Icon(Icons.add, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
               label: Text(tr.blNewInvoice),
             ),
             FilledButton.icon(
               onPressed: () => _setMaintenance(b),
-              icon: const Icon(Icons.verified_outlined, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkBadge01, size: 18),
               label: Text(tr.blSetMaintenance),
             ),
           ],
@@ -158,7 +160,7 @@ class _PlanCards extends StatelessWidget {
     final m = b.maintenance;
     final license = SectionCard(
       title: tr.blLicense,
-      icon: Icons.workspace_premium_outlined,
+      icon: HugeIcons.strokeRoundedAward01,
       child: Column(
         children: [
           InfoRow(label: tr.blLicense, value: tr.blLicenseLifetime),
@@ -168,7 +170,7 @@ class _PlanCards extends StatelessWidget {
     );
     final maintenance = SectionCard(
       title: tr.blMaintenance,
-      icon: Icons.support_agent_outlined,
+      icon: HugeIcons.strokeRoundedHeadset,
       child: Column(
         children: [
           InfoRow(
@@ -227,7 +229,7 @@ class _RenewalsCard extends StatelessWidget {
     final requests = billing.renewalRequests;
     return SectionCard(
       title: tr.blRenewals,
-      icon: Icons.autorenew,
+      icon: HugeIcons.strokeRoundedRefresh,
       child: requests.isEmpty
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -280,7 +282,7 @@ class _RenewalTile extends StatelessWidget {
         () => FilledButton.icon(
           key: const ValueKey('renewal-quote-button'),
           onPressed: detail.busyIds.contains(r.id) ? null : onQuote,
-          icon: const Icon(Icons.request_quote_outlined, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedInvoice01, size: 18),
           label: Text(tr.blQuotePrice),
         ),
       );
@@ -288,7 +290,7 @@ class _RenewalTile extends StatelessWidget {
       action = Obx(
         () => FilledButton.icon(
           onPressed: detail.busyIds.contains(r.invoiceId ?? r.id) ? null : onMarkPaid,
-          icon: const Icon(Icons.payments_outlined, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoneyBag02, size: 18),
           label: Text(tr.blMarkPaid),
         ),
       );
@@ -341,17 +343,17 @@ class _RenewalTile extends StatelessWidget {
             children: [
               _RenewalChip(
                 key: const ValueKey('renewal-workstations'),
-                icon: Icons.desktop_windows_outlined,
+                icon: HugeIcons.strokeRoundedComputerDesk01,
                 text: '${r.workstationsCount} ${tr.blWorkstations}',
               ),
               _RenewalChip(
                 key: const ValueKey('renewal-dossiers'),
-                icon: Icons.folder_outlined,
+                icon: HugeIcons.strokeRoundedFolder01,
                 text: '${r.dossiersCount} ${tr.blDossiers}',
               ),
               _RenewalChip(
                 key: const ValueKey('renewal-years'),
-                icon: Icons.schedule,
+                icon: HugeIcons.strokeRoundedTime02,
                 text: '${r.years} ${tr.blRenewalYears}',
               ),
             ],
@@ -361,7 +363,7 @@ class _RenewalTile extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.notes, size: 16),
+                const HugeIcon(icon: HugeIcons.strokeRoundedNote01, size: 16),
                 const SizedBox(width: 6),
                 Expanded(child: Text(notes, key: const ValueKey('renewal-notes'))),
               ],
@@ -381,7 +383,7 @@ class _RenewalTile extends StatelessWidget {
 class _RenewalChip extends StatelessWidget {
   const _RenewalChip({super.key, required this.icon, required this.text});
 
-  final IconData icon;
+  final HugeData icon;
   final String text;
 
   @override
@@ -395,7 +397,7 @@ class _RenewalChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16),
+          HugeIcon(icon: icon, size: 16),
           const SizedBox(width: 6),
           Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],
@@ -451,7 +453,7 @@ class _InvoicesCard extends StatelessWidget {
     final invoices = billing.invoices;
     return SectionCard(
       title: tr.blInvoices,
-      icon: Icons.receipt_long_outlined,
+      icon: HugeIcons.strokeRoundedInvoice03,
       child: invoices.isEmpty
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -500,20 +502,20 @@ class _InvoicesCard extends StatelessWidget {
                           if (i.hasPdf)
                             IconButton(
                               tooltip: tr.blViewReceipt,
-                              icon: const Icon(Icons.download_outlined, size: 20),
+                              icon: const HugeIcon(icon: HugeIcons.strokeRoundedDownload04, size: 20),
                               onPressed: busy ? null : () => _download(i),
                             ),
                           IconButton(
                             tooltip: i.hasPdf
                                 ? tr.blReplaceReceipt
                                 : tr.blUploadReceipt,
-                            icon: const Icon(Icons.upload_file_outlined, size: 20),
+                            icon: const HugeIcon(icon: HugeIcons.strokeRoundedFileUpload, size: 20),
                             onPressed: busy ? null : () => _upload(i),
                           ),
                           if (i.hasPdf)
                             IconButton(
                               tooltip: tr.blRemoveReceipt,
-                              icon: const Icon(Icons.delete_outline, size: 20),
+                              icon: const HugeIcon(icon: HugeIcons.strokeRoundedDelete02, size: 20),
                               onPressed: busy ? null : () => _remove(i),
                             ),
                         ],

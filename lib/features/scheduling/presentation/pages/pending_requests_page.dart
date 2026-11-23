@@ -21,6 +21,8 @@ import '../controllers/appointment_action_controller.dart';
 import '../controllers/scheduling_lists_controllers.dart';
 import '../dialogs/appointment_dialogs.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// Website requests and slot holds waiting for an employee.
 class PendingRequestsPage extends GetView<PendingRequestsController> {
   const PendingRequestsPage({super.key});
@@ -47,7 +49,7 @@ class PendingRequestsPage extends GetView<PendingRequestsController> {
                 onPressed: controller.holdsState.isLoading || controller.requestsState.isLoading
                     ? null
                     : controller.loadAll,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
             ),
@@ -63,12 +65,12 @@ class PendingRequestsPage extends GetView<PendingRequestsController> {
                 segments: [
                   ButtonSegment(
                     value: 0,
-                    icon: const Icon(Icons.hourglass_top, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedHourglass, size: 18),
                     label: Text(tr.wfHoldsTab(controller.holds.length)),
                   ),
                   ButtonSegment(
                     value: 1,
-                    icon: const Icon(Icons.language, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedGlobe02, size: 18),
                     label: Text(tr.wfWebsiteRequestsTab),
                   ),
                 ],
@@ -110,7 +112,7 @@ class _HoldsList extends StatelessWidget {
               state: controller.holdsState,
               isEmpty: holds.isEmpty,
               onRetry: controller.loadHolds,
-              empty: EmptyView(icon: Icons.event_available_outlined, title: tr.wfNoHolds, message: tr.wfNoHoldsHint),
+              empty: EmptyView(icon: HugeIcons.strokeRoundedCalendarCheck01, title: tr.wfNoHolds, message: tr.wfNoHoldsHint),
               builder: (_) => ListView.separated(
                 itemCount: holds.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 10),
@@ -171,7 +173,7 @@ class _HoldCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.event, size: 16),
+                      const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 16),
                       const SizedBox(width: 6),
                       Text(
                         '${Formatters.dateTime(a.startsAt)} – ${Formatters.time(a.endsAt)}',
@@ -203,25 +205,25 @@ class _HoldCard extends StatelessWidget {
                 if (!waitingForCustomer)
                   FilledButton.icon(
                     onPressed: () => onDecide(a, AppointmentActionKind.confirm),
-                    icon: const Icon(Icons.check, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 18),
                     label: Text(tr.actionConfirm),
                   ),
                 if (!waitingForCustomer)
                   OutlinedButton.icon(
                     onPressed: () => onDecide(a, AppointmentActionKind.propose),
-                    icon: const Icon(Icons.swap_horiz, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight, size: 18),
                     label: Text(tr.wfProposeOther),
                   ),
                 OutlinedButton.icon(
                   onPressed: () =>
                       onDecide(a, waitingForCustomer ? AppointmentActionKind.cancel : AppointmentActionKind.reject),
-                  icon: const Icon(Icons.block, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel02, size: 18),
                   label: Text(waitingForCustomer ? tr.wfCancelProposal : tr.wfReject),
                 ),
                 if (a.prospect.id != 0)
                   IconButton(
                     tooltip: tr.wfOpenProspectRecord,
-                    icon: const Icon(Icons.open_in_new, size: 18),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedLinkSquare02, size: 18),
                     onPressed: () => AppNavigation.openProspect(a.prospect.id),
                   ),
               ],
@@ -264,7 +266,7 @@ class _RequestsList extends StatelessWidget {
   /// Asks for an optional customer-visible message. Null = cancelled.
   Future<String?> _askMessage(String title) {
     final text = TextEditingController();
-    return Get.dialog<String>(
+    return showAppDialog<String>(
       Dialog(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
@@ -354,7 +356,7 @@ class _RequestsList extends StatelessWidget {
                       state: controller.requestsState,
                       isEmpty: page.items.isEmpty,
                       onRetry: controller.loadRequests,
-                      empty: EmptyView(icon: Icons.inbox_outlined, title: tr.wfNoRequests),
+                      empty: EmptyView(icon: HugeIcons.strokeRoundedInbox, title: tr.wfNoRequests),
                       builder: (_) => CrmDataTable<PortalRequest>(
                         rows: page.items,
                         rowHeight: 60,
@@ -402,7 +404,7 @@ class _RequestsList extends StatelessWidget {
                                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                             visualDensity: VisualDensity.compact,
                                           ),
-                                          icon: const Icon(Icons.check, size: 16),
+                                          icon: const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 16),
                                           label: Text(tr.actionConfirm),
                                           onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null
@@ -415,7 +417,7 @@ class _RequestsList extends StatelessWidget {
                                             visualDensity: VisualDensity.compact,
                                             foregroundColor: context.crm.danger,
                                           ),
-                                          icon: const Icon(Icons.close, size: 16),
+                                          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01, size: 16),
                                           label: Text(tr.wfReject),
                                           onPressed: controller.busyRequestIds.contains(r.id)
                                               ? null

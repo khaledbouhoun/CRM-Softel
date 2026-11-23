@@ -27,16 +27,35 @@ class ProductsController extends GetxController {
   /// Ids of products whose activation is being saved.
   final busyIds = <int>{}.obs;
 
+  /// Clicked column: `name`, `prospects` or `status`; null = server order.
+  final sortKey = RxnString();
+  final ascending = true.obs;
+
+  void sortBy(String key) {
+    ascending.value = sortKey.value == key ? !ascending.value : true;
+    sortKey.value = key;
+  }
+
   List<Product> get visibleProducts {
     final query = search.value.trim().toLowerCase();
-    return products
+    final list = products
         .where((p) {
           if (!showInactive.value && !p.isActive) return false;
           if (query.isEmpty) return true;
           return p.name.toLowerCase().contains(query) ||
               (p.description?.toLowerCase().contains(query) ?? false);
         })
-        .toList(growable: false);
+        .toList();
+    final key = sortKey.value;
+    if (key == null) return list;
+    Comparable<Object> value(Product p) => switch (key) {
+      'prospects' => p.prospectsCount ?? 0,
+      'status' => p.isActive ? 0 : 1,
+      _ => p.name.toLowerCase(),
+    };
+    final dir = ascending.value ? 1 : -1;
+    list.sort((a, b) => dir * value(a).compareTo(value(b)));
+    return list;
   }
 
   @override

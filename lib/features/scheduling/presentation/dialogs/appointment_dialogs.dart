@@ -13,6 +13,8 @@ import '../../../../core/widgets/workflow_widgets.dart';
 import '../../data/models/appointment.dart';
 import '../controllers/appointment_action_controller.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 /// What a decision dialog resolved with. [stale] means the server state
 /// changed under the employee (an expired hold): reload the list even though
 /// nothing was saved.
@@ -88,7 +90,7 @@ class _ActionDialog extends StatelessWidget {
     return Obx(
       () => FormDialog(
         title: _title,
-        icon: Icons.event_note_outlined,
+        icon: HugeIcons.strokeRoundedCalendar02,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
         submitLabel: _submitLabel,
@@ -228,7 +230,7 @@ class _Summary extends StatelessWidget {
 /// Full detail of an appointment with the actions allowed in its state.
 /// Resolves with true when something changed (the caller reloads).
 Future<bool> showAppointmentDetailDialog(Appointment appointment) async {
-  final changed = await Get.dialog<bool>(
+  final changed = await showAppDialog<bool>(
     _DetailDialog(appointment),
     barrierDismissible: true,
   );
@@ -254,17 +256,17 @@ class _DetailDialog extends StatelessWidget {
       if (a.isAwaitingDecision) ...[
         FilledButton.icon(
           onPressed: () => _run(AppointmentActionKind.confirm),
-          icon: const Icon(Icons.check, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedTick02, size: 18),
           label: Text(tr.actionConfirm),
         ),
         OutlinedButton.icon(
           onPressed: () => _run(AppointmentActionKind.propose),
-          icon: const Icon(Icons.swap_horiz, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeftRight, size: 18),
           label: Text(tr.wfProposeOther),
         ),
         OutlinedButton.icon(
           onPressed: () => _run(AppointmentActionKind.reject),
-          icon: const Icon(Icons.block, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel02, size: 18),
           label: Text(tr.wfReject),
         ),
       ],
@@ -274,20 +276,20 @@ class _DetailDialog extends StatelessWidget {
         if (a.canComplete)
           FilledButton.icon(
             onPressed: () => _run(AppointmentActionKind.complete),
-            icon: const Icon(Icons.task_alt, size: 18),
+            icon: const HugeIcon(icon: HugeIcons.strokeRoundedCheckmarkCircle01, size: 18),
             label: Text(tr.wfRecordOutcome),
           ),
         if (!a.type.isDemo)
           OutlinedButton.icon(
             onPressed: () => _run(AppointmentActionKind.reschedule),
-            icon: const Icon(Icons.edit_calendar_outlined, size: 18),
+            icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarAdd01, size: 18),
             label: Text(tr.wfReschedule),
           ),
       ],
       if (a.canCancel && a.status != AppointmentStatus.held)
         OutlinedButton.icon(
           onPressed: () => _run(AppointmentActionKind.cancel),
-          icon: const Icon(Icons.event_busy, size: 18),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarRemove02, size: 18),
           label: Text(tr.wfCancelAppointment),
         ),
       if (a.whatsapp != null) OpenWhatsAppButton(link: a.whatsapp!),
@@ -309,7 +311,7 @@ class _DetailDialog extends StatelessWidget {
                   AppointmentStatusBadge(status: a.status),
                   IconButton(
                     tooltip: tr.actionClose,
-                    icon: const Icon(Icons.close),
+                    icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                     onPressed: () => Get.back(result: false),
                   ),
                 ],
@@ -343,7 +345,7 @@ class _DetailDialog extends StatelessWidget {
                   child: StatusBadge(
                     label: tr.wfActivityRecorded,
                     color: context.crm.success,
-                    icon: Icons.task_alt,
+                    icon: HugeIcons.strokeRoundedCheckmarkCircle01,
                   ),
                 ),
               if (actions.isNotEmpty) ...[
@@ -378,12 +380,12 @@ class OpenWhatsAppButton extends StatelessWidget {
       child: compact
           ? IconButton(
               tooltip: label,
-              icon: const Icon(Icons.chat_outlined, size: 20),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedMessage01, size: 20),
               onPressed: () => WhatsAppLauncher.launchPrefilledLink(link.url),
             )
           : OutlinedButton.icon(
               onPressed: () => WhatsAppLauncher.launchPrefilledLink(link.url),
-              icon: const Icon(Icons.chat_outlined, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedMessage01, size: 18),
               label: Text(label),
             ),
     );

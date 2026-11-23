@@ -12,6 +12,7 @@ import '../../../../core/widgets/layout_widgets.dart';
 import '../controllers/connection_settings_controller.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 class ConnectionSettingsPage extends GetView<ConnectionSettingsController> {
   const ConnectionSettingsPage({super.key});
 
@@ -52,7 +53,7 @@ class ConnectionSettingsPage extends GetView<ConnectionSettingsController> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.waving_hand_outlined),
+                          HugeIcon(icon: HugeIcons.strokeRoundedWavingHand01),
                           SizedBox(width: 12),
                           Expanded(child: Text(tr.firstLaunchHint)),
                         ],
@@ -84,7 +85,7 @@ class _ServerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SectionCard(
     title: tr.settingsServerTitle,
-    icon: Icons.dns_outlined,
+    icon: HugeIcons.strokeRoundedServer,
     subtitle: tr.settingsServerSubtitle,
     child: Form(
       key: c.formKey,
@@ -100,7 +101,10 @@ class _ServerCard extends StatelessWidget {
                 labelText: tr.fieldApiAddress,
                 hintText: AppConfig.defaultApiBaseUrl,
                 helperText: tr.apiAddressHelp,
-                prefixIcon: Icon(Icons.link, size: 20),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 18),
+                ),
               ),
               validator: c.validateUrl,
               onChanged: (_) => c.onUrlChanged(),
@@ -137,10 +141,10 @@ class _ServerCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    HugeIcon(icon: 
                       status == ConnectionTestStatus.success
-                          ? Icons.check_circle_outline
-                          : Icons.error_outline,
+                          ? HugeIcons.strokeRoundedCheckmarkCircle03
+                          : HugeIcons.strokeRoundedAlertCircle,
                       color: status == ConnectionTestStatus.success
                           ? crm.success
                           : crm.danger,
@@ -165,7 +169,7 @@ class _ServerCard extends StatelessWidget {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(Icons.network_check, size: 18),
+                      : const HugeIcon(icon: HugeIcons.strokeRoundedNetwork, size: 18),
                   label: Text(
                     status == ConnectionTestStatus.testing
                         ? tr.testing
@@ -175,7 +179,7 @@ class _ServerCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 FilledButton.icon(
                   onPressed: c.isSaving.value ? null : onSave,
-                  icon: const Icon(Icons.save_outlined, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedFloppyDisk, size: 18),
                   label: Text(
                     c.isSaving.value ? tr.actionSaving : tr.actionSave,
                   ),
@@ -197,7 +201,7 @@ class _AppearanceCard extends StatelessWidget {
     final settings = Get.find<AppSettingsService>();
     return SectionCard(
       title: tr.settingsDisplay,
-      icon: Icons.palette_outlined,
+      icon: HugeIcons.strokeRoundedPaintBoard,
       child: Obx(
         () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,17 +235,17 @@ class _AppearanceCard extends StatelessWidget {
                 ButtonSegment(
                   value: ThemeMode.light,
                   label: Text(tr.themeLightShort),
-                  icon: const Icon(Icons.light_mode_outlined),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedSun03),
                 ),
                 ButtonSegment(
                   value: ThemeMode.dark,
                   label: Text(tr.themeDarkShort),
-                  icon: const Icon(Icons.dark_mode_outlined),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoon02),
                 ),
                 ButtonSegment(
                   value: ThemeMode.system,
                   label: Text(tr.themeSystemShort),
-                  icon: const Icon(Icons.computer),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedComputerDesk01),
                 ),
               ],
               selected: {settings.themeMode.value},
@@ -263,7 +267,7 @@ class _AboutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SectionCard(
     title: tr.settingsAbout,
-    icon: Icons.info_outline,
+    icon: HugeIcons.strokeRoundedInformationCircle,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -37,6 +37,7 @@ class ScheduleSessionController extends GetxController {
     WorkflowConfigRepository? configRepository,
     ProductsRepository? productsRepository,
     ProspectRef? customer,
+    DateTime? initialDate,
     DateTime Function()? clock,
   }) : _repository = repository,
        _workflow = workflow,
@@ -51,7 +52,9 @@ class ScheduleSessionController extends GetxController {
     final types = workflow.typesOfGroup(mode.group);
     if (types.isNotEmpty) selectType(types.first);
     final now = _clock();
-    date.value = DateTime(now.year, now.month, now.day + 1);
+    date.value = initialDate == null
+        ? DateTime(now.year, now.month, now.day + 1)
+        : DateTime(initialDate.year, initialDate.month, initialDate.day);
     final start = _parseTime(settings?.workStart);
     if (start != null) startTime.value = start;
     _applyDefaultEnd();

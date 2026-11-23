@@ -18,11 +18,13 @@ import '../controllers/schedule_session_controller.dart';
 
 export '../controllers/schedule_session_controller.dart' show SessionMode;
 
+import 'package:hugeicons/hugeicons.dart';
 /// Schedules a training session or an accompaniment series for a customer.
 /// Resolves with the created session(s), or null when cancelled.
 Future<ScheduleResult?> showScheduleSessionDialog({
   required SessionMode mode,
   ProspectRef? customer,
+  DateTime? initialDate,
 }) async {
   final workflow = Get.find<WorkflowLookupService>();
   try {
@@ -39,6 +41,7 @@ Future<ScheduleResult?> showScheduleSessionDialog({
       productsRepository: Get.find<ProductsRepository>(),
       mode: mode,
       customer: customer,
+      initialDate: initialDate,
     ),
     builder: (c) => _SessionDialog(c),
   );
@@ -82,8 +85,8 @@ class _SessionDialog extends StatelessWidget {
       return FormDialog(
         title: c.isAccompaniment ? tr.wfNewAccompaniment : tr.wfNewTraining,
         icon: c.isAccompaniment
-            ? Icons.event_repeat_outlined
-            : Icons.school_outlined,
+            ? HugeIcons.strokeRoundedCalendarSync
+            : HugeIcons.strokeRoundedMortarboard01,
         width: 640,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
@@ -171,7 +174,10 @@ class _SessionDialog extends StatelessWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: tr.wfDate,
-                      prefixIcon: const Icon(Icons.event, size: 20),
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, size: 18),
+                      ),
                       errorText: c.startError,
                     ),
                     child: Text(Formatters.date(c.date.value)),
@@ -183,7 +189,10 @@ class _SessionDialog extends StatelessWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: tr.wfStartTime,
-                      prefixIcon: const Icon(Icons.schedule, size: 20),
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedTime02, size: 18),
+                      ),
                     ),
                     child: Text(c.startTime.value?.format(context) ?? '—'),
                   ),
@@ -194,7 +203,10 @@ class _SessionDialog extends StatelessWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: tr.wfEndTime,
-                      prefixIcon: const Icon(Icons.schedule, size: 20),
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedTime02, size: 18),
+                      ),
                       errorText: c.endError,
                     ),
                     child: Text(c.endTime.value?.format(context) ?? '—'),

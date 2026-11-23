@@ -14,6 +14,8 @@ import 'config_schema.dart';
 import 'workflow_settings_controllers.dart';
 import 'workflow_settings_page.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../core/widgets/animated_entrance.dart';
 /// Customer-facing links of one product (training material, documentation).
 /// Links are deactivated, never deleted; "customer visible" decides whether
 /// the portal may show them (a hidden URL is not authorization).
@@ -26,7 +28,7 @@ Future<void> showProductResourcesDialog(Product product) async {
   final tag = 'product-resources-${product.id}';
   Get.put(list, tag: tag);
   try {
-    await Get.dialog<void>(_ResourcesDialog(product: product, list: list));
+    await showAppDialog<void>(_ResourcesDialog(product: product, list: list));
   } finally {
     Get.delete<ConfigEntityController>(tag: tag, force: true);
   }
@@ -87,12 +89,12 @@ class _ResourcesDialog extends StatelessWidget {
                 ),
                 FilledButton.icon(
                   onPressed: _edit,
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
                   label: Text(tr.actionAdd),
                 ),
                 IconButton(
                   tooltip: tr.actionClose,
-                  icon: const Icon(Icons.close),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                   onPressed: () => Get.back(),
                 ),
               ],
@@ -117,7 +119,7 @@ class _ResourcesDialog extends StatelessWidget {
                   onRetry: list.load,
                   empty: EmptyView(
                     compact: true,
-                    icon: Icons.link_off,
+                    icon: HugeIcons.strokeRoundedUnlink01,
                     title: tr.wfNoResources,
                   ),
                   builder: (_) => ListView.separated(
@@ -128,7 +130,7 @@ class _ResourcesDialog extends StatelessWidget {
                       final r = rows[i];
                       return ListTile(
                         dense: true,
-                        leading: const Icon(Icons.link),
+                        leading: const HugeIcon(icon: HugeIcons.strokeRoundedLink01),
                         title: Text(
                           r.name,
                           style: TextStyle(
@@ -155,7 +157,7 @@ class _ResourcesDialog extends StatelessWidget {
                             ),
                             IconButton(
                               tooltip: tr.actionEdit,
-                              icon: const Icon(Icons.edit_outlined, size: 20),
+                              icon: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, size: 20),
                               onPressed: () => _edit(r),
                             ),
                           ],

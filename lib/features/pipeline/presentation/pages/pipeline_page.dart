@@ -6,6 +6,7 @@ import '../../../../app/shell/app_shell.dart';
 import '../../../../app/shell/navigation.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/animated_entrance.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/filter_widgets.dart';
 import '../../../../core/widgets/layout_widgets.dart';
@@ -19,6 +20,8 @@ import '../../../settings/presentation/widgets/stage_widgets.dart';
 import '../controllers/pipeline_controller.dart';
 import '../../../../app/l10n/l10n.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+import '../../../../core/widgets/huge_data.dart';
 class PipelinePage extends GetView<PipelineController> {
   const PipelinePage({super.key});
 
@@ -49,9 +52,9 @@ class PipelinePage extends GetView<PipelineController> {
                     final found = await showProspectSearchDialog(
                       initialQuery: controller.search.value,
                     );
-                    if (found != null) AppNavigation.openProspect(found.id);
+                    if (found != null) AppNavigation.openRecord(id: found.id, isCustomer: found.isCustomer);
                   },
-                  icon: const Icon(Icons.travel_explore, size: 18),
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedGlobe02, size: 18),
                   label: Text(tr.searchProspectTitle),
                 ),
               ),
@@ -59,7 +62,7 @@ class PipelinePage extends GetView<PipelineController> {
                 onPressed: controller.stagesState.isLoading
                     ? null
                     : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
             ],
@@ -72,7 +75,7 @@ class PipelinePage extends GetView<PipelineController> {
               isEmpty: controller.columns.isEmpty,
               onRetry: controller.load,
               empty: EmptyView(
-                icon: Icons.view_kanban_outlined,
+                icon: HugeIcons.strokeRoundedKanban,
                 title: tr.noStagesConfigured,
                 action: FilledButton(
                   onPressed: () => AppNavigation.goTo(Routes.stagesSettings),
@@ -197,7 +200,7 @@ class _StageColumn extends StatelessWidget {
                   if (column.items.isEmpty) {
                     return EmptyView(
                       compact: true,
-                      icon: Icons.move_to_inbox_outlined,
+                      icon: HugeIcons.strokeRoundedInboxDownload,
                       title: stage.isActive
                           ? tr.dropCardHere
                           : tr.stageDeactivated,
@@ -213,8 +216,21 @@ class _StageColumn extends StatelessWidget {
                     children: [
                       if (state.isLoading)
                         const LinearProgressIndicator(minHeight: 2),
-                      for (final p in column.items)
-                        _DraggableCard(c: c, prospect: p, onMove: _move),
+                      for (var i = 0; i < column.items.length; i++)
+                        // Keyed by id: existing cards keep their state (no
+                        // replay on refresh); a card dropped into this column
+                        // is new here and fades in.
+                        FadeSlideIn.staggered(
+                          key: ValueKey('pipeline-card-${column.items[i].id}'),
+                          index: i,
+                          step: const Duration(milliseconds: 40),
+                          distance: 10,
+                          child: _DraggableCard(
+                            c: c,
+                            prospect: column.items[i],
+                            onMove: _move,
+                          ),
+                        ),
                       if (column.hasMore.value)
                         TextButton(
                           onPressed: column.isLoadingMore.value
@@ -264,7 +280,7 @@ class _ColumnHeader extends StatelessWidget {
           Row(
             children: [
               if (!stage.isOpen) ...[
-                Icon(stageTypeIcon(stage.type), size: 16, color: stage.color),
+                HugeIcon(icon: stageTypeIcon(stage.type), size: 16, color: stage.color),
                 const SizedBox(width: 6),
               ],
               Expanded(
@@ -348,7 +364,14 @@ class _DraggableCard extends StatelessWidget {
           ),
         ),
         childWhenDragging: Opacity(opacity: 0.35, child: card),
-        child: MouseRegion(cursor: SystemMouseCursors.grab, child: card),
+        child: MouseRegion(
+          cursor: SystemMouseCursors.grab,
+          child: HoverLift(
+            lift: 1.5,
+            borderRadius: BorderRadius.circular(12),
+            child: card,
+          ),
+        ),
       ),
     );
   }
@@ -417,7 +440,7 @@ class _ProspectCard extends StatelessWidget {
                       child: PopupMenuButton<SalesStage>(
                         tooltip: tr.moveTo,
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.more_vert, size: 18),
+                        icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoreVertical, size: 18),
                         onSelected: (stage) => onMove!(prospect, stage),
                         itemBuilder: (_) => [
                           for (final col in c.columns)
@@ -449,8 +472,8 @@ class _ProspectCard extends StatelessWidget {
                   if (next != null)
                     _Meta(
                       icon: overdue
-                          ? Icons.warning_amber_rounded
-                          : Icons.event_outlined,
+                          ? HugeIcons.strokeRoundedAlert02
+                          : HugeIcons.strokeRoundedCalendar01,
                       text: overdue
                           ? tr.followUpOverdueTip
                           : Formatters.relative(next),
@@ -458,13 +481,13 @@ class _ProspectCard extends StatelessWidget {
                     ),
                   if (prospect.lastActivityAt != null)
                     _Meta(
-                      icon: Icons.history,
+                      icon: HugeIcons.strokeRoundedHistory,
                       text: Formatters.relative(prospect.lastActivityAt),
                       color: context.colors.onSurfaceVariant,
                     ),
                   if (prospect.isLost && prospect.lossReason != null)
                     _Meta(
-                      icon: Icons.do_not_disturb_on_outlined,
+                      icon: HugeIcons.strokeRoundedMinusSignCircle,
                       text: prospect.lossReason!.label,
                       color: crm.danger,
                     ),
@@ -481,7 +504,7 @@ class _ProspectCard extends StatelessWidget {
 class _Meta extends StatelessWidget {
   const _Meta({required this.icon, required this.text, required this.color});
 
-  final IconData icon;
+  final HugeData icon;
   final String text;
   final Color color;
 
@@ -489,7 +512,7 @@ class _Meta extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Icon(icon, size: 13, color: color),
+      HugeIcon(icon: icon, size: 13, color: color),
       const SizedBox(width: 3),
       Text(text, style: TextStyle(fontSize: 11.5, color: color)),
     ],

@@ -20,6 +20,7 @@ import '../helpers/fixtures.dart';
 import '../helpers/test_env.dart';
 import '../helpers/workflow_fixtures.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Renders each new staff screen against mocked API responses: loading,
 /// data, errors and the main actions. Nothing here reaches a real server.
 void main() {
@@ -59,7 +60,7 @@ void main() {
   });
 
   Future<void> pumpRoute(WidgetTester tester, String route) async {
-    tester.view.physicalSize = const Size(1700, 1250);
+    tester.view.physicalSize = const Size(2600, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     // The test font (Ahem) is much wider than the app font, so the fixed-width
@@ -82,7 +83,7 @@ void main() {
     await settle(tester);
   }
 
-  testWidgets('sidebar groups every page into the four workspaces', (
+  testWidgets('sidebar groups every page into the six workspaces', (
     tester,
   ) async {
     base.adapter.reply(
@@ -93,10 +94,12 @@ void main() {
     await pumpRoute(tester, Routes.customers);
     // Workspace headers (rendered upper-case).
     for (final header in [
-      tr.navWorkspaceAgenda,
-      tr.navWorkspaceSales,
-      tr.navWorkspaceSupport,
+      tr.navWorkspaceProspects,
+      tr.navWorkspaceCustomers,
       tr.navWorkspaceBilling,
+      tr.navWorkspaceProducts,
+      tr.navWorkspaceTeam,
+      tr.navWorkspaceAnalytics,
     ]) {
       expect(find.text(header.toUpperCase()), findsOneWidget, reason: header);
     }
@@ -110,7 +113,7 @@ void main() {
       'Pipeline',
       'Clients',
       'Produits',
-      'Après-vente',
+      'Interventions & Support',
       'Formation et accompagnement',
       'Demandes et réservations',
       'Employés',
@@ -135,7 +138,7 @@ void main() {
     );
     await pumpRoute(tester, Routes.customers);
     expect(
-      find.text('${tr.navWorkspaceSales}  ›  ${tr.navCustomers}'),
+      find.text('${tr.navWorkspaceCustomers}  ›  ${tr.navCustomers}'),
       findsOneWidget,
     );
     expect(tester.takeException(), isNull);
@@ -222,6 +225,9 @@ void main() {
   testWidgets(
     'customer profile shows products with purchase date, trials and portal state',
     (tester) async {
+      tester.view.physicalSize = const Size(2200, 1250);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       base.adapter.reply(
         'GET',
         '/customers/42',
@@ -250,7 +256,13 @@ void main() {
       );
       await pumpRoute(tester, '/customers/42');
       expect(find.text('SARL Exemple'), findsWidgets);
+      // Products tab is selected by default; tap Portal tab to see the portal state.
+      await tester.tap(find.text(tr.customerTabPortal));
+      await tester.pumpAndSettle();
       expect(find.text(tr.wfNoPortalAccount), findsOneWidget);
+      // Tap Prospect Archive tab to see trials.
+      await tester.tap(find.text(tr.customerTabProspectArchive));
+      await tester.pumpAndSettle();
       expect(find.text(tr.wfTrialActive), findsOneWidget);
       expect(find.text('Nouvel essai'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -294,7 +306,7 @@ void main() {
       await pumpRoute(tester, Routes.calendar);
       expect(find.text('Formation GestCom'), findsOneWidget);
       expect(find.text('Démo terminée'), findsOneWidget);
-      expect(find.byIcon(Icons.check_circle), findsWidgets); // completed marker
+      expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedCheckmarkCircle02), findsWidgets); // completed marker
       // Week and day views render too.
       await tester.tap(find.text(tr.wfViewWeek));
       await settle(tester);
@@ -586,8 +598,14 @@ void main() {
       ..reply('GET', '/calendar', wrap(<Object>[]))
       ..reply('GET', '/interventions', paginated([interventionJson()]));
     await pumpRoute(tester, Routes.employees);
-    expect(find.text('salim'), findsOneWidget);
-    await tester.tap(find.text('salim'));
+    // No nickname yet: the card falls back to user@computer.
+    expect(find.text('salim@PC1'), findsOneWidget);
+    expect(find.text(tr.empRoleSupport), findsOneWidget);
+    expect(find.text(tr.empPresenceBusy), findsOneWidget);
+    expect(find.text(tr.empFollowUpsCount(3)), findsOneWidget);
+    expect(find.text(tr.empTicketsCount(2)), findsOneWidget);
+    expect(find.text(tr.empAppointmentsCount(1)), findsOneWidget);
+    await tester.tap(find.text('salim@PC1'));
     await settle(tester);
     expect(find.textContaining('INT-5'), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -627,7 +645,7 @@ void main() {
     expect(find.text('Normale'), findsOneWidget);
     expect(find.text(tr.statusInactive), findsOneWidget);
     // Deactivate instead of delete: the row stays and uses PATCH/DELETE only.
-    expect(find.byIcon(Icons.delete), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is HugeIcon && w.icon == HugeIcons.strokeRoundedDelete01), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

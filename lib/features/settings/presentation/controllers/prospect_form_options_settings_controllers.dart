@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../app/l10n/l10n.dart';
 import '../../../../app/services/lookup_service.dart';
+import '../../../../app/shell/settings_nav.dart';
 import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/state/action_result.dart';
 import '../../../../core/state/load_state.dart';
@@ -34,11 +35,32 @@ class ProspectFormOptionsSettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Deep link (`?type=source`) or a settings-nav click picks the list.
+    selectType(Get.parameters['type'] ?? SettingsNav.takeRequest());
+    SettingsNav.request.addListener(_onNavRequest);
     load();
   }
 
-  void selectType(String type) {
-    selectedType.value = type;
+  @override
+  void onClose() {
+    SettingsNav.request.removeListener(_onNavRequest);
+    super.onClose();
+  }
+
+  /// A settings chip was clicked while this page is already open.
+  void _onNavRequest() {
+    final requested = SettingsNav.request.value;
+    if (requested != null && ProspectFormOption.allTypes.contains(requested)) {
+      SettingsNav.takeRequest();
+      selectType(requested);
+    }
+  }
+
+  /// Shows [type]; unknown or null values keep the current list.
+  void selectType(String? type) {
+    if (type != null && ProspectFormOption.allTypes.contains(type)) {
+      selectedType.value = type;
+    }
   }
 
   Future<void> load() => state.run(() async {

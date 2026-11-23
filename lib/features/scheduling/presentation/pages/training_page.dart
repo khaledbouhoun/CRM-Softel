@@ -18,6 +18,7 @@ import '../controllers/scheduling_lists_controllers.dart';
 import '../dialogs/appointment_dialogs.dart';
 import '../dialogs/schedule_session_dialog.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// Training sessions and accompaniment series.
 class TrainingPage extends GetView<TrainingController> {
   const TrainingPage({super.key});
@@ -87,18 +88,18 @@ class TrainingPage extends GetView<TrainingController> {
             Obx(
               () => OutlinedButton.icon(
                 onPressed: controller.state.isLoading ? null : controller.load,
-                icon: const Icon(Icons.refresh, size: 18),
+                icon: const HugeIcon(icon: HugeIcons.strokeRoundedRefresh, size: 18),
                 label: Text(tr.actionRefresh),
               ),
             ),
             OutlinedButton.icon(
               onPressed: () => _schedule(SessionMode.accompaniment),
-              icon: const Icon(Icons.event_repeat_outlined, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendarSync, size: 18),
               label: Text(tr.wfNewAccompaniment),
             ),
             FilledButton.icon(
               onPressed: () => _schedule(SessionMode.training),
-              icon: const Icon(Icons.add, size: 18),
+              icon: const HugeIcon(icon: HugeIcons.strokeRoundedAdd01, size: 18),
               label: Text(tr.wfNewTraining),
             ),
           ],
@@ -160,7 +161,7 @@ class TrainingPage extends GetView<TrainingController> {
                         isEmpty: items.isEmpty,
                         onRetry: controller.load,
                         empty: EmptyView(
-                          icon: Icons.school_outlined,
+                          icon: HugeIcons.strokeRoundedMortarboard01,
                           title: tr.wfNoSessions,
                           message: tr.wfNoSessionsHint,
                         ),
