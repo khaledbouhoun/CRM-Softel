@@ -5,6 +5,7 @@ import '../../interventions/data/models/intervention.dart';
 import '../../interventions/domain/interventions_repository.dart';
 import '../../scheduling/data/models/calendar_item.dart';
 import '../../scheduling/domain/scheduling_repository.dart';
+import '../data/employee_options.dart';
 import '../data/employees_repository.dart';
 import '../data/models/employee_session.dart';
 
@@ -39,6 +40,8 @@ class EmployeesController extends GetxController {
   final interventions = <Intervention>[].obs;
   final workloadState = LoadState();
 
+  final saving = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -54,6 +57,29 @@ class EmployeesController extends GetxController {
           .firstOrNull;
     }
   });
+
+  /// Saves the nickname and role of a workstation, then reloads the list.
+  /// Returns false when the CRM refuses.
+  Future<bool> saveWorkstation(
+    EmployeeSession employee, {
+    required String customName,
+    required EmployeeRole role,
+  }) async {
+    saving.value = true;
+    try {
+      await _employees.updateEmployee(
+        employee.employeeId,
+        customName: customName.trim(),
+        role: role.value,
+      );
+      await load();
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      saving.value = false;
+    }
+  }
 
   Future<void> select(EmployeeSession? employee) async {
     selected.value = employee;
