@@ -13,6 +13,7 @@ import '../../../prospects/data/models/prospect.dart';
 import '../../data/models/customer_models.dart';
 import '../controllers/customers_controllers.dart';
 
+import 'package:hugeicons/hugeicons.dart';
 /// "Convert prospect to customer": choose the purchased products and an
 /// optional note. Resolves with the converted prospect, or null.
 Future<Prospect?> showConvertProspectDialog(Prospect prospect) =>
@@ -47,7 +48,7 @@ class _ConvertDialog extends StatelessWidget {
       }.values.toList();
       return FormDialog(
         title: tr.wfConvertTitle,
-        icon: Icons.verified_user_outlined,
+        icon: HugeIcons.strokeRoundedSecurityCheck,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
         submitLabel: tr.actionConfirm,
@@ -161,7 +162,7 @@ class _TrialDialog extends StatelessWidget {
 
       return FormDialog(
         title: tr.wfNewTrial,
-        icon: Icons.science_outlined,
+        icon: HugeIcons.strokeRoundedMedicine01,
         busy: c.isSubmitting.value,
         errorMessage: c.errorMessage.value,
         submitLabel: tr.actionConfirm,
@@ -259,7 +260,10 @@ class _TrialDialog extends StatelessWidget {
                     helperText: selected == null
                         ? null
                         : (selected.hasDemo ? tr.prDemoLinkHint : tr.prNoDemoLink),
-                    prefixIcon: const Icon(Icons.link, size: 20),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedLink01, size: 18),
+                    ),
                   ),
                   child: SelectableText(
                     selected?.demoUrl ?? '—',

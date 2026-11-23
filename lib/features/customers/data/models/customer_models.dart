@@ -1,8 +1,46 @@
 import '../../../../app/l10n/l10n.dart';
 import '../../../../core/models/named_ref.dart';
 import '../../../../core/utils/json_utils.dart';
+import '../../../activities/data/models/activity.dart';
+import '../../../interventions/data/models/intervention.dart';
 import '../../../prospects/data/models/prospect.dart';
+import '../../../prospects/data/models/stage_history_entry.dart';
 import '../../../scheduling/data/models/appointment.dart';
+
+/// Sortable columns of the customer table (API `sort`).
+enum CustomerSort {
+  companyName('name'),
+  city('city'),
+  phone('phone'),
+  maintenance('maintenance'),
+  convertedAt('converted_at');
+
+  const CustomerSort(this.apiValue);
+  final String apiValue;
+
+  bool get defaultsToAscending => this != convertedAt;
+}
+
+/// Maintenance-plan filter of the customer list (API `maintenance`).
+enum CustomerMaintenanceFilter {
+  all(null),
+  active('active'),
+  expiring('expiring'),
+  expiredOrNone('expired_none');
+
+  const CustomerMaintenanceFilter(this.apiValue);
+  final String? apiValue;
+}
+
+/// Portal-access filter of the customer list (API `portal`).
+enum CustomerPortalFilter {
+  all(null),
+  hasAccount('has_account'),
+  noAccount('no_account');
+
+  const CustomerPortalFilter(this.apiValue);
+  final String? apiValue;
+}
 
 /// A product the customer owns (`products[]` of the customer profile).
 class CustomerProduct {
@@ -20,6 +58,43 @@ class CustomerProduct {
     id: asInt(json['id']),
     name: asString(json['name']),
     purchasedAt: asDateTimeOrNull(json['purchased_at']),
+  );
+}
+
+/// A license / maintenance plan row (`subscriptions[]` of the customer profile).
+class CustomerSubscription {
+  const CustomerSubscription({
+    required this.id,
+    required this.type,
+    required this.status,
+    this.isActive = false,
+    this.daysRemaining,
+    this.startsAt,
+    this.expiresAt,
+  });
+
+  final int id;
+
+  /// `lifetime_license` or `maintenance`.
+  final String type;
+
+  /// `active`, `expiring_soon` or `expired`.
+  final String status;
+  final bool isActive;
+  final int? daysRemaining;
+  final DateTime? startsAt;
+  final DateTime? expiresAt;
+
+  bool get isMaintenance => type == 'maintenance';
+
+  factory CustomerSubscription.fromJson(JsonMap json) => CustomerSubscription(
+    id: asInt(json['id']),
+    type: asString(json['type']),
+    status: asString(json['status']),
+    isActive: asBool(json['is_active']),
+    daysRemaining: asIntOrNull(json['days_remaining']),
+    startsAt: asDateTimeOrNull(json['starts_at']),
+    expiresAt: asDateTimeOrNull(json['expires_at']),
   );
 }
 
@@ -118,6 +193,10 @@ class CustomerProfile {
     this.portalAccounts = const [],
     this.trials = const [],
     this.appointments = const [],
+    this.stageHistory = const [],
+    this.activities = const [],
+    this.interventions = const [],
+    this.subscriptions = const [],
   });
 
   final Prospect prospect;
@@ -125,6 +204,20 @@ class CustomerProfile {
   final List<PortalAccount> portalAccounts;
   final List<Trial> trials;
   final List<Appointment> appointments;
+
+  /// Sales journey while the customer was still a prospect (oldest first).
+  final List<StageHistoryEntry> stageHistory;
+  final List<Activity> activities;
+  final List<Intervention> interventions;
+  final List<CustomerSubscription> subscriptions;
+
+  /// The current maintenance plan (most recent one), if any.
+  CustomerSubscription? get maintenance {
+    for (final s in subscriptions) {
+      if (s.isMaintenance) return s;
+    }
+    return null;
+  }
 
   bool get hasPortalAccount => portalAccounts.any((a) => a.isActive);
 
@@ -136,6 +229,10 @@ class CustomerProfile {
     portalAccounts: asList(json['portal_accounts'], PortalAccount.fromJson),
     trials: asList(json['trials'], Trial.fromJson),
     appointments: asList(json['appointments'], Appointment.fromJson),
+    stageHistory: asList(json['stage_history'], StageHistoryEntry.fromJson),
+    activities: asList(json['activities'], Activity.fromJson),
+    interventions: asList(json['interventions'], Intervention.fromJson),
+    subscriptions: asList(json['subscriptions'], CustomerSubscription.fromJson),
   );
 }
 

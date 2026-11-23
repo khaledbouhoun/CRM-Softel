@@ -14,10 +14,24 @@ class CustomersRemoteDataSource {
     String search = '',
     int page = 1,
     int perPage = 25,
+    int? productId,
+    CustomerMaintenanceFilter maintenance = CustomerMaintenanceFilter.all,
+    CustomerPortalFilter portal = CustomerPortalFilter.all,
+    CustomerSort sort = CustomerSort.convertedAt,
+    bool ascending = false,
   }) async {
     final body = await _api.get(
       ApiEndpoints.customers,
-      query: {'search': search.trim(), 'page': page, 'per_page': perPage},
+      query: {
+        'search': search.trim(),
+        'page': page,
+        'per_page': perPage,
+        'product_id': ?productId,
+        'maintenance': ?maintenance.apiValue,
+        'portal': ?portal.apiValue,
+        'sort': sort.apiValue,
+        'direction': ascending ? 'asc' : 'desc',
+      },
     );
     return ApiResponse.paginated(body, Prospect.fromJson);
   }

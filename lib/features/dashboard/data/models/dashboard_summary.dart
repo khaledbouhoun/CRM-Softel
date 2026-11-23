@@ -20,6 +20,77 @@ class LossReasonCount {
   );
 }
 
+/// Customers (converted prospects) and their maintenance plans.
+class CustomerStats {
+  const CustomerStats({
+    this.total = 0,
+    this.activeMaintenance = 0,
+    this.expiringSoon = 0,
+    this.expired = 0,
+  });
+
+  final int total;
+  final int activeMaintenance;
+  final int expiringSoon;
+  final int expired;
+
+  factory CustomerStats.fromJson(JsonMap json) => CustomerStats(
+    total: asInt(json['total']),
+    activeMaintenance: asInt(json['active_maintenance']),
+    expiringSoon: asInt(json['expiring_soon']),
+    expired: asInt(json['expired']),
+  );
+}
+
+/// Open support tickets (interventions) and pending customer-portal requests.
+class SupportStats {
+  const SupportStats({
+    this.openTickets = 0,
+    this.urgentTickets = 0,
+    this.pendingRequests = 0,
+  });
+
+  final int openTickets;
+  final int urgentTickets;
+  final int pendingRequests;
+
+  factory SupportStats.fromJson(JsonMap json) => SupportStats(
+    openTickets: asInt(json['open_tickets']),
+    urgentTickets: asInt(json['urgent_tickets']),
+    pendingRequests: asInt(json['pending_requests']),
+  );
+}
+
+class OperationsStats {
+  const OperationsStats({this.appointmentsToday = 0, this.activeTrials = 0});
+
+  final int appointmentsToday;
+  final int activeTrials;
+
+  factory OperationsStats.fromJson(JsonMap json) => OperationsStats(
+    appointmentsToday: asInt(json['appointments_today']),
+    activeTrials: asInt(json['active_trials']),
+  );
+}
+
+/// Prospects created and deals closed since the 1st of the month.
+class MonthStats {
+  const MonthStats({this.won = 0, this.lost = 0, this.newProspects = 0});
+
+  final int won;
+  final int lost;
+  final int newProspects;
+
+  /// Won / (won + lost) this month; null when nothing closed yet.
+  double? get conversion => won + lost == 0 ? null : won / (won + lost);
+
+  factory MonthStats.fromJson(JsonMap json) => MonthStats(
+    won: asInt(json['won']),
+    lost: asInt(json['lost']),
+    newProspects: asInt(json['new_prospects']),
+  );
+}
+
 /// Payload of GET `/dashboard`. All figures are computed by the server.
 class DashboardSummary {
   const DashboardSummary({
@@ -34,6 +105,10 @@ class DashboardSummary {
     required this.recentActivities,
     this.lostByReason,
     this.upcomingWindowDays,
+    this.customers = const CustomerStats(),
+    this.support = const SupportStats(),
+    this.operations = const OperationsStats(),
+    this.thisMonth = const MonthStats(),
   });
 
   final int totalProspects;
@@ -42,6 +117,11 @@ class DashboardSummary {
   final int lostProspects;
   final int followUpsToday;
   final int followUpsOverdue;
+
+  final CustomerStats customers;
+  final SupportStats support;
+  final OperationsStats operations;
+  final MonthStats thisMonth;
 
   /// Pending follow-ups in the next [upcomingWindowDays] days after today.
   final int followUpsUpcoming;
@@ -86,6 +166,16 @@ class DashboardSummary {
       lostByReason: json['lost_by_reason'] is List
           ? asList(json['lost_by_reason'], LossReasonCount.fromJson)
           : null,
+      customers: CustomerStats.fromJson(
+        asMapOrNull(json['customers']) ?? const {},
+      ),
+      support: SupportStats.fromJson(asMapOrNull(json['support']) ?? const {}),
+      operations: OperationsStats.fromJson(
+        asMapOrNull(json['operations']) ?? const {},
+      ),
+      thisMonth: MonthStats.fromJson(
+        asMapOrNull(json['this_month']) ?? const {},
+      ),
     );
   }
 }

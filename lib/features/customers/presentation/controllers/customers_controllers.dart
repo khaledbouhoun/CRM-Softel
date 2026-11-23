@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../../../app/l10n/l10n.dart';
+import '../../../../app/services/lookup_service.dart';
 import '../../../../core/network/api_exceptions.dart';
 import '../../../../core/network/api_response.dart';
 import '../../../../core/state/action_result.dart';
@@ -23,6 +24,11 @@ class CustomersListController extends GetxController {
   final page = Rx<Paginated<Prospect>>(const Paginated.empty());
   final state = LoadState();
   final search = ''.obs;
+  final productId = Rxn<int>();
+  final maintenance = CustomerMaintenanceFilter.all.obs;
+  final portal = CustomerPortalFilter.all.obs;
+  final sort = CustomerSort.convertedAt.obs;
+  final ascending = false.obs;
   int _pageNumber = 1;
   int _perPage = 25;
 
@@ -32,6 +38,10 @@ class CustomersListController extends GetxController {
   void onInit() {
     super.onInit();
     load();
+    // Product filter options; the list works without them.
+    if (Get.isRegistered<LookupService>()) {
+      Get.find<LookupService>().ensureLoaded().catchError((Object _) {});
+    }
   }
 
   Future<void> load() => state.run(() async {
@@ -39,8 +49,54 @@ class CustomersListController extends GetxController {
       search: search.value,
       page: _pageNumber,
       perPage: _perPage,
+      productId: productId.value,
+      maintenance: maintenance.value,
+      portal: portal.value,
+      sort: sort.value,
+      ascending: ascending.value,
     );
   });
+
+  bool get hasFilters =>
+      search.value.trim().isNotEmpty ||
+      productId.value != null ||
+      maintenance.value != CustomerMaintenanceFilter.all ||
+      portal.value != CustomerPortalFilter.all;
+
+  /// Clicking the sorted column toggles the direction.
+  Future<void> sortBy(CustomerSort value) {
+    ascending.value = sort.value == value ? !ascending.value : value.defaultsToAscending;
+    sort.value = value;
+    _pageNumber = 1;
+    return load();
+  }
+
+  Future<void> setProduct(int? id) {
+    productId.value = id;
+    _pageNumber = 1;
+    return load();
+  }
+
+  Future<void> setMaintenance(CustomerMaintenanceFilter value) {
+    maintenance.value = value;
+    _pageNumber = 1;
+    return load();
+  }
+
+  Future<void> setPortal(CustomerPortalFilter value) {
+    portal.value = value;
+    _pageNumber = 1;
+    return load();
+  }
+
+  Future<void> clearFilters() {
+    search.value = '';
+    productId.value = null;
+    maintenance.value = CustomerMaintenanceFilter.all;
+    portal.value = CustomerPortalFilter.all;
+    _pageNumber = 1;
+    return load();
+  }
 
   Future<void> setSearch(String value) {
     if (value.trim() == search.value.trim()) return Future.value();

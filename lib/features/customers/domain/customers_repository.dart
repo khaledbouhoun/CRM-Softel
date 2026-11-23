@@ -10,6 +10,11 @@ abstract interface class CustomersRepository {
     String search = '',
     int page = 1,
     int perPage = 25,
+    int? productId,
+    CustomerMaintenanceFilter maintenance = CustomerMaintenanceFilter.all,
+    CustomerPortalFilter portal = CustomerPortalFilter.all,
+    CustomerSort sort = CustomerSort.convertedAt,
+    bool ascending = false,
   });
 
   Future<CustomerProfile> getCustomer(int id);

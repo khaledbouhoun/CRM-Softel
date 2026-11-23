@@ -14,7 +14,21 @@ class CustomersRepositoryImpl implements CustomersRepository {
     String search = '',
     int page = 1,
     int perPage = 25,
-  }) => _remote.getCustomers(search: search, page: page, perPage: perPage);
+    int? productId,
+    CustomerMaintenanceFilter maintenance = CustomerMaintenanceFilter.all,
+    CustomerPortalFilter portal = CustomerPortalFilter.all,
+    CustomerSort sort = CustomerSort.convertedAt,
+    bool ascending = false,
+  }) => _remote.getCustomers(
+    search: search,
+    page: page,
+    perPage: perPage,
+    productId: productId,
+    maintenance: maintenance,
+    portal: portal,
+    sort: sort,
+    ascending: ascending,
+  );
 
   @override
   Future<CustomerProfile> getCustomer(int id) => _remote.getCustomer(id);
